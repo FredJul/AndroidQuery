@@ -5,8 +5,10 @@ import com.memtrip.sqlking.common.Table;
 
 @Table
 public class User {
-    @Column(index = true) int id;
-    @Column String username;
+    @Column(index = true)
+    int id;
+    @Column
+    String username;
 
     public int getId() {
         return id;

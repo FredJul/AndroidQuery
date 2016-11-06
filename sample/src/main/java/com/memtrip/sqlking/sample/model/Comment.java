@@ -5,11 +5,16 @@ import com.memtrip.sqlking.common.Table;
 
 @Table
 public class Comment {
-    @Column(index = true) int id;
-    @Column String body;
-    @Column long timestamp;
-    @Column int userId;
-    @Column User user;
+    @Column(index = true)
+    int id;
+    @Column
+    String body;
+    @Column
+    long timestamp;
+    @Column
+    int userId;
+    @Column
+    User user;
 
     public int getId() {
         return id;

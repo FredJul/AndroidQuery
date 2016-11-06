@@ -137,11 +137,11 @@ install {
 }
 
 dependencies {
-    compile 'com.memtrip.sqlking:common:1.1.5'
+    compile project(':common')
     compile 'io.reactivex:rxjava:1.1.1'
     compile 'io.reactivex:rxandroid:1.1.0'
 
-    androidTestApt 'com.memtrip.sqlking:preprocessor:1.1.5'
+    androidTestApt project(':preprocessor')
 
     androidTestCompile(
         'com.android.support.test:runner:0.3',

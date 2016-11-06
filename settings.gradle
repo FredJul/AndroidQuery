@@ -1,1 +1,1 @@
-include ':client'
+include ':common', ':preprocessor', ':client', ':sample'

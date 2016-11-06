@@ -142,7 +142,7 @@ public class CommentActivity extends AppCompatActivity {
 
     private void refreshComments() {
         Select.getBuilder()
-                .join(innerJoin(User.class, on("Comment.userId","User.id")))
+                .join(innerJoin(User.class, on("Comment.userId", "User.id")))
                 .orderBy("Comment.timestamp", OrderBy.Order.DESC)
                 .rx(Comment.class, App.getInstance().getSQLProvider())
                 .subscribeOn(Schedulers.io())
