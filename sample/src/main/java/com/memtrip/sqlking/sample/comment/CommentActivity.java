@@ -101,8 +101,8 @@ public class CommentActivity extends AppCompatActivity {
 
     private void insertUser() {
         User user = new User();
-        user.set_id(1);
-        user.setUsername("Sam");
+        user._id = 1;
+        user.username = "Sam";
 
         Insert.getBuilder().values(user)
                 .rx(App.getInstance().getLocalDatabaseProvider())
@@ -132,9 +132,9 @@ public class CommentActivity extends AppCompatActivity {
     @OnClick(R.id.insert_comment)
     public void insert() {
         Comment comment = new Comment();
-        comment.setBody(editText.getText().toString());
-        comment.setTimestamp(System.currentTimeMillis());
-        comment.setUserId(1);
+        comment.body = editText.getText().toString();
+        comment.timestamp = System.currentTimeMillis();
+        comment.userId = 1;
 
         Insert.getBuilder().values(comment)
                 .rx(App.getInstance().getContentDatabaseProvider())

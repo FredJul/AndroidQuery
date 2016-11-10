@@ -3,13 +3,14 @@ package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 import com.memtrip.sqlking.preprocessor.processor.data.Column;
 import com.memtrip.sqlking.preprocessor.processor.data.Table;
 import com.memtrip.sqlking.preprocessor.processor.utils.StringUtils;
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModelException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModelException;
 
 public class JoinSettersMethod implements TemplateMethodModelEx {
 
@@ -42,11 +43,11 @@ public class JoinSettersMethod implements TemplateMethodModelEx {
                                 .append("\")) {")
                                 .append(System.getProperty("line.separator"))
                                 .append(table.getName().toLowerCase())
-                                .append(".set")
-                                .append(StringUtils.firstToUpperCase(column.getName()))
-                                .append("(")
+                                .append(".")
+                                .append(column.getName())
+                                .append(" = ")
                                 .append(StringUtils.assembleTypeGetter(column.getType()))
-                                .append(");");
+                                .append(";");
                     }
 
                     sb.append(System.getProperty("line.separator"));

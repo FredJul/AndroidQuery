@@ -112,7 +112,7 @@ public class Q {
                                     ${join(column.getClassName(),tables)}
                                 <#else>
                                     } else if (cursor.getColumnName(x).equals(${formatConstant(column.getName())})) {
-                                        ${table.getName()?lower_case}.set${column.getName()?cap_first}(${getCursorGetter(column.getType())});
+                                        ${table.getName()?lower_case}.${column.getName()} = ${getCursorGetter(column.getType())};
                                 </#if>
                             </#list>
                             }
@@ -142,7 +142,7 @@ public class Q {
                 ContentValues contentValues = new ContentValues();
 
                 <#list table.getMutableColumns(tables) as column>
-                    contentValues.put(${formatConstant(column.getName())}, ${table.getName()?lower_case}.get${column.getName()?cap_first}());
+                    contentValues.put(${formatConstant(column.getName())}, ${table.getName()?lower_case}.${column.getName()});
                 </#list>
 
                 return contentValues;

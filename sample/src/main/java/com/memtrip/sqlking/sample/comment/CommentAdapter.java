@@ -64,9 +64,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }
 
         public void populate(Comment comment) {
-            author.setText(comment.getUser().getUsername());
-            body.setText(comment.getBody());
-            timestamp.setText(dateTimeFormatter.print(comment.getTimestamp()));
+            author.setText(comment.user.username);
+            body.setText(comment.body);
+            timestamp.setText(dateTimeFormatter.print(comment.timestamp));
         }
     }
 }

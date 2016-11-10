@@ -2,13 +2,15 @@ package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
 import com.memtrip.sqlking.preprocessor.processor.data.Column;
 import com.memtrip.sqlking.preprocessor.processor.data.Table;
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModelException;
+import com.memtrip.sqlking.preprocessor.processor.utils.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModelException;
 
 public class JoinReferencesMethod implements TemplateMethodModelEx {
 
@@ -66,11 +68,11 @@ public class JoinReferencesMethod implements TemplateMethodModelEx {
                 "();" +
                 System.getProperty("line.separator") +
                 joinTableName.toLowerCase() +
-                ".set" +
-                table.getName() +
-                "(" +
+                "." +
+                StringUtils.firstToLowerCase(table.getName()) +
+                " = " +
                 table.getName().toLowerCase() +
-                ");" +
+                ";" +
                 System.getProperty("line.separator") +
                 System.getProperty("line.separator");
         }

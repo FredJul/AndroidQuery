@@ -7,10 +7,14 @@ import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
 import com.memtrip.sqlking.preprocessor.processor.data.Data;
 import com.memtrip.sqlking.preprocessor.processor.data.parse.ParseAnnotations;
-import com.memtrip.sqlking.preprocessor.processor.data.validator.MembersHaveGetterSettersValidator;
 import com.memtrip.sqlking.preprocessor.processor.data.validator.PrimaryKeyMustBeUnique;
 import com.memtrip.sqlking.preprocessor.processor.data.validator.TableNamesMustBeUniqueValidator;
 import com.memtrip.sqlking.preprocessor.processor.freemarker.DataModel;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -20,10 +24,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashSet;
-import java.util.Set;
 
 @AutoService(javax.annotation.processing.Processor.class)
 public class Processor extends AbstractProcessor {
@@ -95,7 +95,6 @@ public class Processor extends AbstractProcessor {
 
     private Validator[] getValidators(Data data) {
         return new Validator[]{
-                new MembersHaveGetterSettersValidator(data),
                 new TableNamesMustBeUniqueValidator(data),
                 new PrimaryKeyMustBeUnique(data)
         };
