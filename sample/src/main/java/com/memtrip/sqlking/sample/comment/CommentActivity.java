@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.memtrip.sqlking.database.Result;
 import com.memtrip.sqlking.gen.Q;
 import com.memtrip.sqlking.operation.function.Count;
 import com.memtrip.sqlking.operation.function.Insert;
@@ -167,10 +168,10 @@ public class CommentActivity extends AppCompatActivity {
                 .rx(Comment.class, App.getInstance().getLocalDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Comment[]>() {
+                .subscribe(new Action1<Result<Comment>>() {
                     @Override
-                    public void call(Comment[] comments) {
-                        commentAdapter.addAll(comments);
+                    public void call(Result<Comment> comments) {
+                        commentAdapter.addAll(comments.asArray());
                     }
                 }));
     }

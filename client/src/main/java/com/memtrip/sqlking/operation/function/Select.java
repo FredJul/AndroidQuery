@@ -17,6 +17,7 @@ package com.memtrip.sqlking.operation.function;
 
 import com.memtrip.sqlking.database.DatabaseProvider;
 import com.memtrip.sqlking.database.Query;
+import com.memtrip.sqlking.database.Result;
 import com.memtrip.sqlking.operation.clause.Clause;
 import com.memtrip.sqlking.operation.join.Join;
 import com.memtrip.sqlking.operation.keyword.Limit;
@@ -115,7 +116,7 @@ public class Select extends Query {
          * @param <T> The model object returned from the query
          * @return The rows returned by the Select query
          */
-        public <T> T[] execute(Class<T> classDef, DatabaseProvider databaseProvider) {
+        public <T> Result<T> execute(Class<T> classDef, DatabaseProvider databaseProvider) {
             return select(
                     new Select(mClause, mJoin, mOrderBy, mLimit),
                     classDef,
@@ -145,10 +146,10 @@ public class Select extends Query {
          * @param <T> The model object returned from the query
          * @return An RxJava Observable
          */
-        public <T> Observable<T[]> rx(final Class<T> classDef, final DatabaseProvider databaseProvider) {
-            return wrapRx(new Callable<T[]>() {
+        public <T> Observable<Result<T>> rx(final Class<T> classDef, final DatabaseProvider databaseProvider) {
+            return wrapRx(new Callable<Result<T>>() {
                 @Override
-                public T[] call() throws Exception {
+                public Result<T> call() throws Exception {
                     return execute(classDef, databaseProvider);
                 }
             });

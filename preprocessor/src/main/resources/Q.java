@@ -96,32 +96,37 @@ public class Q {
             }
 
             @Override
-            public ${packagedTableName}[] retrieveSQLSelectResults(Cursor cursor) {
+            public ${packagedTableName} getSingleResult(Cursor cursor) {
+                ${packagedTableName} ${table.getName()?lower_case} = new ${packagedTableName}();
+
+                ${joinReferences(table.getName(),tables)}
+
+                for (int x = 0; x < cursor.getColumnCount(); x++) {
+                    <#assign retrieveSQLSelectResults>
+                        <#list table.getColumns() as column>
+                            <#if column.isJoinable(tables)>
+                                ${join(column.getClassName(),tables)}
+                            <#else>
+                                } else if (cursor.getColumnName(x).equals(${formatConstant(column.getName())})) {
+                                    ${table.getName()?lower_case}.${column.getName()} = ${getCursorGetter(column.getType())};
+                            </#if>
+                        </#list>
+                        }
+                    </#assign>
+
+                    ${retrieveSQLSelectResults?trim?remove_beginning("} else ")}
+                }
+
+                return ${table.getName()?lower_case};
+            }
+
+            @Override
+            public ${packagedTableName}[] getArrayResult(Cursor cursor) {
                 ${packagedTableName}[] result = new ${packagedTableName}[cursor.getCount()];
 
                 cursor.moveToFirst();
                 for (int i = 0; !cursor.isAfterLast(); i++) {
-                    ${packagedTableName} ${table.getName()?lower_case} = new ${packagedTableName}();
-
-                    ${joinReferences(table.getName(),tables)}
-
-                    for (int x = 0; x < cursor.getColumnCount(); x++) {
-                        <#assign retrieveSQLSelectResults>
-                            <#list table.getColumns() as column>
-                                <#if column.isJoinable(tables)>
-                                    ${join(column.getClassName(),tables)}
-                                <#else>
-                                    } else if (cursor.getColumnName(x).equals(${formatConstant(column.getName())})) {
-                                        ${table.getName()?lower_case}.${column.getName()} = ${getCursorGetter(column.getType())};
-                                </#if>
-                            </#list>
-                            }
-                        </#assign>
-
-                        ${retrieveSQLSelectResults?trim?remove_beginning("} else ")}
-                    }
-
-                    result[i] = ${table.getName()?lower_case};
+                    result[i] = getSingleResult(cursor);
                     cursor.moveToNext();
                 }
 

@@ -29,5 +29,8 @@ public interface SQLQuery {
     String getCreateIndexQuery();
     String[] getColumnNames();
     ContentValues getContentValues(Object model);
-    <T> T[] retrieveSQLSelectResults(Cursor cursor);
+
+    <T> T getSingleResult(Cursor cursor);
+
+    <T> T[] getArrayResult(Cursor cursor);
 }

@@ -45,15 +45,15 @@ public abstract class Query {
         );
     }
 
-    protected static <T> T[] select(Select select, Class<?> classDef, DatabaseProvider databaseProvider) {
+    protected static <T> Result<T> select(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
         Cursor cursor = selectCursor(select, classDef, databaseProvider);
-        return getSQLQuery(classDef, databaseProvider).retrieveSQLSelectResults(cursor);
+        return new Result<>(classDef, databaseProvider.getResolver(), cursor);
     }
 
-    protected static <T> T selectSingle(Select select, Class<?> classDef, DatabaseProvider databaseProvider) {
+    protected static <T> T selectSingle(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
         Cursor cursor = selectCursor(select, classDef, databaseProvider);
 
-        T[] results = getSQLQuery(classDef, databaseProvider).retrieveSQLSelectResults(cursor);
+        T[] results = getSQLQuery(classDef, databaseProvider).getArrayResult(cursor);
 
         if (results != null && results.length > 0) {
             return results[0];
