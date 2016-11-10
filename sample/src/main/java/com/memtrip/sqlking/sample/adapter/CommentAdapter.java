@@ -1,4 +1,4 @@
-package com.memtrip.sqlking.sample.comment;
+package com.memtrip.sqlking.sample.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,9 +18,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
+
     private Comment[] comments;
 
-    public void addAll(Comment[] comments) {
+    public void setComments(Comment[] comments) {
         this.comments = comments;
         notifyDataSetChanged();
     }

@@ -1,4 +1,4 @@
-package com.memtrip.sqlking.sample.comment;
+package com.memtrip.sqlking.sample.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,9 +14,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHolder> {
+
     private Result<Contacts> mContacts;
 
-    public void addAll(Result<Contacts> contacts) {
+    public void setContacts(Result<Contacts> contacts) {
         this.mContacts = contacts;
         notifyDataSetChanged();
     }

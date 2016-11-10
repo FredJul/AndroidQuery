@@ -1,11 +1,8 @@
-package com.memtrip.sqlking.sample.comment;
+package com.memtrip.sqlking.sample.activity;
 
 import android.app.LoaderManager;
-import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +21,9 @@ import com.memtrip.sqlking.operation.function.Select;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
 import com.memtrip.sqlking.sample.App;
 import com.memtrip.sqlking.sample.R;
+import com.memtrip.sqlking.sample.adapter.CommentAdapter;
+import com.memtrip.sqlking.sample.adapter.ContactsAdapter;
+import com.memtrip.sqlking.sample.loader.ContactsLoader;
 import com.memtrip.sqlking.sample.model.Comment;
 import com.memtrip.sqlking.sample.model.Contacts;
 import com.memtrip.sqlking.sample.model.User;
@@ -39,7 +39,7 @@ import rx.subscriptions.CompositeSubscription;
 import static com.memtrip.sqlking.operation.clause.On.on;
 import static com.memtrip.sqlking.operation.join.InnerJoin.innerJoin;
 
-public class CommentActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.comment_count)
     TextView mCommentsCount;
@@ -58,47 +58,22 @@ public class CommentActivity extends AppCompatActivity {
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
-    public static class CustomCursorLoader extends CursorLoader {
-        private final Loader.ForceLoadContentObserver mObserver = new Loader.ForceLoadContentObserver();
-
-        public CustomCursorLoader(Context context) {
-            super(context);
-        }
+    private final LoaderManager.LoaderCallbacks<Result<Contacts>> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<Result<Contacts>>() {
 
         @Override
-        public Cursor loadInBackground() {
-            Cursor cursor = Select.getBuilder().execute(
-                    Contacts.class,
-                    Contacts.getContentDatabaseProvider(getContext().getContentResolver(), new Q.DefaultResolver()));
-
-            if (cursor != null) {
-                // Ensure the cursor window is filled
-                cursor.getCount();
-                cursor.registerContentObserver(mObserver);
-            }
-
-            return cursor;
-        }
-    }
-
-    ;
-
-    private final LoaderManager.LoaderCallbacks<Cursor> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
-
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            CursorLoader loader = new CustomCursorLoader(CommentActivity.this);
+        public Loader<Result<Contacts>> onCreateLoader(int id, Bundle args) {
+            ContactsLoader loader = new ContactsLoader(MainActivity.this);
             loader.setUpdateThrottle(300);
             return loader;
         }
 
         @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            mContactsAdapter.addAll(new Result<>(Contacts.class, new Q.DefaultResolver(), data));
+        public void onLoadFinished(Loader<Result<Contacts>> loader, Result<Contacts> data) {
+            mContactsAdapter.setContacts(new Result<>(Contacts.class, new Q.DefaultResolver(), data));
         }
 
         @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
+        public void onLoaderReset(Loader<Result<Contacts>> loader) {
 //            BaseAdapter adapter = getListAdapter();
 //            if (adapter != null && adapter instanceof CursorAdapter) {
 //                ((CursorAdapter) adapter).swapCursor(null);
@@ -231,7 +206,7 @@ public class CommentActivity extends AppCompatActivity {
                 .subscribe(new Action1<Result<Comment>>() {
                     @Override
                     public void call(Result<Comment> comments) {
-                        mCommentAdapter.addAll(comments.asArray());
+                        mCommentAdapter.setComments(comments.asArray());
                     }
                 }));
     }
