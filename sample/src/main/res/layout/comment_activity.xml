@@ -8,27 +8,27 @@
         android:id="@+id/comment_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:background="@color/colorPrimary"
-        android:textColor="@color/white"
-        android:text="@string/count" />
+        android:padding="8dp"
+        android:text="@string/count"
+        android:textColor="@color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:padding="@dimen/margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/margin">
 
         <EditText
             android:id="@+id/enter_comment"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin"
-            android:singleLine="true"
+            android:layout_weight="1"
             android:lines="1"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:singleLine="true" />
 
         <Button
             android:id="@+id/insert_comment"
@@ -40,12 +40,25 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/comments"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:background="@color/white" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/comments"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/contacts"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white" />
+
+    </LinearLayout>
 
 </LinearLayout>

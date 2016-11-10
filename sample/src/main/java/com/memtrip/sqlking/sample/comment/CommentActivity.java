@@ -1,6 +1,11 @@
 package com.memtrip.sqlking.sample.comment;
 
+import android.app.LoaderManager;
+import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.ContentObserver;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +25,7 @@ import com.memtrip.sqlking.operation.keyword.OrderBy;
 import com.memtrip.sqlking.sample.App;
 import com.memtrip.sqlking.sample.R;
 import com.memtrip.sqlking.sample.model.Comment;
+import com.memtrip.sqlking.sample.model.Contacts;
 import com.memtrip.sqlking.sample.model.User;
 
 import butterknife.Bind;
@@ -36,17 +42,69 @@ import static com.memtrip.sqlking.operation.join.InnerJoin.innerJoin;
 public class CommentActivity extends AppCompatActivity {
 
     @Bind(R.id.comment_count)
-    TextView count;
+    TextView mCommentsCount;
 
     @Bind(R.id.enter_comment)
-    EditText editText;
+    EditText mEnterCommentEditText;
 
     @Bind(R.id.comments)
-    RecyclerView recyclerView;
+    RecyclerView mCommentsRecyclerView;
 
-    private CommentAdapter commentAdapter;
+    @Bind(R.id.contacts)
+    RecyclerView mContactsRecyclerView;
+
+    private CommentAdapter mCommentAdapter;
+    private ContactsAdapter mContactsAdapter;
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+
+    public static class CustomCursorLoader extends CursorLoader {
+        private final Loader.ForceLoadContentObserver mObserver = new Loader.ForceLoadContentObserver();
+
+        public CustomCursorLoader(Context context) {
+            super(context);
+        }
+
+        @Override
+        public Cursor loadInBackground() {
+            Cursor cursor = Select.getBuilder().execute(
+                    Contacts.class,
+                    Contacts.getContentDatabaseProvider(getContext().getContentResolver(), new Q.DefaultResolver()));
+
+            if (cursor != null) {
+                // Ensure the cursor window is filled
+                cursor.getCount();
+                cursor.registerContentObserver(mObserver);
+            }
+
+            return cursor;
+        }
+    }
+
+    ;
+
+    private final LoaderManager.LoaderCallbacks<Cursor> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            CursorLoader loader = new CustomCursorLoader(CommentActivity.this);
+            loader.setUpdateThrottle(300);
+            return loader;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            mContactsAdapter.addAll(new Result<>(Contacts.class, new Q.DefaultResolver(), data));
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+//            BaseAdapter adapter = getListAdapter();
+//            if (adapter != null && adapter instanceof CursorAdapter) {
+//                ((CursorAdapter) adapter).swapCursor(null);
+//            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +112,16 @@ public class CommentActivity extends AppCompatActivity {
         setContentView(R.layout.comment_activity);
         ButterKnife.bind(this);
 
-        commentAdapter = new CommentAdapter();
+        mCommentAdapter = new CommentAdapter();
+        mContactsAdapter = new ContactsAdapter();
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(commentAdapter);
+        mCommentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mCommentsRecyclerView.setAdapter(mCommentAdapter);
 
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mContactsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mContactsRecyclerView.setAdapter(mContactsAdapter);
+
+        mEnterCommentEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -78,19 +140,17 @@ public class CommentActivity extends AppCompatActivity {
                 countComments();
             }
         });
+
+        checkUserExists();
+        countComments();
+
+        getLoaderManager().initLoader(0, null, mLoaderCallbacks);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mCompositeSubscription.unsubscribe();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        checkUserExists();
-        countComments();
     }
 
     private void checkUserExists() {
@@ -135,7 +195,7 @@ public class CommentActivity extends AppCompatActivity {
                 .subscribe(new Action1<Long>() {
                     @Override
                     public void call(Long aLong) {
-                        count.setText(getResources().getString(R.string.count, aLong.toString()));
+                        mCommentsCount.setText(getResources().getString(R.string.count, aLong.toString()));
                     }
                 }));
     }
@@ -143,7 +203,7 @@ public class CommentActivity extends AppCompatActivity {
     @OnClick(R.id.insert_comment)
     public void insert() {
         Comment comment = new Comment();
-        comment.body = editText.getText().toString();
+        comment.body = mEnterCommentEditText.getText().toString();
         comment.timestamp = System.currentTimeMillis();
         comment.userId = 1;
 
@@ -158,7 +218,7 @@ public class CommentActivity extends AppCompatActivity {
                     }
                 }));
 
-        editText.getText().clear();
+        mEnterCommentEditText.getText().clear();
     }
 
     private void refreshComments() {
@@ -171,7 +231,7 @@ public class CommentActivity extends AppCompatActivity {
                 .subscribe(new Action1<Result<Comment>>() {
                     @Override
                     public void call(Result<Comment> comments) {
-                        commentAdapter.addAll(comments.asArray());
+                        mCommentAdapter.addAll(comments.asArray());
                     }
                 }));
     }

@@ -28,6 +28,8 @@ public interface SQLQuery {
     String[] getIndexNames();
     String getCreateIndexQuery();
     String[] getColumnNames();
+
+    String[] getColumnNamesWithTablePrefix();
     ContentValues getContentValues(Object model);
 
     <T> T getSingleResult(Cursor cursor);

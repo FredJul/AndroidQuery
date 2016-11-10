@@ -43,11 +43,13 @@ public class ContentDatabaseProvider extends DatabaseProvider {
     }
 
     public Uri getUri(Class model) {
-        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(mAuthority).appendPath(model.getSimpleName()).build();
+        // TODO: should be able to customize the table name
+        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(mAuthority).appendPath(firstToLowerCase(model.getSimpleName())).build();
     }
 
     protected Uri getUri(String tableName) {
-        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(mAuthority).appendPath(tableName).build();
+        // TODO: should be able to customize the table name
+        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(mAuthority).appendPath(firstToLowerCase(tableName)).build();
     }
 
     protected void bulkInsert(String tableName, ContentValues[] valuesArray) {
@@ -132,5 +134,13 @@ public class ContentDatabaseProvider extends DatabaseProvider {
 
     protected Cursor rawQuery(String sql) {
         throw new SQLException("Raw queries not supported by ContentProvider");
+    }
+
+    static String firstToUpperCase(String value) {
+        return Character.toUpperCase(value.charAt(0)) + value.substring(1);
+    }
+
+    static String firstToLowerCase(String value) {
+        return Character.toLowerCase(value.charAt(0)) + value.substring(1);
     }
 }

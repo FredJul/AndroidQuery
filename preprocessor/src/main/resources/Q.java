@@ -32,6 +32,11 @@ public class Q {
 
         <#assign getColumnNames>
             <#list table.getMutableColumns(tables) as column>
+                "${column.getName()}",
+            </#list>
+        </#assign>
+        <#assign getColumnNamesWithTablePrefix>
+            <#list table.getMutableColumns(tables) as column>
                 "${table.getName()}.${column.getName()}",
             </#list>
         </#assign>
@@ -138,6 +143,11 @@ public class Q {
             @Override
             public String[] getColumnNames() {
                 return new String[]{${getColumnNames?remove_ending(",")}};
+            }
+
+            @Override
+            public String[] getColumnNamesWithTablePrefix() {
+                return new String[]{${getColumnNamesWithTablePrefix?remove_ending(",")}};
             }
 
             @Override

@@ -322,7 +322,7 @@ public class ClauseHelper {
 
         for (Join join : joins) {
             SQLQuery sqlQuery = resolver.getSQLQuery(join.getTable());
-            String[] columnNames = sqlQuery.getColumnNames();
+            String[] columnNames = sqlQuery.getColumnNamesWithTablePrefix();
 
             Collections.addAll(joinColumns, columnNames);
 

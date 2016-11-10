@@ -35,7 +35,7 @@ public abstract class Query {
 
         return databaseProvider.query(
                 sqlQuery.getTableName(),
-                sqlQuery.getColumnNames(),
+                select.getJoin() != null ? sqlQuery.getColumnNamesWithTablePrefix() : sqlQuery.getColumnNames(),
                 select.getClause(),
                 select.getJoin(),
                 null,
