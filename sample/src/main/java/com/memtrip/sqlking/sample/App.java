@@ -2,6 +2,7 @@ package com.memtrip.sqlking.sample;
 
 import android.app.Application;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.memtrip.sqlking.database.ContentDatabaseProvider;
 import com.memtrip.sqlking.database.LocalDatabaseProvider;
@@ -36,9 +37,8 @@ public class App extends Application {
 
         mLocalDatabaseProvider = getLocalDatabaseProvider(this);
 
-        mContentDatabaseProvider = new ContentDatabaseProvider(getContentResolver(),
-                "com.memtrip.sqlking.sample.provider.ModelContentProvider",
-                new Q.DefaultResolver()
+        mContentDatabaseProvider = new Q.ContentDatabaseProvider(getContentResolver(),
+                "com.memtrip.sqlking.sample.provider.ModelContentProvider"
         );
 
         sApp = this;
@@ -48,12 +48,19 @@ public class App extends Application {
         if (sApp != null && sApp.mLocalDatabaseProvider != null) {
             return sApp.mLocalDatabaseProvider;
         } else {
-            return new LocalDatabaseProvider(context,
+            return new Q.LocalDatabaseProvider(context,
                     DATABASE_NAME,
                     VERSION,
-                    new Q.DefaultResolver(),
                     Comment.class,
-                    User.class);
+                    User.class) {
+
+                @Override
+                protected void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+                    super.onUpgrade(db, oldVersion, newVersion);
+
+                    // Put here your migration code
+                }
+            };
         }
     }
 }

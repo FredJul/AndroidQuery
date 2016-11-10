@@ -1,9 +1,13 @@
 package com.memtrip.sqlking.gen;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import com.memtrip.sqlking.common.SQLQuery;
 import com.memtrip.sqlking.common.Resolver;
+import com.memtrip.sqlking.database.LocalDatabaseProvider;
+import com.memtrip.sqlking.database.ContentDatabaseProvider;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -26,6 +30,25 @@ public class Q {
                 throw new IllegalStateException("Please ensure all SQL tables are annotated with @Table");
             }
         }
+    }
+
+    public static class LocalDatabaseProvider extends com.memtrip.sqlking.database.LocalDatabaseProvider {
+
+        public LocalDatabaseProvider(Context context,
+                                     String name,
+                                     int version,
+                                     Class<?>... modelClassDef) {
+            super(context, name, version, new DefaultResolver(), modelClassDef);
+        }
+
+    }
+
+    public static class ContentDatabaseProvider extends com.memtrip.sqlking.database.ContentDatabaseProvider {
+
+        public ContentDatabaseProvider(ContentResolver contentResolver, String authority) {
+            super(contentResolver, authority, new DefaultResolver());
+        }
+
     }
 
     <#list tables as table>
