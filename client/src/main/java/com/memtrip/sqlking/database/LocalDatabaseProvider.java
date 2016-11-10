@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-present memtrip LTD.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,27 +16,98 @@
 package com.memtrip.sqlking.database;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import com.memtrip.sqlking.common.Resolver;
+import com.memtrip.sqlking.common.SQLQuery;
 import com.memtrip.sqlking.operation.clause.Clause;
 import com.memtrip.sqlking.operation.join.Join;
 import com.memtrip.sqlking.operation.keyword.Limit;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class LocalDatabaseProvider extends DatabaseProvider {
 
-    protected SQLiteDatabase mDatabase;
+    private SQLiteDatabase mDatabase;
+    private String[] mSchemaArray;
+    private String[] mTableNameArray;
+    private String[] mCreateIndexQuery;
+    private List<String> mIndexNames;
 
-    protected LocalDatabaseProvider(SQLiteDatabase database, Resolver resolver) {
+    public LocalDatabaseProvider(Context context,
+                                 String name,
+                                 int version,
+                                 Resolver resolver,
+                                 Class<?>... modelClassDef) {
         super(resolver);
-        mDatabase = database;
+
+        int modelCount = modelClassDef.length;
+
+        mSchemaArray = new String[modelCount];
+        mTableNameArray = new String[modelCount];
+        mCreateIndexQuery = new String[modelCount];
+        mIndexNames = new ArrayList<>();
+
+        for (int i = 0; i < modelClassDef.length; i++) {
+            SQLQuery sqlQuery = resolver.getSQLQuery(modelClassDef[i]);
+            mSchemaArray[i] = sqlQuery.getTableInsertQuery();
+            mTableNameArray[i] = sqlQuery.getTableName();
+            mCreateIndexQuery[i] = sqlQuery.getCreateIndexQuery();
+
+            for (String indexName : sqlQuery.getIndexNames()) {
+                mIndexNames.add(indexName);
+            }
+        }
+
+        SQLiteOpenHelper openHelper = new SQLiteOpenHelper(context, name, null, version) {
+            @Override
+            public void onCreate(SQLiteDatabase db) {
+                LocalDatabaseProvider.this.onCreate(db);
+            }
+
+            @Override
+            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+                LocalDatabaseProvider.this.onUpgrade(db, oldVersion, newVersion);
+            }
+        };
+
+        mDatabase = openHelper.getWritableDatabase();
+    }
+
+    protected void onCreate(SQLiteDatabase db) {
+        for (String schema : mSchemaArray) {
+            db.execSQL(schema);
+        }
+
+        for (String createIndex : mCreateIndexQuery) {
+            if (createIndex != null) {
+                db.execSQL(createIndex);
+            }
+        }
+    }
+
+    protected void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (newVersion > oldVersion) {
+            //TODO: for now it destroy everything...
+            for (String tableName : mTableNameArray) {
+                db.execSQL("DROP TABLE IF EXISTS " + tableName);
+            }
+
+            for (String index : mIndexNames) {
+                db.execSQL("DROP INDEX IF EXISTS " + index);
+            }
+            onCreate(db);
+        }
     }
 
     protected void bulkInsert(String tableName, ContentValues[] valuesArray) {
@@ -111,5 +182,9 @@ public class LocalDatabaseProvider extends DatabaseProvider {
 
     protected Cursor rawQuery(String sql) {
         return mDatabase.rawQuery(sql, null);
+    }
+
+    SQLiteDatabase getDatabase() {
+        return mDatabase;
     }
 }

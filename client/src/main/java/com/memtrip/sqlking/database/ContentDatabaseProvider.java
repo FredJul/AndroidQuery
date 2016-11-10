@@ -36,7 +36,7 @@ public class ContentDatabaseProvider extends DatabaseProvider {
     protected String mAuthority;
     protected ContentResolver mContentResolver;
 
-    protected ContentDatabaseProvider(ContentResolver contentResolver, String authority, Resolver resolver) {
+    public ContentDatabaseProvider(ContentResolver contentResolver, String authority, Resolver resolver) {
         super(resolver);
         mContentResolver = contentResolver;
         mAuthority = authority;

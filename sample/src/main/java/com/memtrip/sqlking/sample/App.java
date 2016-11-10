@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.memtrip.sqlking.database.ContentDatabaseProvider;
 import com.memtrip.sqlking.database.LocalDatabaseProvider;
-import com.memtrip.sqlking.database.SQLInit;
 import com.memtrip.sqlking.gen.Q;
 import com.memtrip.sqlking.sample.model.Comment;
 import com.memtrip.sqlking.sample.model.User;
@@ -37,8 +36,7 @@ public class App extends Application {
 
         mLocalDatabaseProvider = getLocalDatabaseProvider(this);
 
-        mContentDatabaseProvider = SQLInit.createContentDatabaseProvider(
-                getContentResolver(),
+        mContentDatabaseProvider = new ContentDatabaseProvider(getContentResolver(),
                 "com.memtrip.sqlking.sample.provider.ModelContentProvider",
                 new Q.DefaultResolver()
         );
@@ -50,14 +48,12 @@ public class App extends Application {
         if (sApp != null && sApp.mLocalDatabaseProvider != null) {
             return sApp.mLocalDatabaseProvider;
         } else {
-            return SQLInit.createLocalDatabaseProvider(
-                    context,
+            return new LocalDatabaseProvider(context,
                     DATABASE_NAME,
                     VERSION,
                     new Q.DefaultResolver(),
                     Comment.class,
-                    User.class
-            );
+                    User.class);
         }
     }
 }

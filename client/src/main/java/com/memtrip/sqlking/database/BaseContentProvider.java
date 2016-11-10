@@ -28,7 +28,7 @@ public abstract class BaseContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mDatabase = getLocalSQLProvider().mDatabase;
+        mDatabase = getLocalSQLProvider().getDatabase();
         return true;
     }
 
