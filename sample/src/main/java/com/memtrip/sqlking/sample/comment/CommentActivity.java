@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.memtrip.sqlking.gen.Q;
 import com.memtrip.sqlking.operation.function.Count;
 import com.memtrip.sqlking.operation.function.Insert;
 import com.memtrip.sqlking.operation.function.Select;
@@ -26,6 +27,7 @@ import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 import static com.memtrip.sqlking.operation.clause.On.on;
 import static com.memtrip.sqlking.operation.join.InnerJoin.innerJoin;
@@ -42,6 +44,8 @@ public class CommentActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     private CommentAdapter commentAdapter;
+
+    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,12 @@ public class CommentActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCompositeSubscription.unsubscribe();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         checkUserExists();
@@ -104,7 +114,7 @@ public class CommentActivity extends AppCompatActivity {
         user._id = 1;
         user.username = "Sam";
 
-        Insert.getBuilder().values(user)
+        mCompositeSubscription.add(Insert.getBuilder().values(user)
                 .rx(App.getInstance().getLocalDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -113,11 +123,11 @@ public class CommentActivity extends AppCompatActivity {
                     public void call(Void aVoid) {
                         refreshComments();
                     }
-                });
+                }));
     }
 
     private void countComments() {
-        Count.getBuilder()
+        mCompositeSubscription.add(Count.getBuilder()
                 .rx(Comment.class, App.getInstance().getLocalDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -126,7 +136,7 @@ public class CommentActivity extends AppCompatActivity {
                     public void call(Long aLong) {
                         count.setText(getResources().getString(R.string.count, aLong.toString()));
                     }
-                });
+                }));
     }
 
     @OnClick(R.id.insert_comment)
@@ -136,7 +146,7 @@ public class CommentActivity extends AppCompatActivity {
         comment.timestamp = System.currentTimeMillis();
         comment.userId = 1;
 
-        Insert.getBuilder().values(comment)
+        mCompositeSubscription.add(Insert.getBuilder().values(comment)
                 .rx(App.getInstance().getContentDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -145,15 +155,15 @@ public class CommentActivity extends AppCompatActivity {
                     public void call(Void aVoid) {
                         refreshComments();
                     }
-                });
+                }));
 
         editText.getText().clear();
     }
 
     private void refreshComments() {
-        Select.getBuilder()
-                .join(innerJoin(User.class, on("Comment.userId", "User._id")))
-                .orderBy("Comment.timestamp", OrderBy.Order.DESC)
+        mCompositeSubscription.add(Select.getBuilder()
+                .join(innerJoin(User.class, on(Comment.class.getSimpleName() + '.' + Q.Comment.USER_ID, User.class.getSimpleName() + '.' + Q.User._ID)))
+                .orderBy(Comment.class.getSimpleName() + '.' + Q.Comment.TIMESTAMP, OrderBy.Order.DESC)
                 .rx(Comment.class, App.getInstance().getLocalDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -162,6 +172,6 @@ public class CommentActivity extends AppCompatActivity {
                     public void call(Comment[] comments) {
                         commentAdapter.addAll(comments);
                     }
-                });
+                }));
     }
 }
