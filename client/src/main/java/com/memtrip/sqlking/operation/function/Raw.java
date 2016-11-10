@@ -2,8 +2,8 @@ package com.memtrip.sqlking.operation.function;
 
 import android.database.Cursor;
 
+import com.memtrip.sqlking.database.DatabaseProvider;
 import com.memtrip.sqlking.database.Query;
-import com.memtrip.sqlking.database.SQLProvider;
 
 public class Raw extends Query {
 
@@ -23,8 +23,8 @@ public class Raw extends Query {
             return this;
         }
 
-        public Cursor execute(SQLProvider sqlProvider) {
-            return rawQuery(mQuery, sqlProvider);
+        public Cursor execute(DatabaseProvider databaseProvider) {
+            return rawQuery(mQuery, databaseProvider);
         }
     }
 }

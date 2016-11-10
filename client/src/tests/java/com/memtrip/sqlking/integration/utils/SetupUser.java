@@ -15,7 +15,7 @@
  */
 package com.memtrip.sqlking.integration.utils;
 
-import com.memtrip.sqlking.database.SQLProvider;
+import com.memtrip.sqlking.database.DatabaseProvider;
 import com.memtrip.sqlking.integration.models.User;
 import com.memtrip.sqlking.operation.function.Delete;
 import com.memtrip.sqlking.operation.function.Insert;
@@ -56,7 +56,7 @@ public class SetupUser {
     public static final double CLYDE_RATING = 90.2;
     public static final int CLYDE_COUNT = 62;
 
-    public void setupFourTestUsers(SQLProvider sqlProvider) {
+    public void setupFourTestUsers(DatabaseProvider databaseProvider) {
         User[] users = {
             createUser(
                     ANGIE_ID,
@@ -98,11 +98,11 @@ public class SetupUser {
 
         Insert.getBuilder()
             .values(users)
-            .execute(sqlProvider);
+                .execute(databaseProvider);
     }
 
-    public void tearDownFourTestUsers(SQLProvider sqlProvider) {
-        Delete.getBuilder().execute(User.class, sqlProvider);
+    public void tearDownFourTestUsers(DatabaseProvider databaseProvider) {
+        Delete.getBuilder().execute(User.class, databaseProvider);
     }
 
     public static User createUser(int id,

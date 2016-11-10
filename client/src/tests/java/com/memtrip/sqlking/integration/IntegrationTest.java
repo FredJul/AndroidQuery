@@ -19,7 +19,7 @@ import android.app.Activity;
 import android.support.test.InstrumentationRegistry;
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.memtrip.sqlking.database.SQLProvider;
+import com.memtrip.sqlking.database.DatabaseProvider;
 import com.memtrip.sqlking.integration.utils.Setup;
 import com.memtrip.sqlking.integration.utils.SetupData;
 import com.memtrip.sqlking.integration.utils.SetupLog;
@@ -38,7 +38,7 @@ public abstract class IntegrationTest extends ActivityInstrumentationTestCase2<A
     private SetupLog mSetupLog;
     private SetupData mSetupData;
 
-    protected SQLProvider getSQLProvider() {
+    protected DatabaseProvider getSQLProvider() {
         return mSetup.getSQLProvider();
     }
 

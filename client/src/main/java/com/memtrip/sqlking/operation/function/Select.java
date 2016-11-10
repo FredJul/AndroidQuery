@@ -15,8 +15,8 @@
  */
 package com.memtrip.sqlking.operation.function;
 
+import com.memtrip.sqlking.database.DatabaseProvider;
 import com.memtrip.sqlking.database.Query;
-import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.operation.clause.Clause;
 import com.memtrip.sqlking.operation.join.Join;
 import com.memtrip.sqlking.operation.keyword.Limit;
@@ -111,45 +111,45 @@ public class Select extends Query {
         /**
          * Executes a Select query
          * @param classDef The class definition that the query should run on
-         * @param sqlProvider Where the magic happens!
+         * @param databaseProvider Where the magic happens!
          * @param <T> The model object returned from the query
          * @return The rows returned by the Select query
          */
-        public <T> T[] execute(Class<T> classDef, SQLProvider sqlProvider) {
+        public <T> T[] execute(Class<T> classDef, DatabaseProvider databaseProvider) {
             return select(
                     new Select(mClause, mJoin, mOrderBy, mLimit),
                     classDef,
-                    sqlProvider
+                    databaseProvider
             );
         }
 
         /**
          * Executes a Select query that expects a single result
          * @param classDef The class definition that the query should run on
-         * @param sqlProvider Where the magic happens!
+         * @param databaseProvider Where the magic happens!
          * @param <T> The model object returned from the query
          * @return The row returned by the Select query
          */
-        public <T> T executeOne(Class<T> classDef, SQLProvider sqlProvider) {
+        public <T> T executeOne(Class<T> classDef, DatabaseProvider databaseProvider) {
             return selectSingle(
                     new Select(mClause, mJoin, mOrderBy, mLimit),
                     classDef,
-                    sqlProvider
+                    databaseProvider
             );
         }
 
         /**
          * Executes a Select query
          * @param classDef The class definition that the query should run on
-         * @param sqlProvider Where the magic happens!
+         * @param databaseProvider Where the magic happens!
          * @param <T> The model object returned from the query
          * @return An RxJava Observable
          */
-        public <T> Observable<T[]> rx(final Class<T> classDef, final SQLProvider sqlProvider) {
+        public <T> Observable<T[]> rx(final Class<T> classDef, final DatabaseProvider databaseProvider) {
             return wrapRx(new Callable<T[]>() {
                 @Override
                 public T[] call() throws Exception {
-                    return execute(classDef, sqlProvider);
+                    return execute(classDef, databaseProvider);
                 }
             });
         }
@@ -157,15 +157,15 @@ public class Select extends Query {
         /**
          * Executes a Select query that expects a single result
          * @param classDef The class definition that the query should run on
-         * @param sqlProvider Where the magic happens!
+         * @param databaseProvider Where the magic happens!
          * @param <T> The model object returned from the query
          * @return An RxJava Observable
          */
-        public <T> Observable<T> rxOne(final Class<T> classDef, final SQLProvider sqlProvider) {
+        public <T> Observable<T> rxOne(final Class<T> classDef, final DatabaseProvider databaseProvider) {
             return wrapRx(new Callable<T>() {
                 @Override
                 public T call() throws Exception {
-                    return executeOne(classDef, sqlProvider);
+                    return executeOne(classDef, databaseProvider);
                 }
             });
         }

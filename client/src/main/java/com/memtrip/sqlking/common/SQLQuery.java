@@ -27,7 +27,6 @@ public interface SQLQuery {
     String getTableInsertQuery();
     String[] getIndexNames();
     String getCreateIndexQuery();
-    String[] buildUnionInsertQuery(Object[] models);
     String[] getColumnNames();
     ContentValues getContentValues(Object model);
     <T> T[] retrieveSQLSelectResults(Cursor cursor);

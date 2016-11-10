@@ -1,6 +1,6 @@
 package com.memtrip.sqlking.integration.utils;
 
-import com.memtrip.sqlking.database.SQLProvider;
+import com.memtrip.sqlking.database.DatabaseProvider;
 import com.memtrip.sqlking.integration.models.Data;
 import com.memtrip.sqlking.integration.models.Log;
 import com.memtrip.sqlking.operation.function.Delete;
@@ -8,11 +8,11 @@ import com.memtrip.sqlking.operation.function.Insert;
 
 public class SetupData {
 
-    public void tearDownTestData(SQLProvider sqlProvider) {
-        Delete.getBuilder().execute(Log.class, sqlProvider);
+    public void tearDownTestData(DatabaseProvider databaseProvider) {
+        Delete.getBuilder().execute(Log.class, databaseProvider);
     }
 
-    public void setupTestData(SQLProvider sqlProvider) {
+    public void setupTestData(DatabaseProvider databaseProvider) {
         Data[] data = {
                 createData(
                     "data1"
@@ -27,7 +27,7 @@ public class SetupData {
 
         Insert.getBuilder()
                 .values(data)
-                .execute(sqlProvider);
+                .execute(databaseProvider);
     }
 
     public static Data createData(String name) {

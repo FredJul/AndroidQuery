@@ -1,9 +1,11 @@
 package com.memtrip.sqlking.sample;
 
 import android.app.Application;
+import android.content.Context;
 
+import com.memtrip.sqlking.database.ContentDatabaseProvider;
+import com.memtrip.sqlking.database.LocalDatabaseProvider;
 import com.memtrip.sqlking.database.SQLInit;
-import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.gen.Q;
 import com.memtrip.sqlking.sample.model.Comment;
 import com.memtrip.sqlking.sample.model.User;
@@ -11,13 +13,18 @@ import com.memtrip.sqlking.sample.model.User;
 public class App extends Application {
     private static App sApp;
 
-    private SQLProvider sqlProvider;
+    private LocalDatabaseProvider mLocalDatabaseProvider;
+    private ContentDatabaseProvider mContentDatabaseProvider;
 
     private static final String DATABASE_NAME = "SQLKing";
     private static final int VERSION = 2;
 
-    public SQLProvider getSQLProvider() {
-        return sqlProvider;
+    public LocalDatabaseProvider getLocalDatabaseProvider() {
+        return mLocalDatabaseProvider;
+    }
+
+    public ContentDatabaseProvider getContentDatabaseProvider() {
+        return mContentDatabaseProvider;
     }
 
     public static App getInstance() {
@@ -28,15 +35,29 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        sApp = this;
+        mLocalDatabaseProvider = getLocalDatabaseProvider(this);
 
-        sqlProvider = SQLInit.createDatabase(
-                DATABASE_NAME,
-                VERSION,
-                new Q.DefaultResolver(),
-                this,
-                Comment.class,
-                User.class
+        mContentDatabaseProvider = SQLInit.createContentDatabaseProvider(
+                getContentResolver(),
+                "com.memtrip.sqlking.sample.provider.ModelContentProvider",
+                new Q.DefaultResolver()
         );
+
+        sApp = this;
+    }
+
+    public static LocalDatabaseProvider getLocalDatabaseProvider(Context context) {
+        if (sApp != null && sApp.mLocalDatabaseProvider != null) {
+            return sApp.mLocalDatabaseProvider;
+        } else {
+            return SQLInit.createLocalDatabaseProvider(
+                    context,
+                    DATABASE_NAME,
+                    VERSION,
+                    new Q.DefaultResolver(),
+                    Comment.class,
+                    User.class
+            );
+        }
     }
 }

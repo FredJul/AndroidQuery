@@ -30,28 +30,20 @@ import com.memtrip.sqlking.operation.keyword.OrderBy;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class SQLProvider {
-    private SQLiteDatabase mDatabase;
-    private Resolver mResolver;
-    private ClauseHelper mClauseHelper;
+public class LocalDatabaseProvider extends DatabaseProvider {
 
-    protected Resolver getResolver() {
-        return mResolver;
-    }
+    protected SQLiteDatabase mDatabase;
 
-    protected SQLProvider(SQLiteDatabase database, Resolver resolver) {
+    protected LocalDatabaseProvider(SQLiteDatabase database, Resolver resolver) {
+        super(resolver);
         mDatabase = database;
-        mResolver = resolver;
-        mClauseHelper = new ClauseHelper();
     }
 
-    protected void insertMultiple(String[] unionInsertQuery) {
+    protected void bulkInsert(String tableName, ContentValues[] valuesArray) {
         mDatabase.beginTransaction();
 
-        for (String query : unionInsertQuery) {
-            Cursor cursor = mDatabase.rawQuery(query, null);
-            cursor.moveToLast();
-            cursor.close();
+        for (ContentValues values : valuesArray) {
+            mDatabase.insert(tableName, null, values);
         }
 
         mDatabase.setTransactionSuccessful();

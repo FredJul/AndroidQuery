@@ -1,6 +1,8 @@
 package com.memtrip.sqlking.sample.comment;
 
+import android.database.ContentObserver;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -63,6 +65,14 @@ public class CommentActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        getContentResolver().registerContentObserver(App.getInstance().getContentDatabaseProvider().getUri(Comment.class), true, new ContentObserver(new Handler()) {
+            @Override
+            public void onChange(boolean selfChange) {
+                super.onChange(selfChange);
+                countComments();
+            }
+        });
     }
 
     @Override
@@ -74,7 +84,7 @@ public class CommentActivity extends AppCompatActivity {
 
     private void checkUserExists() {
         Count.getBuilder()
-                .rx(User.class, App.getInstance().getSQLProvider())
+                .rx(User.class, App.getInstance().getContentDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
@@ -91,11 +101,11 @@ public class CommentActivity extends AppCompatActivity {
 
     private void insertUser() {
         User user = new User();
-        user.setId(1);
+        user.set_id(1);
         user.setUsername("Sam");
 
         Insert.getBuilder().values(user)
-                .rx(App.getInstance().getSQLProvider())
+                .rx(App.getInstance().getLocalDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Void>() {
@@ -108,7 +118,7 @@ public class CommentActivity extends AppCompatActivity {
 
     private void countComments() {
         Count.getBuilder()
-                .rx(Comment.class, App.getInstance().getSQLProvider())
+                .rx(Comment.class, App.getInstance().getLocalDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Long>() {
@@ -127,7 +137,7 @@ public class CommentActivity extends AppCompatActivity {
         comment.setUserId(1);
 
         Insert.getBuilder().values(comment)
-                .rx(App.getInstance().getSQLProvider())
+                .rx(App.getInstance().getContentDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Void>() {
@@ -142,9 +152,9 @@ public class CommentActivity extends AppCompatActivity {
 
     private void refreshComments() {
         Select.getBuilder()
-                .join(innerJoin(User.class, on("Comment.userId", "User.id")))
+                .join(innerJoin(User.class, on("Comment.userId", "User._id")))
                 .orderBy("Comment.timestamp", OrderBy.Order.DESC)
-                .rx(Comment.class, App.getInstance().getSQLProvider())
+                .rx(Comment.class, App.getInstance().getLocalDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Comment[]>() {

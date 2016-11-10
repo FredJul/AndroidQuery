@@ -15,8 +15,8 @@
  */
 package com.memtrip.sqlking.operation.function;
 
+import com.memtrip.sqlking.database.DatabaseProvider;
 import com.memtrip.sqlking.database.Query;
-import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.operation.clause.Clause;
 
 import java.util.concurrent.Callable;
@@ -60,28 +60,28 @@ public class Count extends Query {
         /**
          * Execute a Count query
          * @param classDef The class definition that the query should run on
-         * @param sqlProvider Where the magic happens!
+         * @param databaseProvider Where the magic happens!
          * @return The row count returned by the query
          */
-        public long execute(Class<?> classDef, SQLProvider sqlProvider) {
+        public long execute(Class<?> classDef, DatabaseProvider databaseProvider) {
             return count(
                     new Count(mClause),
                     classDef,
-                    sqlProvider
+                    databaseProvider
             );
         }
 
         /**
          * Execute a Count query
          * @param classDef The class definition that the query should run on
-         * @param sqlProvider Where the magic happens!
+         * @param databaseProvider Where the magic happens!
          * @return An RxJava Observable
          */
-        public Observable<Long> rx(final Class<?> classDef, final SQLProvider sqlProvider) {
+        public Observable<Long> rx(final Class<?> classDef, final DatabaseProvider databaseProvider) {
             return wrapRx(new Callable<Long>() {
                 @Override
                 public Long call() throws Exception {
-                    return execute(classDef, sqlProvider);
+                    return execute(classDef, databaseProvider);
                 }
             });
         }

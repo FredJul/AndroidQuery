@@ -1,6 +1,6 @@
 package com.memtrip.sqlking.integration.utils;
 
-import com.memtrip.sqlking.database.SQLProvider;
+import com.memtrip.sqlking.database.DatabaseProvider;
 import com.memtrip.sqlking.integration.models.Log;
 import com.memtrip.sqlking.integration.models.Post;
 import com.memtrip.sqlking.operation.function.Delete;
@@ -26,11 +26,11 @@ public class SetupPost {
     public static final long POST_3_TIMESTAMP = System.currentTimeMillis();
     public static final int POST_3_USER_ID = SetupUser.CLYDE_ID;
 
-    public void tearDownTestPosts(SQLProvider sqlProvider) {
-        Delete.getBuilder().execute(Log.class, sqlProvider);
+    public void tearDownTestPosts(DatabaseProvider databaseProvider) {
+        Delete.getBuilder().execute(Log.class, databaseProvider);
     }
 
-    public void setupTestPosts(SQLProvider sqlProvider) {
+    public void setupTestPosts(DatabaseProvider databaseProvider) {
         Post[] posts = {
                 createPost(
                         POST_1_ID,
@@ -57,7 +57,7 @@ public class SetupPost {
 
         Insert.getBuilder()
                 .values(posts)
-                .execute(sqlProvider);
+                .execute(databaseProvider);
     }
 
     public static Post createPost(int id, String title,

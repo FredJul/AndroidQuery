@@ -15,8 +15,8 @@
  */
 package com.memtrip.sqlking.operation.function;
 
+import com.memtrip.sqlking.database.DatabaseProvider;
 import com.memtrip.sqlking.database.Query;
-import com.memtrip.sqlking.database.SQLProvider;
 
 import java.util.concurrent.Callable;
 
@@ -58,26 +58,26 @@ public class Insert extends Query {
 
         /**
          * Executes an Insert query
-         * @param sqlProvider Where the magic happens!
+         * @param databaseProvider Where the magic happens!
          */
-        public void execute(SQLProvider sqlProvider) {
+        public void execute(DatabaseProvider databaseProvider) {
             insert(
                     new Insert(mValues),
                     mValues != null && mValues.length > 0 ? mValues[0].getClass() : Object.class,
-                    sqlProvider
+                    databaseProvider
             );
         }
 
         /**
          * Executes an Insert query
-         * @param sqlProvider Where the magic happens!
+         * @param databaseProvider Where the magic happens!
          * @return An RxJava Observable
          */
-        public Observable<Void> rx(final SQLProvider sqlProvider) {
+        public Observable<Void> rx(final DatabaseProvider databaseProvider) {
             return wrapRx(new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
-                    execute(sqlProvider);
+                    execute(databaseProvider);
                     return null; // Void
                 }
             });

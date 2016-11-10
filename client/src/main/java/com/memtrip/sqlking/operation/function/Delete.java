@@ -15,8 +15,8 @@
  */
 package com.memtrip.sqlking.operation.function;
 
+import com.memtrip.sqlking.database.DatabaseProvider;
 import com.memtrip.sqlking.database.Query;
-import com.memtrip.sqlking.database.SQLProvider;
 import com.memtrip.sqlking.operation.clause.Clause;
 
 import java.util.concurrent.Callable;
@@ -60,27 +60,27 @@ public class Delete extends Query {
         /**
          * Executes a Delete query
          * @param classDef The class definition that the query should run on
-         * @param sqlProvider Where the magic happens!
+         * @param databaseProvider Where the magic happens!
          * @return The rows affected by the Delete query
          */
-        public int execute(Class<?> classDef, SQLProvider sqlProvider) {
+        public int execute(Class<?> classDef, DatabaseProvider databaseProvider) {
             return delete(
                     new Delete(mClause),
                     classDef,
-                    sqlProvider
+                    databaseProvider
             );
         }
         /**
          * Executes a Delete query
          * @param classDef The class definition that the query should run on
-         * @param sqlProvider Where the magic happens!
+         * @param databaseProvider Where the magic happens!
          * @return An RxJava Observable
          */
-        public Observable<Integer> rx(final Class<?> classDef, final SQLProvider sqlProvider) {
+        public Observable<Integer> rx(final Class<?> classDef, final DatabaseProvider databaseProvider) {
             return wrapRx(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
-                    return execute(classDef, sqlProvider);
+                    return execute(classDef, databaseProvider);
                 }
             });
         }

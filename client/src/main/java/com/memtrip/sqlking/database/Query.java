@@ -1,5 +1,6 @@
 package com.memtrip.sqlking.database;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.memtrip.sqlking.common.SQLQuery;
@@ -16,18 +17,23 @@ import rx.Subscriber;
 
 public abstract class Query {
 
-    protected static void insert(Insert insert, Class<?> classDef, SQLProvider sqlProvider) {
+    protected static void insert(Insert insert, Class<?> classDef, DatabaseProvider databaseProvider) {
         if (insert.getModels() != null && insert.getModels().length > 0) {
-            String[] unionInsert = getSQLQuery(classDef,sqlProvider).buildUnionInsertQuery(insert.getModels());
-            sqlProvider.insertMultiple(unionInsert);
+            Object[] models = insert.getModels();
+            ContentValues[] valuesArray = new ContentValues[models.length];
+            SQLQuery sqlQuery = getSQLQuery(classDef, databaseProvider);
+            for (int i = 0; i < models.length; i++) {
+                valuesArray[i] = sqlQuery.getContentValues(models[i]);
+            }
+            databaseProvider.bulkInsert(sqlQuery.getTableName(), valuesArray);
         }
     }
 
-    protected static Cursor selectCursor(Select select, Class<?> classDef, SQLProvider sqlProvider) {
+    protected static Cursor selectCursor(Select select, Class<?> classDef, DatabaseProvider databaseProvider) {
 
-        SQLQuery sqlQuery = getSQLQuery(classDef, sqlProvider);
+        SQLQuery sqlQuery = getSQLQuery(classDef, databaseProvider);
 
-        return sqlProvider.query(
+        return databaseProvider.query(
                 sqlQuery.getTableName(),
                 sqlQuery.getColumnNames(),
                 select.getClause(),
@@ -39,15 +45,15 @@ public abstract class Query {
         );
     }
 
-    protected static <T> T[] select(Select select, Class<?> classDef, SQLProvider sqlProvider) {
-        Cursor cursor = selectCursor(select, classDef, sqlProvider);
-        return getSQLQuery(classDef, sqlProvider).retrieveSQLSelectResults(cursor);
+    protected static <T> T[] select(Select select, Class<?> classDef, DatabaseProvider databaseProvider) {
+        Cursor cursor = selectCursor(select, classDef, databaseProvider);
+        return getSQLQuery(classDef, databaseProvider).retrieveSQLSelectResults(cursor);
     }
 
-    protected static <T> T selectSingle(Select select, Class<?> classDef, SQLProvider sqlProvider) {
-        Cursor cursor = selectCursor(select, classDef, sqlProvider);
+    protected static <T> T selectSingle(Select select, Class<?> classDef, DatabaseProvider databaseProvider) {
+        Cursor cursor = selectCursor(select, classDef, databaseProvider);
 
-        T[] results = getSQLQuery(classDef, sqlProvider).retrieveSQLSelectResults(cursor);
+        T[] results = getSQLQuery(classDef, databaseProvider).retrieveSQLSelectResults(cursor);
 
         if (results != null && results.length > 0) {
             return results[0];
@@ -56,30 +62,30 @@ public abstract class Query {
         }
     }
 
-    protected static int update(Update update, Class<?> classDef, SQLProvider sqlProvider) {
-        return sqlProvider.update(
-                getSQLQuery(classDef, sqlProvider).getTableName(),
+    protected static int update(Update update, Class<?> classDef, DatabaseProvider databaseProvider) {
+        return databaseProvider.update(
+                getSQLQuery(classDef, databaseProvider).getTableName(),
                 update.getContentValues(),
                 update.getConditions()
         );
     }
 
-    protected static long count(Count count, Class<?> classDef, SQLProvider sqlProvider) {
-        return sqlProvider.count(
-                getSQLQuery(classDef, sqlProvider).getTableName(),
+    protected static long count(Count count, Class<?> classDef, DatabaseProvider databaseProvider) {
+        return databaseProvider.count(
+                getSQLQuery(classDef, databaseProvider).getTableName(),
                 count.getClause()
         );
     }
 
-    protected static int delete(Delete delete, Class<?> classDef, SQLProvider sqlProvider) {
-        return sqlProvider.delete(
-                getSQLQuery(classDef, sqlProvider).getTableName(),
+    protected static int delete(Delete delete, Class<?> classDef, DatabaseProvider databaseProvider) {
+        return databaseProvider.delete(
+                getSQLQuery(classDef, databaseProvider).getTableName(),
                 delete.getConditions()
         );
     }
 
-    protected static Cursor rawQuery(String query, SQLProvider sqlProvider) {
-        return sqlProvider.rawQuery(query);
+    protected static Cursor rawQuery(String query, DatabaseProvider databaseProvider) {
+        return databaseProvider.rawQuery(query);
     }
 
     protected static <T> Observable<T> wrapRx(final Callable<T> func) {
@@ -97,7 +103,7 @@ public abstract class Query {
         );
     }
 
-    private static SQLQuery getSQLQuery(Class<?> classDef, SQLProvider sqlProvider) {
-        return sqlProvider.getResolver().getSQLQuery(classDef);
+    private static SQLQuery getSQLQuery(Class<?> classDef, DatabaseProvider databaseProvider) {
+        return databaseProvider.getResolver().getSQLQuery(classDef);
     }
 }

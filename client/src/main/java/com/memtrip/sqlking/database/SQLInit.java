@@ -15,6 +15,7 @@
  */
 package com.memtrip.sqlking.database;
 
+import android.content.ContentResolver;
 import android.content.Context;
 
 import com.memtrip.sqlking.common.Resolver;
@@ -29,11 +30,11 @@ import java.util.List;
  */
 public class SQLInit {
 
-    public static SQLProvider createDatabase(String name,
-                                             int version,
-                                             Resolver resolver,
-                                             Context context,
-                                             Class<?> ... modelClassDef) {
+    protected static SQLOpen createDatabase(Context context,
+                                            String name,
+                                            int version,
+                                            Resolver resolver,
+                                            Class<?>... modelClassDef) {
 
         int modelCount = modelClassDef.length;
 
@@ -53,16 +54,31 @@ public class SQLInit {
             }
         }
 
-        SQLOpen sqlOpen = new SQLOpen(
+        return new SQLOpen(
+                context,
                 name,
                 version,
                 schemaArray,
                 tableNameArray,
                 createIndexArray,
-                indexNameArray,
-                context
+                indexNameArray
         );
+    }
 
-        return new SQLProvider(sqlOpen.getDatabase(), resolver);
+    public static LocalDatabaseProvider createLocalDatabaseProvider(Context context,
+                                                                    String dbName,
+                                                                    int version,
+                                                                    Resolver resolver,
+                                                                    Class<?>... modelClassDef) {
+
+        SQLOpen sqlOpen = createDatabase(context, dbName, version, resolver, modelClassDef);
+        return new LocalDatabaseProvider(sqlOpen.getDatabase(), resolver);
+    }
+
+    public static ContentDatabaseProvider createContentDatabaseProvider(ContentResolver contentResolver,
+                                                                        String authority,
+                                                                        Resolver resolver) {
+
+        return new ContentDatabaseProvider(contentResolver, authority, resolver);
     }
 }

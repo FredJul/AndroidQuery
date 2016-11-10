@@ -6,7 +6,7 @@ import com.memtrip.sqlking.common.Table;
 @Table
 public class Comment {
     @Column(index = true)
-    int id;
+    int _id;
     @Column
     String body;
     @Column
@@ -16,12 +16,12 @@ public class Comment {
     @Column
     User user;
 
-    public int getId() {
-        return id;
+    public int get_id() {
+        return _id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void set_id(int id) {
+        this._id = id;
     }
 
     public String getBody() {

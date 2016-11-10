@@ -30,16 +30,16 @@ public class SQLOpen extends SQLiteOpenHelper {
 	private String[] mTableNameArray;
     private String[] mCreateIndexQuery;
     private List<String> mIndexNames;
-	
+
 	protected SQLiteDatabase getDatabase() {
 	    return mDatabase;
 	}
-	
-	protected SQLOpen(String name, int version, String[] schemaArray,
+
+	protected SQLOpen(Context context,
+					  String name, int version, String[] schemaArray,
 					  String[] tableNameArray,
 					  String[] indexQuery,
-					  List<String> indexNames,
-					  Context context) {
+					  List<String> indexNames) {
 
 		super(context, name, null, version);
 

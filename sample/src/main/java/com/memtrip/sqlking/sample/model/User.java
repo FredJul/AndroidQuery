@@ -6,16 +6,16 @@ import com.memtrip.sqlking.common.Table;
 @Table
 public class User {
     @Column(index = true)
-    int id;
+    int _id;
     @Column
     String username;
 
-    public int getId() {
-        return id;
+    public int get_id() {
+        return _id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void set_id(int id) {
+        this._id = id;
     }
 
     public String getUsername() {
