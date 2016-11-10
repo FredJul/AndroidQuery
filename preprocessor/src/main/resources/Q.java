@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import com.memtrip.sqlking.common.SQLQuery;
-import com.memtrip.sqlking.common.Resolver;
+import com.memtrip.sqlking.database.TableDescription;
+import com.memtrip.sqlking.database.Resolver;
 import com.memtrip.sqlking.database.LocalDatabaseProvider;
 import com.memtrip.sqlking.database.ContentDatabaseProvider;
 
@@ -17,7 +17,7 @@ public class Q {
     public static class DefaultResolver implements Resolver {
 
         @Override
-        public SQLQuery getSQLQuery(Class<?> classDef) {
+        public TableDescription getTableDescription(Class<?> classDef) {
             <#assign isAssignableFrom>
                 <#list tables as table>
                 } else if (classDef.isAssignableFrom(${table.getPackage()}.${table.getName()}.class)) {
@@ -70,7 +70,7 @@ public class Q {
             ${table.getPackage()}.${table.getName()}
         </#assign>
 
-        public static class ${table.getName()} implements SQLQuery {
+        public static class ${table.getName()} implements TableDescription {
 
             <#list table.getColumns() as column>
                 public static final String ${formatConstant(column.getName())} = "${column.getName()}";

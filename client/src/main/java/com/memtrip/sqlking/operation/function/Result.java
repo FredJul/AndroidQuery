@@ -1,21 +1,21 @@
-package com.memtrip.sqlking.database;
+package com.memtrip.sqlking.operation.function;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.memtrip.sqlking.common.Resolver;
-import com.memtrip.sqlking.common.SQLQuery;
+import com.memtrip.sqlking.database.Resolver;
+import com.memtrip.sqlking.database.TableDescription;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class Result<T> extends CursorWrapper {
 
-    private SQLQuery mQuery;
+    private TableDescription mQuery;
 
     public Result(Class<T> type, Resolver resolver, Cursor cursor) {
         super(cursor);
-        mQuery = resolver.getSQLQuery(type);
+        mQuery = resolver.getTableDescription(type);
     }
 
     public T get() {

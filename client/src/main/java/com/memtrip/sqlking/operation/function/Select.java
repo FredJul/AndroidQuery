@@ -17,7 +17,6 @@ package com.memtrip.sqlking.operation.function;
 
 import com.memtrip.sqlking.database.DatabaseProvider;
 import com.memtrip.sqlking.database.Query;
-import com.memtrip.sqlking.database.Result;
 import com.memtrip.sqlking.operation.clause.Clause;
 import com.memtrip.sqlking.operation.join.Join;
 import com.memtrip.sqlking.operation.keyword.Limit;

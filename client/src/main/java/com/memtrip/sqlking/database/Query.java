@@ -3,10 +3,10 @@ package com.memtrip.sqlking.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.memtrip.sqlking.common.SQLQuery;
 import com.memtrip.sqlking.operation.function.Count;
 import com.memtrip.sqlking.operation.function.Delete;
 import com.memtrip.sqlking.operation.function.Insert;
+import com.memtrip.sqlking.operation.function.Result;
 import com.memtrip.sqlking.operation.function.Select;
 import com.memtrip.sqlking.operation.function.Update;
 
@@ -21,21 +21,21 @@ public abstract class Query {
         if (insert.getModels() != null && insert.getModels().length > 0) {
             Object[] models = insert.getModels();
             ContentValues[] valuesArray = new ContentValues[models.length];
-            SQLQuery sqlQuery = getSQLQuery(classDef, databaseProvider);
+            TableDescription tableDescription = getTableDescription(classDef, databaseProvider);
             for (int i = 0; i < models.length; i++) {
-                valuesArray[i] = sqlQuery.getContentValues(models[i]);
+                valuesArray[i] = tableDescription.getContentValues(models[i]);
             }
-            databaseProvider.bulkInsert(sqlQuery.getTableName(), valuesArray);
+            databaseProvider.bulkInsert(tableDescription.getTableName(), valuesArray);
         }
     }
 
     protected static Cursor selectCursor(Select select, Class<?> classDef, DatabaseProvider databaseProvider) {
 
-        SQLQuery sqlQuery = getSQLQuery(classDef, databaseProvider);
+        TableDescription tableDescription = getTableDescription(classDef, databaseProvider);
 
         return databaseProvider.query(
-                sqlQuery.getTableName(),
-                select.getJoin() != null ? sqlQuery.getColumnNamesWithTablePrefix() : sqlQuery.getColumnNames(),
+                tableDescription.getTableName(),
+                select.getJoin() != null ? tableDescription.getColumnNamesWithTablePrefix() : tableDescription.getColumnNames(),
                 select.getClause(),
                 select.getJoin(),
                 null,
@@ -53,7 +53,7 @@ public abstract class Query {
     protected static <T> T selectSingle(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
         Cursor cursor = selectCursor(select, classDef, databaseProvider);
 
-        T[] results = getSQLQuery(classDef, databaseProvider).getArrayResult(cursor);
+        T[] results = getTableDescription(classDef, databaseProvider).getArrayResult(cursor);
 
         if (results != null && results.length > 0) {
             return results[0];
@@ -64,7 +64,7 @@ public abstract class Query {
 
     protected static int update(Update update, Class<?> classDef, DatabaseProvider databaseProvider) {
         return databaseProvider.update(
-                getSQLQuery(classDef, databaseProvider).getTableName(),
+                getTableDescription(classDef, databaseProvider).getTableName(),
                 update.getContentValues(),
                 update.getConditions()
         );
@@ -72,14 +72,14 @@ public abstract class Query {
 
     protected static long count(Count count, Class<?> classDef, DatabaseProvider databaseProvider) {
         return databaseProvider.count(
-                getSQLQuery(classDef, databaseProvider).getTableName(),
+                getTableDescription(classDef, databaseProvider).getTableName(),
                 count.getClause()
         );
     }
 
     protected static int delete(Delete delete, Class<?> classDef, DatabaseProvider databaseProvider) {
         return databaseProvider.delete(
-                getSQLQuery(classDef, databaseProvider).getTableName(),
+                getTableDescription(classDef, databaseProvider).getTableName(),
                 delete.getConditions()
         );
     }
@@ -103,7 +103,7 @@ public abstract class Query {
         );
     }
 
-    private static SQLQuery getSQLQuery(Class<?> classDef, DatabaseProvider databaseProvider) {
-        return databaseProvider.getResolver().getSQLQuery(classDef);
+    private static TableDescription getTableDescription(Class<?> classDef, DatabaseProvider databaseProvider) {
+        return databaseProvider.getResolver().getTableDescription(classDef);
     }
 }

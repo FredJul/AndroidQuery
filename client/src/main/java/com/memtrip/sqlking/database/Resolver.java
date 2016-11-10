@@ -13,26 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.memtrip.sqlking.common;
-
-import android.content.ContentValues;
-import android.database.Cursor;
+package com.memtrip.sqlking.database;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-@SuppressWarnings("WeakerAccess")
-public interface SQLQuery {
-    String getTableName();
-    String getTableInsertQuery();
-    String[] getIndexNames();
-    String getCreateIndexQuery();
-    String[] getColumnNames();
-
-    String[] getColumnNamesWithTablePrefix();
-    ContentValues getContentValues(Object model);
-
-    <T> T getSingleResult(Cursor cursor);
-
-    <T> T[] getArrayResult(Cursor cursor);
+public interface Resolver {
+    TableDescription getTableDescription(Class<?> classDef);
 }

@@ -22,7 +22,6 @@ import android.database.SQLException;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.memtrip.sqlking.common.Resolver;
 import com.memtrip.sqlking.operation.clause.Clause;
 import com.memtrip.sqlking.operation.join.Join;
 import com.memtrip.sqlking.operation.keyword.Limit;

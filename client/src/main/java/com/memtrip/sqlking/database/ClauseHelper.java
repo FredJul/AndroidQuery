@@ -15,8 +15,6 @@
  */
 package com.memtrip.sqlking.database;
 
-import com.memtrip.sqlking.common.Resolver;
-import com.memtrip.sqlking.common.SQLQuery;
 import com.memtrip.sqlking.operation.clause.And;
 import com.memtrip.sqlking.operation.clause.Clause;
 import com.memtrip.sqlking.operation.clause.In;
@@ -244,8 +242,8 @@ public class ClauseHelper {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (Join join : joins) {
-            SQLQuery sqlQuery = resolver.getSQLQuery(join.getTable());
-            String tableName = sqlQuery.getTableName();
+            TableDescription tableDescription = resolver.getTableDescription(join.getTable());
+            String tableName = tableDescription.getTableName();
 
             stringBuilder
             		.append(" ")
@@ -321,8 +319,8 @@ public class ClauseHelper {
         List<String> joinColumns = new ArrayList<>();
 
         for (Join join : joins) {
-            SQLQuery sqlQuery = resolver.getSQLQuery(join.getTable());
-            String[] columnNames = sqlQuery.getColumnNamesWithTablePrefix();
+            TableDescription tableDescription = resolver.getTableDescription(join.getTable());
+            String[] columnNames = tableDescription.getColumnNamesWithTablePrefix();
 
             Collections.addAll(joinColumns, columnNames);
 

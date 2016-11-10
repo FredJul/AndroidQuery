@@ -13,10 +13,10 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.memtrip.sqlking.database.Result;
 import com.memtrip.sqlking.gen.Q;
 import com.memtrip.sqlking.operation.function.Count;
 import com.memtrip.sqlking.operation.function.Insert;
+import com.memtrip.sqlking.operation.function.Result;
 import com.memtrip.sqlking.operation.function.Select;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
 import com.memtrip.sqlking.sample.App;

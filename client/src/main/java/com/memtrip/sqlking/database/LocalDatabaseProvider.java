@@ -23,8 +23,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.memtrip.sqlking.common.Resolver;
-import com.memtrip.sqlking.common.SQLQuery;
 import com.memtrip.sqlking.operation.clause.Clause;
 import com.memtrip.sqlking.operation.join.Join;
 import com.memtrip.sqlking.operation.keyword.Limit;
@@ -59,12 +57,12 @@ public class LocalDatabaseProvider extends DatabaseProvider {
         mIndexNames = new ArrayList<>();
 
         for (int i = 0; i < modelClassDef.length; i++) {
-            SQLQuery sqlQuery = resolver.getSQLQuery(modelClassDef[i]);
-            mSchemaArray[i] = sqlQuery.getTableInsertQuery();
-            mTableNameArray[i] = sqlQuery.getTableName();
-            mCreateIndexQuery[i] = sqlQuery.getCreateIndexQuery();
+            TableDescription tableDescription = resolver.getTableDescription(modelClassDef[i]);
+            mSchemaArray[i] = tableDescription.getTableInsertQuery();
+            mTableNameArray[i] = tableDescription.getTableName();
+            mCreateIndexQuery[i] = tableDescription.getCreateIndexQuery();
 
-            for (String indexName : sqlQuery.getIndexNames()) {
+            for (String indexName : tableDescription.getIndexNames()) {
                 mIndexNames.add(indexName);
             }
         }

@@ -4,6 +4,8 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Loader;
 
+import com.memtrip.sqlking.operation.function.Result;
+
 public abstract class BaseSelectLoader<T> extends AsyncTaskLoader<Result<T>> {
 
     private final Loader.ForceLoadContentObserver mObserver = new Loader.ForceLoadContentObserver();

@@ -4,9 +4,9 @@ import android.content.ContentResolver;
 import android.provider.ContactsContract;
 
 import com.memtrip.sqlking.common.Column;
-import com.memtrip.sqlking.common.Resolver;
 import com.memtrip.sqlking.common.Table;
 import com.memtrip.sqlking.database.ContentDatabaseProvider;
+import com.memtrip.sqlking.database.Resolver;
 
 @Table
 public class Contacts {
