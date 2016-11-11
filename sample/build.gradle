@@ -21,8 +21,8 @@ android {
 }
 
 dependencies {
-    apt project(':preprocessor')
-    compile project(':client')
+    apt project(':android-query-preprocessor')
+    compile project(':android-query')
 
     compile 'joda-time:joda-time:2.9.3'
     compile 'com.jakewharton:butterknife:7.0.1'

@@ -1,1 +1,1 @@
-include ':common', ':preprocessor', ':client', ':sample'
+include ':android-query-common', ':android-query-preprocessor', ':android-query', ':sample'

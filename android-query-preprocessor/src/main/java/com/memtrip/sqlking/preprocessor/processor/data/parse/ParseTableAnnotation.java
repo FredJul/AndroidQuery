@@ -5,11 +5,12 @@ import com.memtrip.sqlking.preprocessor.processor.data.Column;
 import com.memtrip.sqlking.preprocessor.processor.data.ForeignKey;
 import com.memtrip.sqlking.preprocessor.processor.data.Table;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.memtrip.sqlking.preprocessor.processor.data.parse.ParseColumnAnnotation.parseColumn;
 

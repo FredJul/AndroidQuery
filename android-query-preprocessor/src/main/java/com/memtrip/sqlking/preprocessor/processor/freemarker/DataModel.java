@@ -1,7 +1,12 @@
 package com.memtrip.sqlking.preprocessor.processor.freemarker;
 
 import com.memtrip.sqlking.preprocessor.processor.data.Data;
-import com.memtrip.sqlking.preprocessor.processor.freemarker.method.*;
+import com.memtrip.sqlking.preprocessor.processor.freemarker.method.AssembleCreateTableMethod;
+import com.memtrip.sqlking.preprocessor.processor.freemarker.method.FormatConstantMethod;
+import com.memtrip.sqlking.preprocessor.processor.freemarker.method.GetCursorGetterMethod;
+import com.memtrip.sqlking.preprocessor.processor.freemarker.method.GetInsertValueMethod;
+import com.memtrip.sqlking.preprocessor.processor.freemarker.method.JoinReferencesMethod;
+import com.memtrip.sqlking.preprocessor.processor.freemarker.method.JoinSettersMethod;
 
 import java.util.HashMap;
 import java.util.Map;

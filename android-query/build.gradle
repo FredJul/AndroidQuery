@@ -7,23 +7,20 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'sqlking-client'
-    bintrayOrg = 'memtrip'
+    bintrayRepo = 'AndroidQuery'
+    bintrayName = 'android-query'
+    bintrayOrg = 'frju'
 
-    publishedGroupId = 'com.memtrip.sqlking'
-    artifact = 'client'
+    publishedGroupId = 'net.fred.androidquery'
+    artifact = 'android-query'
 
-    libraryDescription = 'SQLKing is an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.'
-
-    siteUrl = 'https://github.com/memtrip/SQLKing'
-    gitUrl = 'https://github.com/memtrip/SQLKing.git'
+    libraryDescription = 'AndroidQuery is an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.'
 
     libraryVersion = '1.1.5'
 
-    developerId = 'samkirton'
-    developerName = 'Samuel Kirton'
-    developerEmail = 'sam@memtrip.com'
+    developerId = 'fredjul'
+    developerName = 'Frédéric Julian'
+    developerEmail = 'fred.julian@gmail.com'
 
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
@@ -111,7 +108,7 @@ install {
 
                 name 'SQLKing client'
                 description libraryDescription
-                url 'http://www.memtrip.com'
+                url 'https://github.com/FredJul/SQLKing'
 
                 licenses {
                     license {
@@ -137,11 +134,11 @@ install {
 }
 
 dependencies {
-    compile project(':common')
+    compile project(':android-query-common')
     compile 'io.reactivex:rxjava:1.1.1'
     compile 'io.reactivex:rxandroid:1.1.0'
 
-    androidTestApt project(':preprocessor')
+    androidTestApt project(':android-query-preprocessor')
 
     androidTestCompile(
         'com.android.support.test:runner:0.3',

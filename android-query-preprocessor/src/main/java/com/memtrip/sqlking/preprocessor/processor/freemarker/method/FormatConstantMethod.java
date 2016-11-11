@@ -1,12 +1,12 @@
 package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModelException;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModelException;
 
 public class FormatConstantMethod implements TemplateMethodModelEx {
 

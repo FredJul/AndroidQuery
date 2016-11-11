@@ -1,12 +1,13 @@
 package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
 import com.memtrip.sqlking.preprocessor.processor.data.Table;
-import freemarker.ext.beans.StringModel;
-import freemarker.template.SimpleSequence;
-import freemarker.template.TemplateModelException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import freemarker.ext.beans.StringModel;
+import freemarker.template.SimpleSequence;
+import freemarker.template.TemplateModelException;
 
 class Util {
 

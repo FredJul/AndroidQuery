@@ -1,8 +1,9 @@
 package com.memtrip.sqlking.preprocessor.processor.data;
 
-import javax.lang.model.element.Element;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.lang.model.element.Element;
 
 public class Table {
     private Element mElement;

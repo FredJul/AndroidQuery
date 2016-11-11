@@ -1,13 +1,14 @@
 package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
 import com.memtrip.sqlking.preprocessor.processor.utils.StringUtils;
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModelException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModelException;
 
 public class GetCursorGetterMethod implements TemplateMethodModelEx {
 

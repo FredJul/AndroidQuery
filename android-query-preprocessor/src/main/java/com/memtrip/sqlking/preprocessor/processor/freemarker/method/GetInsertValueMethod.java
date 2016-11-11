@@ -1,15 +1,15 @@
 package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
 import com.memtrip.sqlking.preprocessor.processor.data.Column;
-import com.memtrip.sqlking.preprocessor.processor.data.Table;
-import freemarker.ext.beans.StringModel;
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModelException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import freemarker.ext.beans.StringModel;
+import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModelException;
 
 public class GetInsertValueMethod implements TemplateMethodModelEx {
 

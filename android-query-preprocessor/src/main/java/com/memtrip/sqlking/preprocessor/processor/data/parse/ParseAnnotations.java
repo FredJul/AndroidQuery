@@ -3,10 +3,11 @@ package com.memtrip.sqlking.preprocessor.processor.data.parse;
 import com.memtrip.sqlking.preprocessor.processor.data.Data;
 import com.memtrip.sqlking.preprocessor.processor.data.Table;
 
-import javax.lang.model.element.Element;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import javax.lang.model.element.Element;
 
 import static com.memtrip.sqlking.preprocessor.processor.data.parse.ParseTableAnnotation.parseTable;
 
