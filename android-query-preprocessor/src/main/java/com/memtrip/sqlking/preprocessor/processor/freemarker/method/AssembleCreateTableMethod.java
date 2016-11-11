@@ -41,14 +41,14 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
         StringBuilder statementBuilder = new StringBuilder();
 
         statementBuilder.append("CREATE TABLE ");
-        statementBuilder.append(table.getName());
+        statementBuilder.append(table.getRealName());
         statementBuilder.append(" (");
 
         for (int i = 0; i < table.getColumns().size(); i++) {
             Column column = table.getColumns().get(i);
 
             if (!column.isJoinable(tables)) {
-                statementBuilder.append(column.getName());
+                statementBuilder.append(column.getRealName());
                 statementBuilder.append(" ");
                 statementBuilder.append(getSQLDataTypeFromClassRef(column.getType()));
 

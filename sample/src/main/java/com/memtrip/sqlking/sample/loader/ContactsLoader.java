@@ -6,18 +6,18 @@ import com.memtrip.sqlking.database.BaseSelectLoader;
 import com.memtrip.sqlking.gen.Q;
 import com.memtrip.sqlking.operation.function.Result;
 import com.memtrip.sqlking.operation.function.Select;
-import com.memtrip.sqlking.sample.model.Contacts;
+import com.memtrip.sqlking.sample.model.Contact;
 
-public class ContactsLoader extends BaseSelectLoader<Contacts> {
+public class ContactsLoader extends BaseSelectLoader<Contact> {
 
     public ContactsLoader(Context context) {
         super(context);
     }
 
     @Override
-    public Result<Contacts> doSelect() {
+    public Result<Contact> doSelect() {
         return Select.getBuilder().execute(
-                Contacts.class,
-                Contacts.getContentDatabaseProvider(getContext().getContentResolver(), new Q.DefaultResolver()));
+                Contact.class,
+                Contact.getContentDatabaseProvider(getContext().getContentResolver(), new Q.DefaultResolver()));
     }
 }

@@ -25,7 +25,7 @@ import com.memtrip.sqlking.sample.adapter.CommentAdapter;
 import com.memtrip.sqlking.sample.adapter.ContactsAdapter;
 import com.memtrip.sqlking.sample.loader.ContactsLoader;
 import com.memtrip.sqlking.sample.model.Comment;
-import com.memtrip.sqlking.sample.model.Contacts;
+import com.memtrip.sqlking.sample.model.Contact;
 import com.memtrip.sqlking.sample.model.User;
 
 import butterknife.Bind;
@@ -58,22 +58,22 @@ public class MainActivity extends AppCompatActivity {
 
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
-    private final LoaderManager.LoaderCallbacks<Result<Contacts>> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<Result<Contacts>>() {
+    private final LoaderManager.LoaderCallbacks<Result<Contact>> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<Result<Contact>>() {
 
         @Override
-        public Loader<Result<Contacts>> onCreateLoader(int id, Bundle args) {
+        public Loader<Result<Contact>> onCreateLoader(int id, Bundle args) {
             ContactsLoader loader = new ContactsLoader(MainActivity.this);
             loader.setUpdateThrottle(300);
             return loader;
         }
 
         @Override
-        public void onLoadFinished(Loader<Result<Contacts>> loader, Result<Contacts> data) {
-            mContactsAdapter.setContacts(new Result<>(Contacts.class, new Q.DefaultResolver(), data));
+        public void onLoadFinished(Loader<Result<Contact>> loader, Result<Contact> data) {
+            mContactsAdapter.setContacts(new Result<>(Contact.class, new Q.DefaultResolver(), data));
         }
 
         @Override
-        public void onLoaderReset(Loader<Result<Contacts>> loader) {
+        public void onLoaderReset(Loader<Result<Contact>> loader) {
 //            BaseAdapter adapter = getListAdapter();
 //            if (adapter != null && adapter instanceof CursorAdapter) {
 //                ((CursorAdapter) adapter).swapCursor(null);

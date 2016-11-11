@@ -34,7 +34,7 @@ public abstract class BaseContentProvider extends ContentProvider {
 
     protected abstract LocalDatabaseProvider getLocalSQLProvider();
 
-    protected static String[] getTableNameAndSelection(Uri uri, String selection) {
+    protected static String[] getTableRealNameAndSelection(Uri uri, String selection) {
         String tableName;
         String lastSegment = uri.getLastPathSegment();
         try {
@@ -57,7 +57,7 @@ public abstract class BaseContentProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        String[] nameAndSelection = getTableNameAndSelection(uri, selection);
+        String[] nameAndSelection = getTableRealNameAndSelection(uri, selection);
 
         Cursor cursor = mDatabase.query(nameAndSelection[0], projection, nameAndSelection[1], selectionArgs, null, null,
                 sortOrder, null);
@@ -102,7 +102,7 @@ public abstract class BaseContentProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        String[] nameAndSelection = getTableNameAndSelection(uri, selection);
+        String[] nameAndSelection = getTableRealNameAndSelection(uri, selection);
 
         int count = mDatabase.update(nameAndSelection[0], values, nameAndSelection[1], selectionArgs);
         if (count > 0) {
@@ -114,7 +114,7 @@ public abstract class BaseContentProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        String[] nameAndSelection = getTableNameAndSelection(uri, selection);
+        String[] nameAndSelection = getTableRealNameAndSelection(uri, selection);
 
         int count = mDatabase.delete(nameAndSelection[0], nameAndSelection[1], selectionArgs);
         if (count > 0) {

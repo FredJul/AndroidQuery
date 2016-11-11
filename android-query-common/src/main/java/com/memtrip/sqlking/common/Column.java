@@ -22,4 +22,6 @@ public @interface Column {
     boolean primary_key() default false;
     boolean auto_increment() default false;
     boolean index() default false;
+
+    String realName() default "";
 }

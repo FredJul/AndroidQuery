@@ -20,4 +20,6 @@ package com.memtrip.sqlking.common;
  */
 public @interface Table {
     ForeignKey[] foreignKeys() default {};
+
+    String realName() default "";
 }

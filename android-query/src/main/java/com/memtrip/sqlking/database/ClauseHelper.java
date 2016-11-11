@@ -243,13 +243,13 @@ public class ClauseHelper {
 
         for (Join join : joins) {
             TableDescription tableDescription = resolver.getTableDescription(join.getTable());
-            String tableName = tableDescription.getTableName();
+            String tableRealName = tableDescription.getTableRealName();
 
             stringBuilder
             		.append(" ")
             		.append(getJoinType(join))
                     .append(" ")
-                    .append(tableName)
+                    .append(tableRealName)
                     .append(" ")
                     .append(getClause(join.getClauses()));
 

@@ -25,7 +25,7 @@ public abstract class Query {
             for (int i = 0; i < models.length; i++) {
                 valuesArray[i] = tableDescription.getContentValues(models[i]);
             }
-            databaseProvider.bulkInsert(tableDescription.getTableName(), valuesArray);
+            databaseProvider.bulkInsert(tableDescription.getTableRealName(), valuesArray);
         }
     }
 
@@ -34,7 +34,7 @@ public abstract class Query {
         TableDescription tableDescription = getTableDescription(classDef, databaseProvider);
 
         return databaseProvider.query(
-                tableDescription.getTableName(),
+                tableDescription.getTableRealName(),
                 select.getJoin() != null ? tableDescription.getColumnNamesWithTablePrefix() : tableDescription.getColumnNames(),
                 select.getClause(),
                 select.getJoin(),
@@ -64,7 +64,7 @@ public abstract class Query {
 
     protected static int update(Update update, Class<?> classDef, DatabaseProvider databaseProvider) {
         return databaseProvider.update(
-                getTableDescription(classDef, databaseProvider).getTableName(),
+                getTableDescription(classDef, databaseProvider).getTableRealName(),
                 update.getContentValues(),
                 update.getConditions()
         );
@@ -72,14 +72,14 @@ public abstract class Query {
 
     protected static long count(Count count, Class<?> classDef, DatabaseProvider databaseProvider) {
         return databaseProvider.count(
-                getTableDescription(classDef, databaseProvider).getTableName(),
+                getTableDescription(classDef, databaseProvider).getTableRealName(),
                 count.getClause()
         );
     }
 
     protected static int delete(Delete delete, Class<?> classDef, DatabaseProvider databaseProvider) {
         return databaseProvider.delete(
-                getTableDescription(classDef, databaseProvider).getTableName(),
+                getTableDescription(classDef, databaseProvider).getTableRealName(),
                 delete.getConditions()
         );
     }

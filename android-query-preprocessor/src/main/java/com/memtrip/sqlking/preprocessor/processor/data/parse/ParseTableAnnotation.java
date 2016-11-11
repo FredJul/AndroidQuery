@@ -19,6 +19,7 @@ class ParseTableAnnotation {
     static Table parseTable(Element element) {
 
         String name = assembleName(element);
+        String realName = assembleRealName(element);
         String tablePackage = assemblePackage(element);
         String type = tablePackage + "." + name;
         List<Column> columns = assembleColumns(element);
@@ -26,6 +27,7 @@ class ParseTableAnnotation {
         Table table = new Table();
         table.setElement(element);
         table.setName(name);
+        table.setRealName(realName);
         table.setPackage(tablePackage);
         table.setType(type);
         table.setColumns(columns);
@@ -37,6 +39,11 @@ class ParseTableAnnotation {
     private static String assembleName(Element element) {
         Name name = element.getSimpleName();
         return name.toString();
+    }
+
+    private static String assembleRealName(Element element) {
+        com.memtrip.sqlking.common.Table tableAnnotation = element.getAnnotation(com.memtrip.sqlking.common.Table.class);
+        return tableAnnotation.realName();
     }
 
     private static String assemblePackage(Element element) {

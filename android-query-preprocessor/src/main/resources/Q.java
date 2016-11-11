@@ -55,16 +55,16 @@ public class Q {
 
         <#assign getColumnNames>
             <#list table.getMutableColumns(tables) as column>
-                "${column.getName()}",
+                "${column.getRealName()}",
             </#list>
         </#assign>
         <#assign getColumnNamesWithTablePrefix>
             <#list table.getMutableColumns(tables) as column>
-                "${table.getName()}.${column.getName()}",
+                "${table.getRealName()}.${column.getRealName()}",
             </#list>
         </#assign>
 
-        <#assign unionInsertColumnNames><#list table.getMutableColumns(tables) as column>${column.getName()},</#list></#assign>
+        <#assign unionInsertColumnNames><#list table.getMutableColumns(tables) as column>${column.getRealName()},</#list></#assign>
 
         <#assign packagedTableName>
             ${table.getPackage()}.${table.getName()}
@@ -73,12 +73,12 @@ public class Q {
         public static class ${table.getName()} implements TableDescription {
 
             <#list table.getColumns() as column>
-                public static final String ${formatConstant(column.getName())} = "${column.getName()}";
+                public static final String ${formatConstant(column.getName())} = "${column.getRealName()}";
             </#list>
 
             @Override
-            public String getTableName() {
-                return "${table.getName()}";
+            public String getTableRealName() {
+                return "${table.getRealName()}";
             }
 
             @Override
@@ -103,7 +103,7 @@ public class Q {
 
                 <#list table.getMutableColumns(tables) as column>
                     <#if column.isIndex()>
-                        sb.append("CREATE INDEX ${table.getName()}_${column.getName()}_index ON ${table.getName()} (${column.getName()});");
+                        sb.append("CREATE INDEX ${table.getName()}_${column.getName()}_index ON ${table.getRealName()} (${column.getRealName()});");
                     </#if>
                 </#list>
 

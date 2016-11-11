@@ -8,14 +8,18 @@ import com.memtrip.sqlking.common.Table;
 import com.memtrip.sqlking.database.ContentDatabaseProvider;
 import com.memtrip.sqlking.database.Resolver;
 
-@Table
-public class Contacts {
+@Table(realName = "contacts")
+public class Contact {
 
-    @Column
-    public int _id;
+    @Column(realName = ContactsContract.Contacts._ID)
+    public int id;
 
-    @Column
-    public String display_name;
+    @Column(realName = ContactsContract.Contacts.DISPLAY_NAME)
+    public String displayName;
+
+    //TODO custom type support
+    //@Column(realName = ContactsContract.Contacts.LOOKUP_KEY)
+    //public Uri lookupKey;
 
     public static ContentDatabaseProvider getContentDatabaseProvider(ContentResolver contentResolver, Resolver resolver) {
         return new ContentDatabaseProvider(contentResolver, ContactsContract.AUTHORITY, resolver);

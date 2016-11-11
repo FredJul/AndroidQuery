@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Column {
     private String mName;
+    private String mRealName;
     private String mClassName;
     private String mType;
     private boolean mIsIndex;
@@ -16,6 +17,14 @@ public class Column {
 
     public void setName(String newVal) {
         mName = newVal;
+    }
+
+    public String getRealName() {
+        return mRealName.length() != 0 ? mRealName : mName;
+    }
+
+    public void setRealName(String newVal) {
+        mRealName = newVal;
     }
 
     public String getClassName() {

@@ -38,7 +38,7 @@ public class LocalDatabaseProvider extends DatabaseProvider {
 
     private SQLiteDatabase mDatabase;
     private String[] mSchemaArray;
-    private String[] mTableNameArray;
+    private String[] mTableRealNameArray;
     private String[] mCreateIndexQuery;
     private List<String> mIndexNames;
 
@@ -52,14 +52,14 @@ public class LocalDatabaseProvider extends DatabaseProvider {
         int modelCount = modelClassDef.length;
 
         mSchemaArray = new String[modelCount];
-        mTableNameArray = new String[modelCount];
+        mTableRealNameArray = new String[modelCount];
         mCreateIndexQuery = new String[modelCount];
         mIndexNames = new ArrayList<>();
 
         for (int i = 0; i < modelClassDef.length; i++) {
             TableDescription tableDescription = resolver.getTableDescription(modelClassDef[i]);
             mSchemaArray[i] = tableDescription.getTableInsertQuery();
-            mTableNameArray[i] = tableDescription.getTableName();
+            mTableRealNameArray[i] = tableDescription.getTableRealName();
             mCreateIndexQuery[i] = tableDescription.getCreateIndexQuery();
 
             for (String indexName : tableDescription.getIndexNames()) {
@@ -97,7 +97,7 @@ public class LocalDatabaseProvider extends DatabaseProvider {
     protected void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (newVersion > oldVersion) {
             //TODO: for now it destroy everything...
-            for (String tableName : mTableNameArray) {
+            for (String tableName : mTableRealNameArray) {
                 db.execSQL("DROP TABLE IF EXISTS " + tableName);
             }
 

@@ -8,6 +8,7 @@ import javax.lang.model.element.Element;
 public class Table {
     private Element mElement;
     private String mName;
+    private String mRealName;
     private String mPackage;
     private String mType;
     private List<Column> mColumns;
@@ -27,6 +28,14 @@ public class Table {
 
     public void setName(String newVal) {
         mName = newVal;
+    }
+
+    public String getRealName() {
+        return mRealName.length() != 0 ? mRealName : mName;
+    }
+
+    public void setRealName(String newVal) {
+        mRealName = newVal;
     }
 
     public String getPackage() {

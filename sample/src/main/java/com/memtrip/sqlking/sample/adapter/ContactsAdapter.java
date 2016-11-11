@@ -8,16 +8,16 @@ import android.widget.TextView;
 
 import com.memtrip.sqlking.operation.function.Result;
 import com.memtrip.sqlking.sample.R;
-import com.memtrip.sqlking.sample.model.Contacts;
+import com.memtrip.sqlking.sample.model.Contact;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHolder> {
 
-    private Result<Contacts> mContacts;
+    private Result<Contact> mContacts;
 
-    public void setContacts(Result<Contacts> contacts) {
+    public void setContacts(Result<Contact> contacts) {
         this.mContacts = contacts;
         notifyDataSetChanged();
     }
@@ -32,7 +32,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     @Override
     public void onBindViewHolder(ContactViewHolder holder, int position) {
-        Contacts contact = mContacts.get(position);
+        Contact contact = mContacts.get(position);
         holder.populate(contact);
     }
 
@@ -51,8 +51,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
             ButterKnife.bind(this, itemView);
         }
 
-        public void populate(Contacts contact) {
-            author.setText(contact.display_name);
+        public void populate(Contact contact) {
+            author.setText(contact.displayName);
         }
     }
 }

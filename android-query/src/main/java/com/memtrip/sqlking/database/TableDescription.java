@@ -23,7 +23,7 @@ import android.database.Cursor;
  */
 @SuppressWarnings("WeakerAccess")
 public interface TableDescription {
-    String getTableName();
+    String getTableRealName();
     String getTableInsertQuery();
     String[] getIndexNames();
     String getCreateIndexQuery();

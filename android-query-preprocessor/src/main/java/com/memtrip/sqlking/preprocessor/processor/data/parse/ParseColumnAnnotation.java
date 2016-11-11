@@ -11,6 +11,7 @@ class ParseColumnAnnotation {
     static Column parseColumn(Element element) {
 
         String name = assembleName(element);
+        String realName = assembleRealName(element);
         boolean isIndex = assembleIsIndex(element);
         boolean hasPrimaryKey = assemblePrimaryKey(element);
         boolean hasAutoIncrement = assembleAutoIncrement(element);
@@ -19,6 +20,7 @@ class ParseColumnAnnotation {
 
         Column column = new Column();
         column.setName(name);
+        column.setRealName(realName);
         column.setIsIndex(isIndex);
         column.setHasPrimaryKey(hasPrimaryKey);
         column.setHasAutoIncrement(hasAutoIncrement);
@@ -31,6 +33,11 @@ class ParseColumnAnnotation {
     private static String assembleName(Element element) {
         Name name = element.getSimpleName();
         return name.toString();
+    }
+
+    private static String assembleRealName(Element element) {
+        com.memtrip.sqlking.common.Column column = element.getAnnotation(com.memtrip.sqlking.common.Column.class);
+        return column.realName();
     }
 
     private static String assembleType(Element element) {

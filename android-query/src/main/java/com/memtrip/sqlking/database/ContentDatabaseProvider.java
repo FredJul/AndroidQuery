@@ -42,12 +42,11 @@ public class ContentDatabaseProvider extends DatabaseProvider {
     }
 
     public Uri getUri(Class model) {
-        // TODO: should be able to customize the table name
-        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(mAuthority).appendPath(firstToLowerCase(model.getSimpleName())).build();
+        String tableRealName = mResolver.getTableDescription(model).getTableRealName();
+        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(mAuthority).appendPath(firstToLowerCase(tableRealName)).build();
     }
 
     protected Uri getUri(String tableName) {
-        // TODO: should be able to customize the table name
         return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(mAuthority).appendPath(firstToLowerCase(tableName)).build();
     }
 
