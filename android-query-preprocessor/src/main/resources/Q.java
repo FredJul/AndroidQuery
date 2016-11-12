@@ -1,4 +1,4 @@
-package com.memtrip.sqlking.gen;
+package ${package_name};
 
 import android.content.Context;
 import android.database.Cursor;

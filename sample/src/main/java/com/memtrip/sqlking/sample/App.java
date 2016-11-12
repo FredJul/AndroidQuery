@@ -6,9 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.memtrip.sqlking.database.ContentDatabaseProvider;
 import com.memtrip.sqlking.database.LocalDatabaseProvider;
-import com.memtrip.sqlking.gen.Q;
 import com.memtrip.sqlking.sample.model.Comment;
 import com.memtrip.sqlking.sample.model.User;
+import com.memtrip.sqlking.sample.model.gen.Q;
 
 public class App extends Application {
     private static App sApp;

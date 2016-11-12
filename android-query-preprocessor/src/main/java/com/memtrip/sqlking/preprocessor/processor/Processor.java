@@ -21,6 +21,8 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Name;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
@@ -36,11 +38,14 @@ public class Processor extends AbstractProcessor {
 	}
 
 	@Override
-	public boolean process(Set<? extends TypeElement> annoations, RoundEnvironment env) {
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
         Set<? extends Element> elements = env.getElementsAnnotatedWith(Table.class);
 
         if (elements != null && elements.size() > 0) {
-            final String GENERATED_FILE_PACKAGE = "com.memtrip.sqlking.gen";
+            PackageElement packageElement = Context.getInstance().getElementUtils().getPackageOf(elements.iterator().next());
+            Name name = packageElement.getQualifiedName();
+
+            final String GENERATED_FILE_PACKAGE = name.toString() + ".gen";
             final String GENERATED_FILE_PATH = "Q.java";
             final String GENERATED_FILE_NAME = "Q";
 
@@ -59,7 +64,7 @@ public class Processor extends AbstractProcessor {
             }
 
             try {
-                String body = mFreeMarker.getMappedFileBodyFromTemplate(GENERATED_FILE_PATH, DataModel.create(data));
+                String body = mFreeMarker.getMappedFileBodyFromTemplate(GENERATED_FILE_PATH, DataModel.create(GENERATED_FILE_PACKAGE, data));
                 createFile(GENERATED_FILE_PACKAGE, GENERATED_FILE_NAME, body);
             } catch (IOException | FormatterException e) {
                 Context.getInstance().getMessager().printMessage(

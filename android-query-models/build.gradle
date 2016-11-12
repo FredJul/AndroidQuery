@@ -1,0 +1,168 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.neenbedankt.android-apt'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+ext {
+    bintrayRepo = 'AndroidQuery'
+    bintrayName = 'android-query'
+    bintrayOrg = 'frju'
+
+    publishedGroupId = 'net.fred.androidquery'
+    artifact = 'android-query'
+
+    libraryDescription = 'AndroidQuery is an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.'
+
+    libraryVersion = '1.1.5'
+
+    developerId = 'fredjul'
+    developerName = 'Frédéric Julian'
+    developerEmail = 'fred.julian@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+
+    siteUrl = 'https://github.com/memtrip/SQLKing'      // Homepage URL of the library
+    gitUrl = 'https://github.com/memtrip/SQLKing.git'
+}
+
+version = libraryVersion
+group = publishedGroupId
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        minSdkVersion 11
+        targetSdkVersion 24
+        versionCode 7
+        versionName "1.1.1"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+            }
+        }
+
+        androidTest.setRoot('src/tests')
+        androidTest.java.srcDirs = ['src/tests/java']
+    }
+
+//    signingConfigs {
+//        config{
+//            storeFile file(properties.getProperty("keystore.storeFile"))
+//            storePassword properties.getProperty("keystore.storePassword")
+//            keyAlias properties.getProperty("keystore.keyAlias")
+//            keyPassword properties.getProperty("keystore.keyPassword")
+//        }
+//    }
+
+//    buildTypes {
+//        release {
+//            signingConfig  signingConfigs.config
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//        }
+//    }
+
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+}
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = bintrayRepo
+        name = bintrayName
+        userOrg = bintrayOrg
+        desc = libraryDescription
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        publish = true
+        publicDownloadNumbers = true
+    }
+}
+
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                groupId publishedGroupId
+                artifactId artifact
+
+                name 'SQLKing client'
+                description libraryDescription
+                url 'https://github.com/FredJul/SQLKing'
+
+                licenses {
+                    license {
+                        name licenseName
+                        url licenseUrl
+                    }
+                }
+                developers {
+                    developer {
+                        id developerId
+                        name developerName
+                        email developerEmail
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    compile project(':android-query')
+    apt project(':android-query-preprocessor')
+
+    androidTestApt project(':android-query-preprocessor')
+
+    androidTestCompile(
+            'com.android.support.test:runner:0.3',
+            'com.android.support.test:rules:0.3',
+            'com.google.dexmaker:dexmaker-mockito:1.1',
+            'com.google.dexmaker:dexmaker:1.1'
+    )
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}

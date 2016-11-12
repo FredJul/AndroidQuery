@@ -13,7 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.memtrip.sqlking.gen.Q;
+import com.memtrip.sqlking.model.Contact;
 import com.memtrip.sqlking.operation.function.Count;
 import com.memtrip.sqlking.operation.function.Insert;
 import com.memtrip.sqlking.operation.function.Result;
@@ -25,8 +25,8 @@ import com.memtrip.sqlking.sample.adapter.CommentAdapter;
 import com.memtrip.sqlking.sample.adapter.ContactsAdapter;
 import com.memtrip.sqlking.sample.loader.ContactsLoader;
 import com.memtrip.sqlking.sample.model.Comment;
-import com.memtrip.sqlking.sample.model.Contact;
 import com.memtrip.sqlking.sample.model.User;
+import com.memtrip.sqlking.sample.model.gen.Q;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onLoadFinished(Loader<Result<Contact>> loader, Result<Contact> data) {
-            mContactsAdapter.setContacts(new Result<>(Contact.class, new Q.DefaultResolver(), data));
+            mContactsAdapter.setContacts(new Result<>(Contact.class, Contact.getResolver(), data));
         }
 
         @Override

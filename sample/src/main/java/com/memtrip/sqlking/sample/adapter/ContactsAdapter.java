@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.memtrip.sqlking.model.Contact;
 import com.memtrip.sqlking.operation.function.Result;
 import com.memtrip.sqlking.sample.R;
-import com.memtrip.sqlking.sample.model.Contact;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
