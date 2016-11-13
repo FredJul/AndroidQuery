@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onLoadFinished(Loader<Result<Contact>> loader, Result<Contact> data) {
-            mContactsAdapter.setContacts(new Result<>(Contact.class, Contact.getResolver(), data));
+            mContactsAdapter.setContacts(data);
         }
 
         @Override
