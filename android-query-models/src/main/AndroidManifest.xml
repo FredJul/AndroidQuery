@@ -1,6 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.memtrip.sqlking.models">
+<manifest package="com.memtrip.sqlking.models">
 
-    <application android:allowBackup="true" />
+    <application />
 
 </manifest>
