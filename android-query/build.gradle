@@ -3,35 +3,11 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.neenbedankt.android-apt'
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
 ext {
-    bintrayRepo = 'AndroidQuery'
-    bintrayName = 'android-query'
-    bintrayOrg = 'frju'
-
-    publishedGroupId = 'net.fred.androidquery'
     artifact = 'android-query'
-
+    libraryName = 'AndroidQuery'
     libraryDescription = 'AndroidQuery is an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.'
-
-    libraryVersion = '1.1.5'
-
-    developerId = 'fredjul'
-    developerName = 'Frédéric Julian'
-    developerEmail = 'fred.julian@gmail.com'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-
-    siteUrl = 'https://github.com/memtrip/SQLKing'      // Homepage URL of the library
-    gitUrl = 'https://github.com/memtrip/SQLKing.git'
 }
-
-version = libraryVersion
-group = publishedGroupId
 
 android {
     compileSdkVersion 24
@@ -41,7 +17,7 @@ android {
         minSdkVersion 11
         targetSdkVersion 24
         versionCode 7
-        versionName "1.1.1"
+        versionName libraryVersion
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -79,6 +55,30 @@ android {
     }
 }
 
+dependencies {
+    compile project(':android-query-common')
+
+    compile 'io.reactivex:rxjava:1.1.1'
+    compile 'io.reactivex:rxandroid:1.1.0'
+
+    androidTestApt project(':android-query-preprocessor')
+
+    androidTestCompile(
+            'com.android.support.test:runner:0.3',
+            'com.android.support.test:rules:0.3',
+            'com.google.dexmaker:dexmaker-mockito:1.1',
+            'com.google.dexmaker:dexmaker:1.1'
+    )
+}
+
+/*************** Maven & Bintray *******************/
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+version = libraryVersion
+group = publishedGroupId
+
 bintray {
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
@@ -86,7 +86,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = bintrayRepo
-        name = bintrayName
+        name = artifact
         userOrg = bintrayOrg
         desc = libraryDescription
         websiteUrl = siteUrl
@@ -97,7 +97,6 @@ bintray {
     }
 }
 
-
 install {
     repositories.mavenInstaller {
         pom {
@@ -105,10 +104,11 @@ install {
                 packaging 'aar'
                 groupId publishedGroupId
                 artifactId artifact
+                version libraryVersion
 
-                name 'SQLKing client'
+                name libraryName
                 description libraryDescription
-                url 'https://github.com/FredJul/SQLKing'
+                url siteUrl
 
                 licenses {
                     license {
@@ -131,21 +131,6 @@ install {
             }
         }
     }
-}
-
-dependencies {
-    compile project(':android-query-common')
-    compile 'io.reactivex:rxjava:1.1.1'
-    compile 'io.reactivex:rxandroid:1.1.0'
-
-    androidTestApt project(':android-query-preprocessor')
-
-    androidTestCompile(
-        'com.android.support.test:runner:0.3',
-        'com.android.support.test:rules:0.3',
-        'com.google.dexmaker:dexmaker-mockito:1.1',
-        'com.google.dexmaker:dexmaker:1.1'
-    )
 }
 
 task sourcesJar(type: Jar) {

@@ -5,33 +5,27 @@ apply plugin: 'com.jfrog.bintray'
 targetCompatibility = JavaVersion.VERSION_1_7
 sourceCompatibility = JavaVersion.VERSION_1_7
 
+ext {
+    artifact = 'android-query-preprocessor'
+    libraryName = 'AndroidQuery preprocessor'
+    libraryDescription = 'AndroidQuery is an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.'
+}
+
+dependencies {
+    compile project(':android-query-common')
+
+    compile 'com.google.auto.service:auto-service:1.0-rc2'
+    compile 'org.freemarker:freemarker:2.3.23'
+    compile 'com.google.googlejavaformat:google-java-format:1.0'
+}
+
+/*************** Maven & Bintray *******************/
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-ext {
-    bintrayRepo = 'AndroidQuery'
-    bintrayName = 'android-query-preprocessor'
-    bintrayOrg = 'frju'
-
-    publishedGroupId = 'net.fred.androidquery'
-    artifact = 'android-query-preprocessor'
-
-    libraryDescription = 'AndroidQuery is an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.'
-
-    libraryVersion = '1.1.5'
-
-    developerId = 'fredjul'
-    developerName = 'Frédéric Julian'
-    developerEmail = 'fred.julian@gmail.com'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-
-    siteUrl = 'https://github.com/memtrip/SQLKing'      // Homepage URL of the library
-    gitUrl = 'https://github.com/memtrip/SQLKing.git'
-}
+version = libraryVersion
+group = publishedGroupId
 
 bintray {
     user = properties.getProperty("bintray.user")
@@ -40,7 +34,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = bintrayRepo
-        name = bintrayName
+        name = artifact
         userOrg = bintrayOrg
         desc = libraryDescription
         websiteUrl = siteUrl
@@ -51,7 +45,6 @@ bintray {
     }
 }
 
-
 install {
     repositories.mavenInstaller {
         pom {
@@ -61,9 +54,9 @@ install {
                 artifactId artifact
                 version libraryVersion
 
-                name 'SQLKing client'
+                name libraryName
                 description libraryDescription
-                url 'https://github.com/FredJul/SQLKing'
+                url siteUrl
 
                 licenses {
                     license {
@@ -86,11 +79,4 @@ install {
             }
         }
     }
-}
-
-dependencies {
-    compile project(':android-query-common')
-    compile 'com.google.auto.service:auto-service:1.0-rc2'
-    compile 'org.freemarker:freemarker:2.3.23'
-    compile 'com.google.googlejavaformat:google-java-format:1.0'
 }

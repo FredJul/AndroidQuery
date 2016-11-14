@@ -5,32 +5,19 @@ apply plugin: 'com.jfrog.bintray'
 targetCompatibility = JavaVersion.VERSION_1_7
 sourceCompatibility = JavaVersion.VERSION_1_7
 
+ext {
+    artifact = 'android-query-common'
+    libraryName = 'AndroidQuery Common'
+    libraryDescription = 'AndroidQuery is an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.'
+}
+
+/*************** Maven & Bintray *******************/
+
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-ext {
-    bintrayRepo = 'AndroidQuery'
-    bintrayName = 'android-query-common'
-    bintrayOrg = 'frju'
-
-    publishedGroupId = 'net.fred.androidquery'
-    artifact = 'android-query-common'
-
-    libraryDescription = 'AndroidQuery is an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.'
-
-    libraryVersion = '1.1.5'
-
-    developerId = 'fredjul'
-    developerName = 'Frédéric Julian'
-    developerEmail = 'fred.julian@gmail.com'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-
-    siteUrl = 'https://github.com/memtrip/SQLKing'      // Homepage URL of the library
-    gitUrl = 'https://github.com/memtrip/SQLKing.git'
-}
+version = libraryVersion
+group = publishedGroupId
 
 bintray {
     user = properties.getProperty("bintray.user")
@@ -39,7 +26,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = bintrayRepo
-        name = bintrayName
+        name = artifact
         userOrg = bintrayOrg
         desc = libraryDescription
         websiteUrl = siteUrl
@@ -50,19 +37,18 @@ bintray {
     }
 }
 
-
 install {
     repositories.mavenInstaller {
         pom {
             project {
-                packaging 'jar'
+                packaging 'aar'
                 groupId publishedGroupId
                 artifactId artifact
                 version libraryVersion
 
-                name 'SQLKing common lib'
+                name libraryName
                 description libraryDescription
-                url 'https://github.com/FredJul/SQLKing'
+                url siteUrl
 
                 licenses {
                     license {
