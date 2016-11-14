@@ -119,7 +119,6 @@
     <orderEntry type="library" exported="" scope="TEST" name="support-annotations-22.2.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="mockito-core-1.9.5" level="project" />
     <orderEntry type="module" module-name="android-query" exported="" />
-    <orderEntry type="library" exported="" name="rxandroid-1.1.0" level="project" />
-    <orderEntry type="library" exported="" name="rxjava-1.1.1" level="project" />
+    <orderEntry type="library" exported="" name="rxjava-1.2.2" level="project" />
   </component>
 </module>
