@@ -110,19 +110,6 @@ public class Q {
                 return (sb.length() > 0) ? sb.toString() : null;
             }
 
-            private String assembleBlob(byte[] val) {
-                if (val != null) {
-                    StringBuilder sb = new StringBuilder();
-
-                    for (byte b : val)
-                        sb.append(String.format("%02X ", b));
-
-                    return sb.toString();
-                } else {
-                    return "NULL";
-                }
-            }
-
             @Override
             public ${packagedTableName} getSingleResult(Cursor cursor) {
                 ${packagedTableName} ${table.getName()?lower_case} = new ${packagedTableName}();
