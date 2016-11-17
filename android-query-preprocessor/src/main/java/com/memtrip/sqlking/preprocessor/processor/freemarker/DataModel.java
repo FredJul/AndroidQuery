@@ -5,7 +5,6 @@ import com.memtrip.sqlking.preprocessor.processor.freemarker.method.AssembleCrea
 import com.memtrip.sqlking.preprocessor.processor.freemarker.method.FormatConstantMethod;
 import com.memtrip.sqlking.preprocessor.processor.freemarker.method.GetContentValueMethod;
 import com.memtrip.sqlking.preprocessor.processor.freemarker.method.GetCursorGetterMethod;
-import com.memtrip.sqlking.preprocessor.processor.freemarker.method.GetInsertValueMethod;
 import com.memtrip.sqlking.preprocessor.processor.freemarker.method.JoinReferencesMethod;
 import com.memtrip.sqlking.preprocessor.processor.freemarker.method.JoinSettersMethod;
 
@@ -23,7 +22,6 @@ public class DataModel {
         map.put(PACKAGE_NAME, packageName);
         map.put(TABLES, data.getTables());
         map.putAll(GetCursorGetterMethod.getMethodMap(data));
-        map.putAll(GetInsertValueMethod.getMethodMap(data));
         map.putAll(GetContentValueMethod.getMethodMap(data));
         map.putAll(AssembleCreateTableMethod.getMethodMap(data));
         map.putAll(FormatConstantMethod.getMethodMap());
