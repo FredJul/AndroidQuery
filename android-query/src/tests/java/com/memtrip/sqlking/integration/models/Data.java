@@ -5,7 +5,8 @@ import com.memtrip.sqlking.common.Table;
 
 @Table
 public class Data {
-    @Column(primary_key = true, auto_increment = true) int id;
+    @Column(primaryKey = true, autoIncrement = true)
+    int id;
     @Column String name;
 
     public int getId() {

@@ -21,7 +21,7 @@ public class Q {
             <#assign isAssignableFrom>
                 <#list tables as table>
                 } else if (classDef.isAssignableFrom(${table.getPackage()}.${table.getName()}.class)) {
-                    return new ${table.getName()}();
+                    return s${table.getName()};
                 </#list>
                 }
             </#assign>
@@ -180,12 +180,14 @@ public class Q {
                 ContentValues contentValues = new ContentValues();
 
                 <#list table.getMutableColumns(tables) as column>
-                    contentValues.put(${formatConstant(column.getName())}, ${table.getName()?lower_case}.${column.getName()});
+                    contentValues.put(${formatConstant(column.getName())}, ${getContentValue(table.getName()?lower_case, column)});
                 </#list>
 
                 return contentValues;
             }
         }
+
+        private static ${table.getName()} s${table.getName()} = new ${table.getName()}();
 
     </#list>
 }

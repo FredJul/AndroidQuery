@@ -15,10 +15,16 @@
  */
 package com.memtrip.sqlking.common;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-@SuppressWarnings("WeakerAccess")
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.FIELD)
 public @interface ForeignKey {
     String targetTable() default "";
     String targetColumn() default "";

@@ -1,8 +1,10 @@
 package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
 import com.memtrip.sqlking.preprocessor.processor.data.Column;
+import com.memtrip.sqlking.preprocessor.processor.data.Data;
 import com.memtrip.sqlking.preprocessor.processor.data.ForeignKey;
 import com.memtrip.sqlking.preprocessor.processor.data.Table;
+import com.memtrip.sqlking.preprocessor.processor.data.TypeConverter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,14 +24,16 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
     private static final String SQL_REAL = "real";
     private static final String SQL_BLOB = "blob";
 
-    public static Map<String, Object> getMethodMap() {
+    private Data mData;
+
+    public static Map<String, Object> getMethodMap(Data data) {
         Map<String, Object> map = new HashMap<>();
-        map.put(ASSEMBLE_CREATE_TABLE, new AssembleCreateTableMethod());
+        map.put(ASSEMBLE_CREATE_TABLE, new AssembleCreateTableMethod(data));
         return map;
     }
 
-    private AssembleCreateTableMethod() {
-
+    private AssembleCreateTableMethod(Data data) {
+        mData = data;
     }
 
     /**
@@ -50,7 +54,14 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
             if (!column.isJoinable(tables)) {
                 statementBuilder.append(column.getRealName());
                 statementBuilder.append(" ");
-                statementBuilder.append(getSQLDataTypeFromClassRef(column.getType()));
+                String sqlType = getSQLDataTypeFromClassRef(column.getType());
+                if (sqlType.length() == 0) {
+                    TypeConverter converter = mData.getConverterFromClass(column.getType());
+                    if (converter != null) {
+                        sqlType = getSQLDataTypeFromClassRef(converter.getDbClassName());
+                    }
+                }
+                statementBuilder.append(sqlType);
 
                 if (column.hasPrimaryKey()) {
                     statementBuilder.append(" PRIMARY KEY");
@@ -89,12 +100,18 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
         switch (value) {
             case "java.lang.String":
                 return SQL_TEXT;
+            case "java.lang.Long":
             case "long":
                 return SQL_LONG;
+            case "java.lang.Integer":
             case "int":
                 return SQL_INTEGER;
+            case "java.lang.Boolean":
             case "boolean":
                 return SQL_INTEGER;
+            case "java.lang.Float":
+            case "java.lang.Double":
+            case "float":
             case "double":
                 return SQL_REAL;
             case "byte[]":

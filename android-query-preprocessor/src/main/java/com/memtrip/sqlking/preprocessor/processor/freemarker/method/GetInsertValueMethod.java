@@ -1,6 +1,8 @@
 package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
 import com.memtrip.sqlking.preprocessor.processor.data.Column;
+import com.memtrip.sqlking.preprocessor.processor.data.Data;
+import com.memtrip.sqlking.preprocessor.processor.data.TypeConverter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,28 +17,43 @@ public class GetInsertValueMethod implements TemplateMethodModelEx {
 
     private static final String GET_INSERT_VALUE = "getInsertValue";
 
-    public static Map<String, Object> getMethodMap() {
+    private Data mData;
+
+    public static Map<String, Object> getMethodMap(Data data) {
         Map<String, Object> map = new HashMap<>();
-        map.put(GET_INSERT_VALUE, new GetInsertValueMethod());
+        map.put(GET_INSERT_VALUE, new GetInsertValueMethod(data));
         return map;
     }
 
-
-    private GetInsertValueMethod() {
-
+    private GetInsertValueMethod(Data data) {
+        mData = data;
     }
 
     private String assembleInsertValue(Column column, String getter) {
         if (column.hasPrimaryKey() && column.hasAutoIncrement()) {
             return "NULL";
         } else {
-            switch (column.getType()) {
+            String sqlType = column.getType();
+
+            TypeConverter converter = mData.getConverterFromClass(column.getType());
+            if (converter != null) {
+                getter = "new " + converter.getName() + "().convertToDb(" + getter + ")";
+                sqlType = converter.getDbClassName();
+            }
+
+            switch (sqlType) {
                 case "java.lang.String":
+                case "java.lang.Long":
+                case "java.lang.Integer":
+                case "java.lang.Double":
+                case "java.lang.Float":
                 case "long":
                 case "int":
                 case "double":
+                case "float":
                     return "'\" + " + getter + " + \"'";
                 case "boolean":
+                case "java.lang.Boolean":
                     return "\" + (" + getter + " ? \"'1'\" : \"'0'\") + \"";
                 case "byte[]":
                     return "\" + assembleBlob(" + getter + ") + \"";

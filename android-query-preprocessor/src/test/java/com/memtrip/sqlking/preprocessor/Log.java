@@ -5,7 +5,8 @@ import com.memtrip.sqlking.common.Table;
 
 @Table
 public class Log {
-    @Column(primary_key = true) int id;
+    @Column(primaryKey = true)
+    int id;
     @Column long timestamp;
 
     public int getId() {

@@ -15,9 +15,16 @@
  */
 package com.memtrip.sqlking.common;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.TYPE)
 public @interface Table {
     ForeignKey[] foreignKeys() default {};
 

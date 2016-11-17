@@ -1,5 +1,6 @@
 package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
+import com.memtrip.sqlking.preprocessor.processor.data.Data;
 import com.memtrip.sqlking.preprocessor.processor.utils.StringUtils;
 
 import java.util.HashMap;
@@ -14,14 +15,16 @@ public class GetCursorGetterMethod implements TemplateMethodModelEx {
 
     private static final String GET_COLUMN_NAMES = "getCursorGetter";
 
-    public static Map<String, Object> getMethodMap() {
+    private Data mData;
+
+    public static Map<String, Object> getMethodMap(Data data) {
         Map<String, Object> map = new HashMap<>();
-        map.put(GET_COLUMN_NAMES, new GetCursorGetterMethod());
+        map.put(GET_COLUMN_NAMES, new GetCursorGetterMethod(data));
         return map;
     }
 
-    private GetCursorGetterMethod() {
-
+    private GetCursorGetterMethod(Data data) {
+        mData = data;
     }
 
     @Override
@@ -32,6 +35,6 @@ public class GetCursorGetterMethod implements TemplateMethodModelEx {
                 value.toString() :
                 String.valueOf(value);
 
-        return StringUtils.assembleTypeGetter(typeValue);
+        return StringUtils.assembleTypeGetter(mData, typeValue);
     }
 }

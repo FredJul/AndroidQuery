@@ -36,8 +36,8 @@ public class PrimaryKeyMustBeUnique implements Validator {
             if (primaryKeyIsUniqueInColumns(table.getColumns())) {
                 throw new ValidatorException(
                         table.getElement(),
-                        "[Duplicate primary_key's found in @Table: `" + table.getName()
-                                + ", only specify one primary_key Column per table]"
+                        "[Duplicate primaryKey's found in @Table: `" + table.getName()
+                                + ", only specify one primaryKey Column per table]"
                 );
             }
         }

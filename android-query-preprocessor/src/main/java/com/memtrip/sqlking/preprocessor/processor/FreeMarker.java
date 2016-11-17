@@ -31,7 +31,7 @@ final class FreeMarker {
         try {
             return createFile(fileName, map);
         } catch (Exception e) {
-            throw new IllegalStateException("Mapping template FAILED: " + e.getMessage());
+            throw new IllegalStateException("Mapping template FAILED: " + (e.getMessage() != null ? e.getMessage() : e));
         }
     }
 

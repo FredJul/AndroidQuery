@@ -2,6 +2,7 @@ package com.memtrip.sqlking.model;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.ContactsContract;
 
 import com.memtrip.sqlking.common.Column;
@@ -19,9 +20,8 @@ public class Contact {
     @Column(realName = ContactsContract.Contacts.DISPLAY_NAME)
     public String displayName;
 
-    //TODO custom type support
-    //@Column(realName = ContactsContract.Contacts.LOOKUP_KEY)
-    //public Uri lookupKey;
+    @Column(realName = ContactsContract.Contacts.LOOKUP_KEY)
+    public Uri lookupKey;
 
     public static ContentDatabaseProvider getContentDatabaseProvider(ContentResolver contentResolver) {
         return new ContentDatabaseProvider(contentResolver, ContactsContract.AUTHORITY, new Q.DefaultResolver());

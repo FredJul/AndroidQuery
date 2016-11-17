@@ -1,5 +1,8 @@
 package com.memtrip.sqlking.preprocessor.processor.utils;
 
+import com.memtrip.sqlking.preprocessor.processor.data.Data;
+import com.memtrip.sqlking.preprocessor.processor.data.TypeConverter;
+
 public class StringUtils {
 
     public static String firstToUpperCase(String value) {
@@ -10,22 +13,49 @@ public class StringUtils {
         return Character.toLowerCase(value.charAt(0)) + value.substring(1);
     }
 
-    public static String assembleTypeGetter(String type) {
-        switch (type) {
-            case "java.lang.String":
-                return "cursor.getString(x)";
-            case "long":
-                return "cursor.getLong(x)";
-            case "int":
-                return "cursor.getInt(x)";
-            case "boolean":
-                return "cursor.getInt(x) == 1 ? true : false";
-            case "double":
-                return "cursor.getDouble(x)";
-            case "byte[]":
-                return "cursor.getBlob(x)";
-            default:
-                return ""; // TODO: foreign key object
+    public static String assembleTypeGetter(Data data, String type) {
+        String sqlType = type;
+        TypeConverter converter = data.getConverterFromClass(type);
+        if (converter != null) {
+            sqlType = converter.getDbClassName();
         }
+
+        String getter;
+        switch (sqlType) {
+            case "java.lang.String":
+                getter = "cursor.getString(x)";
+                break;
+            case "java.lang.Long":
+            case "long":
+                getter = "cursor.getLong(x)";
+                break;
+            case "java.lang.Integer":
+            case "int":
+                getter = "cursor.getInt(x)";
+                break;
+            case "java.lang.Boolean":
+            case "boolean":
+                getter = "cursor.getInt(x) == 1 ? true : false";
+                break;
+            case "java.lang.Double":
+            case "double":
+                getter = "cursor.getDouble(x)";
+                break;
+            case "java.lang.Float":
+            case "float":
+                getter = "cursor.getFloat(x)";
+                break;
+            case "byte[]":
+                getter = "cursor.getBlob(x)";
+                break;
+            default:
+                getter = ""; // TODO: foreign key object
+        }
+
+        if (converter != null) {
+            getter = "new " + converter.getName() + "().convertFromDb(" + getter + ")";
+        }
+
+        return getter;
     }
 }

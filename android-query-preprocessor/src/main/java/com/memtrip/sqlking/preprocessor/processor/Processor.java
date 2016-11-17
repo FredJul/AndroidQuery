@@ -5,6 +5,7 @@ import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
+import com.memtrip.sqlking.common.TypeConverter;
 import com.memtrip.sqlking.preprocessor.processor.data.Data;
 import com.memtrip.sqlking.preprocessor.processor.data.parse.ParseAnnotations;
 import com.memtrip.sqlking.preprocessor.processor.data.validator.PrimaryKeyMustBeUnique;
@@ -39,17 +40,18 @@ public class Processor extends AbstractProcessor {
 
 	@Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
-        Set<? extends Element> elements = env.getElementsAnnotatedWith(Table.class);
+        Set<? extends Element> tableElements = env.getElementsAnnotatedWith(Table.class);
 
-        if (elements != null && elements.size() > 0) {
-            PackageElement packageElement = Context.getInstance().getElementUtils().getPackageOf(elements.iterator().next());
+        if (tableElements != null && tableElements.size() > 0) {
+            PackageElement packageElement = Context.getInstance().getElementUtils().getPackageOf(tableElements.iterator().next());
             Name name = packageElement.getQualifiedName();
 
             final String GENERATED_FILE_PACKAGE = name.toString() + ".gen";
             final String GENERATED_FILE_PATH = "Q.java";
             final String GENERATED_FILE_NAME = "Q";
 
-            Data data = ParseAnnotations.parse(elements);
+            Set<? extends Element> converterElements = env.getElementsAnnotatedWith(TypeConverter.class);
+            Data data = ParseAnnotations.parse(tableElements, converterElements);
 
             try {
                 validate(data);

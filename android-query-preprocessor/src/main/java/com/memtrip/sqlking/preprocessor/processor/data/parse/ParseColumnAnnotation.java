@@ -57,11 +57,11 @@ class ParseColumnAnnotation {
 
     private static boolean assemblePrimaryKey(Element element) {
         com.memtrip.sqlking.common.Column column = element.getAnnotation(com.memtrip.sqlking.common.Column.class);
-        return column.primary_key();
+        return column.primaryKey();
     }
 
     private static boolean assembleAutoIncrement(Element element) {
         com.memtrip.sqlking.common.Column column = element.getAnnotation(com.memtrip.sqlking.common.Column.class);
-        return column.auto_increment();
+        return column.autoIncrement();
     }
 }

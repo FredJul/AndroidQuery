@@ -1,6 +1,7 @@
 package com.memtrip.sqlking.preprocessor.processor.freemarker.method;
 
 import com.memtrip.sqlking.preprocessor.processor.data.Column;
+import com.memtrip.sqlking.preprocessor.processor.data.Data;
 import com.memtrip.sqlking.preprocessor.processor.data.Table;
 import com.memtrip.sqlking.preprocessor.processor.utils.StringUtils;
 
@@ -16,14 +17,16 @@ public class JoinSettersMethod implements TemplateMethodModelEx {
 
     private static final String JOIN = "join";
 
-    public static Map<String, Object> getMethodMap() {
+    private Data mData;
+
+    public static Map<String, Object> getMethodMap(Data data) {
         Map<String, Object> map = new HashMap<>();
-        map.put(JOIN, new JoinSettersMethod());
+        map.put(JOIN, new JoinSettersMethod(data));
         return map;
     }
 
-    private JoinSettersMethod() {
-
+    private JoinSettersMethod(Data data) {
+        mData = data;
     }
 
     private String build(String joinTableName, List<Table> tables) {
@@ -46,7 +49,7 @@ public class JoinSettersMethod implements TemplateMethodModelEx {
                                 .append(".")
                                 .append(column.getName())
                                 .append(" = ")
-                                .append(StringUtils.assembleTypeGetter(column.getType()))
+                                .append(StringUtils.assembleTypeGetter(mData, column.getType()))
                                 .append(";");
                     }
 
