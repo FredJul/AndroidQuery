@@ -8,11 +8,11 @@ public class UriConverter extends BaseTypeConverter<String, Uri> {
 
     @Override
     public String convertToDb(Uri model) {
-        return model.toString();
+        return model == null ? null : model.toString();
     }
 
     @Override
     public Uri convertFromDb(String data) {
-        return Uri.parse(data);
+        return data == null ? null : Uri.parse(data);
     }
 }

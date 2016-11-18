@@ -18,9 +18,6 @@ public class UUIDConverter extends BaseTypeConverter<String, UUID> {
 
     @Override
     public UUID convertFromDb(String data) {
-        if (data == null) {
-            return null;
-        }
-        return UUID.fromString(data);
+        return data == null ? null : UUID.fromString(data);
     }
 }

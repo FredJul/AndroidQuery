@@ -11,6 +11,7 @@ import com.memtrip.sqlking.database.ContentDatabaseProvider;
 import com.memtrip.sqlking.model.gen.Q;
 import com.memtrip.sqlking.operation.function.Result;
 
+@SuppressWarnings("unused")
 @Table(realName = "contacts")
 public class Contact {
 
@@ -19,6 +20,18 @@ public class Contact {
 
     @Column(realName = ContactsContract.Contacts.DISPLAY_NAME)
     public String displayName;
+
+    @Column(realName = ContactsContract.Contacts.PHOTO_URI)
+    public Uri photoUri;
+
+    @Column(realName = ContactsContract.Contacts.PHOTO_THUMBNAIL_URI)
+    public Uri photoThumbnailUri;
+
+    @Column(realName = ContactsContract.Contacts.STARRED)
+    public boolean starred;
+
+    @Column(realName = ContactsContract.Contacts.CUSTOM_RINGTONE)
+    public Uri customRingtone;
 
     @Column(realName = ContactsContract.Contacts.LOOKUP_KEY)
     public Uri lookupKey;
