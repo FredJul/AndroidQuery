@@ -10,7 +10,7 @@ import com.memtrip.sqlking.model.Contact;
 import com.memtrip.sqlking.operation.function.Result;
 import com.memtrip.sqlking.sample.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHolder> {
@@ -43,7 +43,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.comment_adapter_author)
+        @BindView(R.id.comment_adapter_author)
         TextView author;
 
         public ContactViewHolder(View itemView) {

@@ -28,7 +28,7 @@ import com.memtrip.sqlking.sample.model.Comment;
 import com.memtrip.sqlking.sample.model.User;
 import com.memtrip.sqlking.sample.model.gen.Q;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -41,16 +41,16 @@ import static com.memtrip.sqlking.operation.join.InnerJoin.innerJoin;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Bind(R.id.comment_count)
+    @BindView(R.id.comment_count)
     TextView mCommentsCount;
 
-    @Bind(R.id.enter_comment)
+    @BindView(R.id.enter_comment)
     EditText mEnterCommentEditText;
 
-    @Bind(R.id.comments)
+    @BindView(R.id.comments)
     RecyclerView mCommentsRecyclerView;
 
-    @Bind(R.id.contacts)
+    @BindView(R.id.contacts)
     RecyclerView mContactsRecyclerView;
 
     private CommentAdapter mCommentAdapter;

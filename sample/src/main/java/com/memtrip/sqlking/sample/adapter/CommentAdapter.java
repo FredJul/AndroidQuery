@@ -9,12 +9,9 @@ import android.widget.TextView;
 import com.memtrip.sqlking.sample.R;
 import com.memtrip.sqlking.sample.model.Comment;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import java.text.DateFormat;
 
-import java.util.Locale;
-
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
@@ -47,17 +44,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.comment_adapter_author)
+        @BindView(R.id.comment_adapter_author)
         TextView author;
 
-        @Bind(R.id.comment_adapter_body)
+        @BindView(R.id.comment_adapter_body)
         TextView body;
 
-        @Bind(R.id.comment_adapter_timestamp)
+        @BindView(R.id.comment_adapter_timestamp)
         TextView timestamp;
-
-        private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("EEE d MMM HH:mm:ss")
-                .withLocale(Locale.UK);
 
         public CommentViewHolder(View itemView) {
             super(itemView);
@@ -67,7 +61,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         public void populate(Comment comment) {
             author.setText(comment.user.username);
             body.setText(comment.body);
-            timestamp.setText(dateTimeFormatter.print(comment.timestamp));
+            timestamp.setText(DateFormat.getDateInstance().format(comment.timestamp));
         }
     }
 }
