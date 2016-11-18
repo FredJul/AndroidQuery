@@ -21,7 +21,7 @@ import com.memtrip.sqlking.operation.clause.Clause;
 
 import java.util.concurrent.Callable;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Executes a Delete query against the SQLite database

@@ -20,7 +20,7 @@ import com.memtrip.sqlking.database.Query;
 
 import java.util.concurrent.Callable;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Executes an Insert query against the SQLite database

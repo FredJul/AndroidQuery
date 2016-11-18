@@ -31,10 +31,10 @@ import com.memtrip.sqlking.sample.model.gen.Q;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.memtrip.sqlking.operation.clause.On.on;
 import static com.memtrip.sqlking.operation.join.InnerJoin.innerJoin;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private CommentAdapter mCommentAdapter;
     private ContactsAdapter mContactsAdapter;
 
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     private final LoaderManager.LoaderCallbacks<Result<Contact>> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<Result<Contact>>() {
 
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mCompositeSubscription.unsubscribe();
+        mCompositeDisposable.clear();
     }
 
     private void checkUserExists() {
@@ -133,10 +133,10 @@ public class MainActivity extends AppCompatActivity {
                 .rx(User.class, App.getInstance().getContentDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Long>() {
+                .subscribe(new Consumer<Long>() {
                     @Override
-                    public void call(Long aLong) {
-                        if (aLong == 0) {
+                    public void accept(Long count) throws Exception {
+                        if (count == 0) {
                             insertUser();
                         } else {
                             refreshComments();
@@ -150,27 +150,27 @@ public class MainActivity extends AppCompatActivity {
         user._id = 1;
         user.username = "Sam";
 
-        mCompositeSubscription.add(Insert.getBuilder().values(user)
+        mCompositeDisposable.add(Insert.getBuilder().values(user)
                 .rx(App.getInstance().getLocalDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Void>() {
+                .subscribe(new Consumer<Void>() {
                     @Override
-                    public void call(Void aVoid) {
+                    public void accept(Void unused) throws Exception {
                         refreshComments();
                     }
                 }));
     }
 
     private void countComments() {
-        mCompositeSubscription.add(Count.getBuilder()
+        mCompositeDisposable.add(Count.getBuilder()
                 .rx(Comment.class, App.getInstance().getLocalDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Long>() {
+                .subscribe(new Consumer<Long>() {
                     @Override
-                    public void call(Long aLong) {
-                        mCommentsCount.setText(getResources().getString(R.string.count, aLong.toString()));
+                    public void accept(Long count) throws Exception {
+                        mCommentsCount.setText(getResources().getString(R.string.count, count.toString()));
                     }
                 }));
     }
@@ -182,13 +182,13 @@ public class MainActivity extends AppCompatActivity {
         comment.timestamp = System.currentTimeMillis();
         comment.userId = 1;
 
-        mCompositeSubscription.add(Insert.getBuilder().values(comment)
+        mCompositeDisposable.add(Insert.getBuilder().values(comment)
                 .rx(App.getInstance().getContentDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Void>() {
+                .subscribe(new Consumer<Void>() {
                     @Override
-                    public void call(Void aVoid) {
+                    public void accept(Void unused) throws Exception {
                         refreshComments();
                     }
                 }));
@@ -197,15 +197,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshComments() {
-        mCompositeSubscription.add(Select.getBuilder()
+        mCompositeDisposable.add(Select.getBuilder()
                 .join(innerJoin(User.class, on(Comment.class.getSimpleName() + '.' + Q.Comment.USER_ID, User.class.getSimpleName() + '.' + Q.User._ID)))
                 .orderBy(Comment.class.getSimpleName() + '.' + Q.Comment.TIMESTAMP, OrderBy.Order.DESC)
                 .rx(Comment.class, App.getInstance().getLocalDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Result<Comment>>() {
+                .subscribe(new Consumer<Result<Comment>>() {
                     @Override
-                    public void call(Result<Comment> comments) {
+                    public void accept(Result<Comment> comments) throws Exception {
                         mCommentAdapter.setComments(comments.asArray());
                     }
                 }));

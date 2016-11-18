@@ -14,7 +14,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -24,8 +24,8 @@ dependencies {
     apt project(':android-query-preprocessor')
     compile project(':android-query')
     compile project(':android-query-models')
-    compile 'io.reactivex:rxjava:1.2.2'
-    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
     compile 'joda-time:joda-time:2.9.3'
     compile 'com.jakewharton:butterknife:7.0.1'

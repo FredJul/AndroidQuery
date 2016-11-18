@@ -12,8 +12,9 @@ import com.memtrip.sqlking.operation.function.Update;
 
 import java.util.concurrent.Callable;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 
 public abstract class Query {
 
@@ -90,13 +91,13 @@ public abstract class Query {
 
     protected static <T> Observable<T> wrapRx(final Callable<T> func) {
         return Observable.create(
-                new Observable.OnSubscribe<T>() {
+                new ObservableOnSubscribe<T>() {
                     @Override
-                    public void call(Subscriber<? super T> subscriber) {
+                    public void subscribe(ObservableEmitter<T> emitter) throws Exception {
                         try {
-                            subscriber.onNext(func.call());
+                            emitter.onNext(func.call());
                         } catch (Exception e) {
-                            subscriber.onError(e);
+                            emitter.onError(e);
                         }
                     }
                 }

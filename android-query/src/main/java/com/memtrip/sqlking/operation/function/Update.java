@@ -24,7 +24,7 @@ import com.memtrip.sqlking.operation.clause.Where;
 
 import java.util.concurrent.Callable;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Executes an Update query against the SQLite database

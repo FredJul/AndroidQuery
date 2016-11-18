@@ -24,7 +24,7 @@ import com.memtrip.sqlking.operation.keyword.OrderBy;
 
 import java.util.concurrent.Callable;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Executes a Select query against the SQLite database

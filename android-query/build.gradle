@@ -58,7 +58,7 @@ android {
 dependencies {
     compile project(':android-query-common')
 
-    provided 'io.reactivex:rxjava:1.2.2'
+    provided 'io.reactivex.rxjava2:rxjava:2.0.1'
 
     androidTestApt project(':android-query-preprocessor')
 
