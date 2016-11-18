@@ -18,7 +18,7 @@ import io.reactivex.ObservableOnSubscribe;
 
 public abstract class Query {
 
-    protected static void insert(Insert insert, Class<?> classDef, DatabaseProvider databaseProvider) {
+    protected static int insert(Insert insert, Class<?> classDef, DatabaseProvider databaseProvider) {
         if (insert.getModels() != null && insert.getModels().length > 0) {
             Object[] models = insert.getModels();
             ContentValues[] valuesArray = new ContentValues[models.length];
@@ -26,8 +26,10 @@ public abstract class Query {
             for (int i = 0; i < models.length; i++) {
                 valuesArray[i] = tableDescription.getContentValues(models[i]);
             }
-            databaseProvider.bulkInsert(tableDescription.getTableRealName(), valuesArray);
+            return databaseProvider.bulkInsert(tableDescription.getTableRealName(), valuesArray);
         }
+
+        return 0;
     }
 
     protected static Cursor selectCursor(Select select, Class<?> classDef, DatabaseProvider databaseProvider) {

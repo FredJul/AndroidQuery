@@ -39,7 +39,7 @@ public abstract class DatabaseProvider {
         mClauseHelper = new ClauseHelper();
     }
 
-    abstract protected void bulkInsert(String tableName, ContentValues[] valuesArray);
+    abstract protected int bulkInsert(String tableName, ContentValues[] valuesArray);
 
     abstract protected int update(String tableName, ContentValues values, Clause[] clause);
 

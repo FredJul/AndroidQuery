@@ -50,8 +50,8 @@ public class ContentDatabaseProvider extends DatabaseProvider {
         return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(mAuthority).appendPath(firstToLowerCase(tableName)).build();
     }
 
-    protected void bulkInsert(String tableName, ContentValues[] valuesArray) {
-        mContentResolver.bulkInsert(getUri(tableName), valuesArray);
+    protected int bulkInsert(String tableName, ContentValues[] valuesArray) {
+        return mContentResolver.bulkInsert(getUri(tableName), valuesArray);
     }
 
     protected int update(String tableName, ContentValues values, Clause[] clause) {

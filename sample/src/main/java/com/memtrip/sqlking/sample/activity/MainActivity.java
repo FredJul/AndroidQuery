@@ -154,9 +154,9 @@ public class MainActivity extends AppCompatActivity {
                 .rx(App.getInstance().getLocalDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Void>() {
+                .subscribe(new Consumer<Integer>() {
                     @Override
-                    public void accept(Void unused) throws Exception {
+                    public void accept(Integer nbInserted) throws Exception {
                         refreshComments();
                     }
                 }));
@@ -186,9 +186,9 @@ public class MainActivity extends AppCompatActivity {
                 .rx(App.getInstance().getContentDatabaseProvider())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Void>() {
+                .subscribe(new Consumer<Integer>() {
                     @Override
-                    public void accept(Void unused) throws Exception {
+                    public void accept(Integer nbInserted) throws Exception {
                         refreshComments();
                     }
                 }));

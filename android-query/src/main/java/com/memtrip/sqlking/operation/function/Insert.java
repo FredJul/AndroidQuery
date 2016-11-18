@@ -60,8 +60,8 @@ public class Insert extends Query {
          * Executes an Insert query
          * @param databaseProvider Where the magic happens!
          */
-        public void execute(DatabaseProvider databaseProvider) {
-            insert(
+        public int execute(DatabaseProvider databaseProvider) {
+            return insert(
                     new Insert(mValues),
                     mValues != null && mValues.length > 0 ? mValues[0].getClass() : Object.class,
                     databaseProvider
@@ -73,12 +73,11 @@ public class Insert extends Query {
          * @param databaseProvider Where the magic happens!
          * @return An RxJava Observable
          */
-        public Observable<Void> rx(final DatabaseProvider databaseProvider) {
-            return wrapRx(new Callable<Void>() {
+        public Observable<Integer> rx(final DatabaseProvider databaseProvider) {
+            return wrapRx(new Callable<Integer>() {
                 @Override
-                public Void call() throws Exception {
-                    execute(databaseProvider);
-                    return null; // Void
+                public Integer call() throws Exception {
+                    return execute(databaseProvider);
                 }
             });
         }

@@ -108,15 +108,20 @@ public class LocalDatabaseProvider extends DatabaseProvider {
         }
     }
 
-    protected void bulkInsert(String tableName, ContentValues[] valuesArray) {
+    protected int bulkInsert(String tableName, ContentValues[] valuesArray) {
+        int nbInsert = 0;
         mDatabase.beginTransaction();
 
         for (ContentValues values : valuesArray) {
-            mDatabase.insert(tableName, null, values);
+            if (mDatabase.insert(tableName, null, values) != -1) {
+                nbInsert++;
+            }
         }
 
         mDatabase.setTransactionSuccessful();
         mDatabase.endTransaction();
+
+        return nbInsert;
     }
 
     protected int update(String tableName, ContentValues values, Clause[] clause) {
