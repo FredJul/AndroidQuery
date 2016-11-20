@@ -22,20 +22,25 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.Name;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 @AutoService(javax.annotation.processing.Processor.class)
 public class Processor extends AbstractProcessor {
+    private static final String GENERATED_FILE_PATH = "Q.java";
+    private static final String GENERATED_FILE_NAME = "Q";
+
 	private FreeMarker mFreeMarker;
+    private String mGenFilePackage = "net.frju.androidquery.gen";
 
 	@Override
 	public synchronized void init(ProcessingEnvironment env) {
 		mFreeMarker = getFreeMarker();
-		Context.createInstance(env);
+        if (env.getOptions().containsKey("generatedFilePackageName")) {
+            mGenFilePackage = env.getOptions().get("generatedFilePackageName");
+        }
+        Context.createInstance(env);
 	}
 
 	@Override
@@ -43,12 +48,6 @@ public class Processor extends AbstractProcessor {
         Set<? extends Element> tableElements = env.getElementsAnnotatedWith(Table.class);
 
         if (tableElements != null && tableElements.size() > 0) {
-            PackageElement packageElement = Context.getInstance().getElementUtils().getPackageOf(tableElements.iterator().next());
-            Name name = packageElement.getQualifiedName();
-
-            final String GENERATED_FILE_PACKAGE = name.toString() + ".gen";
-            final String GENERATED_FILE_PATH = "Q.java";
-            final String GENERATED_FILE_NAME = "Q";
 
             Set<? extends Element> converterElements = env.getElementsAnnotatedWith(TypeConverter.class);
             Data data = ParseAnnotations.parse(tableElements, converterElements);
@@ -66,8 +65,8 @@ public class Processor extends AbstractProcessor {
             }
 
             try {
-                String body = mFreeMarker.getMappedFileBodyFromTemplate(GENERATED_FILE_PATH, DataModel.create(GENERATED_FILE_PACKAGE, data));
-                createFile(GENERATED_FILE_PACKAGE, GENERATED_FILE_NAME, body);
+                String body = mFreeMarker.getMappedFileBodyFromTemplate(GENERATED_FILE_PATH, DataModel.create(mGenFilePackage, data));
+                createFile(mGenFilePackage, GENERATED_FILE_NAME, body);
             } catch (IOException | FormatterException e) {
                 Context.getInstance().getMessager().printMessage(
                         Diagnostic.Kind.ERROR,

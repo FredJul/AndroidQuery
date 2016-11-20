@@ -22,11 +22,11 @@ ext {
     bintrayRepo = 'AndroidQuery'
     bintrayOrg = 'frju'
 
-    publishedGroupId = 'net.fred.androidquery'
+    publishedGroupId = 'net.frju.androidquery'
 
     libraryVersion = '1.1.6'
 
-    developerId = 'fredjul'
+    developerId = 'frju'
     developerName = 'Frédéric Julian'
     developerEmail = 'fred.julian@gmail.com'
 
@@ -34,6 +34,6 @@ ext {
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
 
-    siteUrl = 'https://github.com/memtrip/SQLKing'      // Homepage URL of the library
-    gitUrl = 'https://github.com/memtrip/SQLKing.git'
+    siteUrl = 'https://github.com/FredJul/AndroidQuery'      // Homepage URL of the library
+    gitUrl = 'https://github.com/FredJul/AndroidQuery.git'
 }

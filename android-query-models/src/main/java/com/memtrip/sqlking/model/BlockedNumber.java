@@ -8,8 +8,9 @@ import android.provider.BlockedNumberContract;
 import com.memtrip.sqlking.common.Column;
 import com.memtrip.sqlking.common.Table;
 import com.memtrip.sqlking.database.ContentDatabaseProvider;
-import com.memtrip.sqlking.model.gen.Q;
 import com.memtrip.sqlking.operation.function.Result;
+
+import net.frju.androidquery.models.gen.Q;
 
 @SuppressWarnings("unused")
 @TargetApi(24)

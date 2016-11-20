@@ -8,7 +8,8 @@ import com.memtrip.sqlking.database.ContentDatabaseProvider;
 import com.memtrip.sqlking.database.LocalDatabaseProvider;
 import com.memtrip.sqlking.sample.model.Comment;
 import com.memtrip.sqlking.sample.model.User;
-import com.memtrip.sqlking.sample.model.gen.Q;
+
+import net.frju.androidquery.gen.Q;
 
 public class App extends Application {
     private static App sApp;

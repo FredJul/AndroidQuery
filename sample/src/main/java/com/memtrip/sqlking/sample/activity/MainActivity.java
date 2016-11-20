@@ -26,7 +26,8 @@ import com.memtrip.sqlking.sample.adapter.ContactsAdapter;
 import com.memtrip.sqlking.sample.loader.ContactsLoader;
 import com.memtrip.sqlking.sample.model.Comment;
 import com.memtrip.sqlking.sample.model.User;
-import com.memtrip.sqlking.sample.model.gen.Q;
+
+import net.frju.androidquery.gen.Q;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
