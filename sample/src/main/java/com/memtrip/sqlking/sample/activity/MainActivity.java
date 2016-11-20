@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void insertUser() {
         User user = new User();
-        user._id = 1;
+        user.id = 1;
         user.username = "Sam";
 
         mCompositeDisposable.add(Insert.getBuilder().values(user)
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void refreshComments() {
         mCompositeDisposable.add(Select.getBuilder()
-                .join(innerJoin(User.class, on(Comment.class.getSimpleName() + '.' + Q.Comment.USER_ID, User.class.getSimpleName() + '.' + Q.User._ID)))
+                .join(innerJoin(User.class, on(Comment.class.getSimpleName() + '.' + Q.Comment.USER_ID, User.class.getSimpleName() + '.' + Q.User.ID)))
                 .orderBy(Comment.class.getSimpleName() + '.' + Q.Comment.TIMESTAMP, OrderBy.Order.DESC)
                 .rx(Comment.class, App.getInstance().getLocalDatabaseProvider())
                 .subscribeOn(Schedulers.io())

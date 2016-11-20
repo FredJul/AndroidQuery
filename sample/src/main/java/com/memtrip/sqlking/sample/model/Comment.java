@@ -5,8 +5,8 @@ import com.memtrip.sqlking.common.Table;
 
 @Table
 public class Comment {
-    @Column(index = true)
-    public int _id;
+    @Column(index = true, realName = "_id")
+    public int id;
     @Column
     public String body;
     @Column
