@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class LocalDatabaseProvider extends DatabaseProvider {
+public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
     private SQLiteDatabase mDatabase;
     private String[] mSchemaArray;
@@ -42,13 +42,9 @@ public class LocalDatabaseProvider extends DatabaseProvider {
     private String[] mCreateIndexQuery;
     private List<String> mIndexNames;
 
-    public LocalDatabaseProvider(Context context,
-                                 String name,
-                                 int version,
-                                 Resolver resolver,
-                                 Class<?>... modelClassDef) {
-        super(resolver);
+    public BaseLocalDatabaseProvider(Context context) {
 
+        Class<?> modelClassDef[] = getResolver().getModelsForProvider(this.getClass());
         int modelCount = modelClassDef.length;
 
         mSchemaArray = new String[modelCount];
@@ -57,7 +53,7 @@ public class LocalDatabaseProvider extends DatabaseProvider {
         mIndexNames = new ArrayList<>();
 
         for (int i = 0; i < modelClassDef.length; i++) {
-            TableDescription tableDescription = resolver.getTableDescription(modelClassDef[i]);
+            TableDescription tableDescription = getResolver().getTableDescription(modelClassDef[i]);
             mSchemaArray[i] = tableDescription.getTableInsertQuery();
             mTableRealNameArray[i] = tableDescription.getTableRealName();
             mCreateIndexQuery[i] = tableDescription.getCreateIndexQuery();
@@ -67,20 +63,24 @@ public class LocalDatabaseProvider extends DatabaseProvider {
             }
         }
 
-        SQLiteOpenHelper openHelper = new SQLiteOpenHelper(context, name, null, version) {
+        SQLiteOpenHelper openHelper = new SQLiteOpenHelper(context, getDbName(), null, getDbVersion()) {
             @Override
             public void onCreate(SQLiteDatabase db) {
-                LocalDatabaseProvider.this.onCreate(db);
+                BaseLocalDatabaseProvider.this.onCreate(db);
             }
 
             @Override
             public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-                LocalDatabaseProvider.this.onUpgrade(db, oldVersion, newVersion);
+                BaseLocalDatabaseProvider.this.onUpgrade(db, oldVersion, newVersion);
             }
         };
 
         mDatabase = openHelper.getWritableDatabase();
     }
+
+    protected abstract String getDbName();
+
+    protected abstract int getDbVersion();
 
     protected void onCreate(SQLiteDatabase db) {
         for (String schema : mSchemaArray) {
@@ -145,7 +145,7 @@ public class LocalDatabaseProvider extends DatabaseProvider {
                         clause,
                         orderBy,
                         limit,
-                        mResolver
+                        getResolver()
                 );
 
                 return mDatabase.rawQuery(joinQuery, mClauseHelper.getClauseArgs(clause));

@@ -37,47 +37,39 @@ public class Insert extends Query {
         mModels = models;
     }
 
-    public static Builder getBuilder() {
-        return new Builder();
+    public static <T> Insert.Builder getBuilder(DatabaseProvider databaseProvider, T... values) {
+        return new Insert.Builder<>(databaseProvider, values);
     }
 
-    public static class Builder {
-        private Object[] mValues;
+    public static class Builder<T> {
+        private T[] mValues;
+        private DatabaseProvider mDatabaseProvider;
 
-        private Builder() { }
-
-        /**
-         * Specify the values for the Insert query
-         * @param values The values that are being inserted
-         * @return Call Builder#execute or Builder#rx to run the query
-         */
-        public Builder values(Object... values) {
+        private Builder(DatabaseProvider databaseProvider, T... values) {
             mValues = values;
-            return this;
+            mDatabaseProvider = databaseProvider;
         }
 
         /**
          * Executes an Insert query
-         * @param databaseProvider Where the magic happens!
          */
-        public int execute(DatabaseProvider databaseProvider) {
+        public int execute() {
             return insert(
                     new Insert(mValues),
                     mValues != null && mValues.length > 0 ? mValues[0].getClass() : Object.class,
-                    databaseProvider
+                    mDatabaseProvider
             );
         }
 
         /**
          * Executes an Insert query
-         * @param databaseProvider Where the magic happens!
          * @return An RxJava Observable
          */
-        public Observable<Integer> rx(final DatabaseProvider databaseProvider) {
+        public Observable<Integer> rx() {
             return wrapRx(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
-                    return execute(databaseProvider);
+                    return execute();
                 }
             });
         }

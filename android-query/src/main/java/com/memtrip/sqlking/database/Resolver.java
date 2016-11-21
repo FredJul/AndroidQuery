@@ -20,4 +20,10 @@ package com.memtrip.sqlking.database;
  */
 public interface Resolver {
     TableDescription getTableDescription(Class<?> classDef);
+
+    Class<?>[] getModelsForProvider(Class<? extends DatabaseProvider> providerClass);
+
+    BaseLocalDatabaseProvider getLocalDatabaseProviderForModel(Class<?> model);
+
+    BaseContentDatabaseProvider getContentDatabaseProviderForModel(Class<?> model);
 }

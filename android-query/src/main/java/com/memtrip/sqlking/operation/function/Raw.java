@@ -14,33 +14,37 @@ public class Raw extends Query {
     private Raw() {
     }
 
-    public static Builder getBuilder() {
-        return new Builder();
+    public static Builder getBuilder(DatabaseProvider databaseProvider) {
+        return new Builder(databaseProvider);
     }
 
     public static class Builder {
         private String mQuery;
+        private DatabaseProvider mDatabaseProvider;
+
+        private Builder(DatabaseProvider databaseProvider) {
+            mDatabaseProvider = databaseProvider;
+        }
 
         public Builder query(String query) {
             mQuery = query;
             return this;
         }
 
-        public Cursor execute(DatabaseProvider databaseProvider) {
-            return rawQuery(mQuery, databaseProvider);
+        public Cursor execute() {
+            return rawQuery(mQuery, mDatabaseProvider);
         }
 
         /**
          * Executes a Row query
          *
-         * @param databaseProvider Where the magic happens!
          * @return An RxJava Observable
          */
-        public Observable<Cursor> rx(final DatabaseProvider databaseProvider) {
+        public Observable<Cursor> rx() {
             return wrapRx(new Callable<Cursor>() {
                 @Override
                 public Cursor call() throws Exception {
-                    return execute(databaseProvider);
+                    return execute();
                 }
             });
         }

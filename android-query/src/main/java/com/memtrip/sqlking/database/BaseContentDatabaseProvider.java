@@ -30,24 +30,24 @@ import com.memtrip.sqlking.operation.keyword.OrderBy;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class ContentDatabaseProvider extends DatabaseProvider {
+public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
 
-    protected String mAuthority;
     protected ContentResolver mContentResolver;
 
-    public ContentDatabaseProvider(ContentResolver contentResolver, String authority, Resolver resolver) {
-        super(resolver);
+    public BaseContentDatabaseProvider(ContentResolver contentResolver) {
+        super();
         mContentResolver = contentResolver;
-        mAuthority = authority;
     }
 
+    protected abstract String getAuthority();
+
     public Uri getUri(Class model) {
-        String tableRealName = mResolver.getTableDescription(model).getTableRealName();
-        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(mAuthority).appendPath(firstToLowerCase(tableRealName)).build();
+        String tableRealName = getResolver().getTableDescription(model).getTableRealName();
+        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableRealName)).build();
     }
 
     protected Uri getUri(String tableName) {
-        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(mAuthority).appendPath(firstToLowerCase(tableName)).build();
+        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableName)).build();
     }
 
     protected int bulkInsert(String tableName, ContentValues[] valuesArray) {

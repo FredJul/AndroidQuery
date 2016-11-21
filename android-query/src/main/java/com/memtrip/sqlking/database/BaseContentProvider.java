@@ -32,7 +32,7 @@ public abstract class BaseContentProvider extends ContentProvider {
         return true;
     }
 
-    protected abstract LocalDatabaseProvider getLocalSQLProvider();
+    protected abstract BaseLocalDatabaseProvider getLocalSQLProvider();
 
     protected static String[] getTableRealNameAndSelection(Uri uri, String selection) {
         String tableName;
@@ -40,7 +40,7 @@ public abstract class BaseContentProvider extends ContentProvider {
         try {
             long id = Long.valueOf(lastSegment);
             List<String> segments = uri.getPathSegments();
-            tableName = ContentDatabaseProvider.firstToUpperCase(segments.get(segments.size() - 2));
+            tableName = BaseContentDatabaseProvider.firstToUpperCase(segments.get(segments.size() - 2));
             String idSelection = BaseColumns._ID + "=" + id;
 
             if (TextUtils.isEmpty(selection)) {
@@ -49,7 +49,7 @@ public abstract class BaseContentProvider extends ContentProvider {
                 selection = idSelection + " AND (" + selection + ")";
             }
         } catch (NumberFormatException e) { // if last segment not an id, it should be the table name
-            tableName = ContentDatabaseProvider.firstToUpperCase(uri.getLastPathSegment());
+            tableName = BaseContentDatabaseProvider.firstToUpperCase(uri.getLastPathSegment());
         }
 
         return new String[]{tableName, selection};

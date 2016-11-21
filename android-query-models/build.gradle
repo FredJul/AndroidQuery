@@ -29,6 +29,13 @@ android {
             }
         }
 
+//TODO
+//        main {
+//            java {
+//                srcDirs = ['src/main/java', 'build/generated/source/apt/release']
+//            }
+//        }
+
         androidTest.setRoot('src/tests')
         androidTest.java.srcDirs = ['src/tests/java']
     }

@@ -14,12 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.memtrip.sqlking.model.Contact;
-import com.memtrip.sqlking.operation.function.Count;
-import com.memtrip.sqlking.operation.function.Insert;
 import com.memtrip.sqlking.operation.function.Result;
-import com.memtrip.sqlking.operation.function.Select;
 import com.memtrip.sqlking.operation.keyword.OrderBy;
-import com.memtrip.sqlking.sample.App;
 import com.memtrip.sqlking.sample.R;
 import com.memtrip.sqlking.sample.adapter.CommentAdapter;
 import com.memtrip.sqlking.sample.adapter.ContactsAdapter;
@@ -109,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getContentResolver().registerContentObserver(App.getInstance().getContentDatabaseProvider().getUri(Comment.class), true, new ContentObserver(new Handler()) {
+        getContentResolver().registerContentObserver(Q.Comment.getContentUri(), true, new ContentObserver(new Handler()) {
             @Override
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
@@ -130,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkUserExists() {
-        Count.getBuilder()
-                .rx(User.class, App.getInstance().getContentDatabaseProvider())
+        Q.User.count()
+                .rx()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
@@ -151,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
         user.id = 1;
         user.username = "Sam";
 
-        mCompositeDisposable.add(Insert.getBuilder().values(user)
-                .rx(App.getInstance().getLocalDatabaseProvider())
+        mCompositeDisposable.add(Q.User.insert(user)
+                .rx()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Integer>() {
@@ -164,8 +160,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void countComments() {
-        mCompositeDisposable.add(Count.getBuilder()
-                .rx(Comment.class, App.getInstance().getLocalDatabaseProvider())
+        mCompositeDisposable.add(Q.Comment.count()
+                .rx()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
@@ -183,8 +179,8 @@ public class MainActivity extends AppCompatActivity {
         comment.timestamp = System.currentTimeMillis();
         comment.userId = 1;
 
-        mCompositeDisposable.add(Insert.getBuilder().values(comment)
-                .rx(App.getInstance().getContentDatabaseProvider())
+        mCompositeDisposable.add(Q.Comment.insertWithContentProvider(comment)
+                .rx()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Integer>() {
@@ -198,10 +194,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshComments() {
-        mCompositeDisposable.add(Select.getBuilder()
+        mCompositeDisposable.add(Q.Comment.select()
                 .join(innerJoin(User.class, on(Comment.class.getSimpleName() + '.' + Q.Comment.USER_ID, User.class.getSimpleName() + '.' + Q.User.ID)))
                 .orderBy(Comment.class.getSimpleName() + '.' + Q.Comment.TIMESTAMP, OrderBy.Order.DESC)
-                .rx(Comment.class, App.getInstance().getLocalDatabaseProvider())
+                .rx()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Result<Comment>>() {

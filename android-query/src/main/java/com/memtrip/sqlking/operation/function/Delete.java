@@ -38,14 +38,19 @@ public class Delete extends Query {
         mConditions = conditions;
     }
 
-    public static Builder getBuilder() {
-        return new Builder();
+    public static <T> Delete.Builder getBuilder(Class<T> classDef, DatabaseProvider databaseProvider) {
+        return new Delete.Builder<>(classDef, databaseProvider);
     }
 
-    public static class Builder {
+    public static class Builder<T> {
         private Clause[] mClause;
+        private Class<T> mClassDef;
+        private DatabaseProvider mDatabaseProvider;
 
-        private Builder() { }
+        private Builder(Class<T> classDef, DatabaseProvider databaseProvider) {
+            mClassDef = classDef;
+            mDatabaseProvider = databaseProvider;
+        }
 
         /**
          * Specify a Where clause for the Delete query
@@ -59,28 +64,24 @@ public class Delete extends Query {
 
         /**
          * Executes a Delete query
-         * @param classDef The class definition that the query should run on
-         * @param databaseProvider Where the magic happens!
          * @return The rows affected by the Delete query
          */
-        public int execute(Class<?> classDef, DatabaseProvider databaseProvider) {
+        public int execute() {
             return delete(
                     new Delete(mClause),
-                    classDef,
-                    databaseProvider
+                    mClassDef,
+                    mDatabaseProvider
             );
         }
         /**
          * Executes a Delete query
-         * @param classDef The class definition that the query should run on
-         * @param databaseProvider Where the magic happens!
          * @return An RxJava Observable
          */
-        public Observable<Integer> rx(final Class<?> classDef, final DatabaseProvider databaseProvider) {
+        public Observable<Integer> rx() {
             return wrapRx(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
-                    return execute(classDef, databaseProvider);
+                    return execute();
                 }
             });
         }

@@ -11,6 +11,8 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
 
 import static com.memtrip.sqlking.preprocessor.processor.data.parse.ParseColumnAnnotation.parseColumn;
 
@@ -19,19 +21,18 @@ class ParseTableAnnotation {
     static Table parseTable(Element element) {
 
         String name = assembleName(element);
-        String realName = assembleRealName(element);
         String tablePackage = assemblePackage(element);
-        String type = tablePackage + "." + name;
-        List<Column> columns = assembleColumns(element);
 
         Table table = new Table();
         table.setElement(element);
         table.setName(name);
-        table.setRealName(realName);
+        table.setRealName(assembleRealName(element));
         table.setPackage(tablePackage);
-        table.setType(type);
-        table.setColumns(columns);
+        table.setType(tablePackage + "." + name);
+        table.setColumns(assembleColumns(element));
         table.setForeignKeys(assembleForeignKeys(element));
+        table.setLocalDatabaseProvider(assembleLocalDatabaseProvider(element));
+        table.setContentDatabaseProvider(assembleContentDatabaseProvider(element));
 
         return table;
     }
@@ -39,6 +40,28 @@ class ParseTableAnnotation {
     private static String assembleName(Element element) {
         Name name = element.getSimpleName();
         return name.toString();
+    }
+
+    private static TypeMirror assembleLocalDatabaseProvider(Element element) {
+        com.memtrip.sqlking.common.Table tableAnnotation = element.getAnnotation(com.memtrip.sqlking.common.Table.class);
+        TypeMirror type = null;
+        try {
+            tableAnnotation.localDatabaseProvider();
+        } catch (MirroredTypeException mte) {
+            type = mte.getTypeMirror();
+        }
+        return type;
+    }
+
+    private static TypeMirror assembleContentDatabaseProvider(Element element) {
+        com.memtrip.sqlking.common.Table tableAnnotation = element.getAnnotation(com.memtrip.sqlking.common.Table.class);
+        TypeMirror type = null;
+        try {
+            tableAnnotation.contentDatabaseProvider();
+        } catch (MirroredTypeException mte) {
+            type = mte.getTypeMirror();
+        }
+        return type;
     }
 
     private static String assembleRealName(Element element) {

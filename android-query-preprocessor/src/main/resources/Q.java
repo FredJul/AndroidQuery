@@ -4,17 +4,44 @@ import android.content.Context;
 import android.database.Cursor;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import com.memtrip.sqlking.database.TableDescription;
-import com.memtrip.sqlking.database.Resolver;
-import com.memtrip.sqlking.database.LocalDatabaseProvider;
-import com.memtrip.sqlking.database.ContentDatabaseProvider;
+import android.net.Uri;
+import com.memtrip.sqlking.database.*;
+import com.memtrip.sqlking.operation.function.*;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Q {
 
+    private static DefaultResolver sResolver;
+
+    public static void init(Context context) {
+        if (sResolver == null) {
+            sResolver = new DefaultResolver();
+            sResolver.init(context);
+        }
+    }
+
+    public static DefaultResolver getResolver() {
+        return sResolver;
+    }
+
     public static class DefaultResolver implements Resolver {
+
+        private static HashMap<Class<?>, BaseLocalDatabaseProvider> mLocalProviders = new HashMap<>();
+        private static HashMap<Class<?>, BaseContentDatabaseProvider> mContentProviders = new HashMap<>();
+
+        public void init(Context context) {
+            <#list tables as table>
+            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
+                    mLocalProviders.put(${table.getPackage()}.${table.getName()}.class, new ${table.getLocalDatabaseProvider().toString()}(context.getApplicationContext()));
+            </#if>
+            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
+                    mContentProviders.put(${table.getPackage()}.${table.getName()}.class, new ${table.getContentDatabaseProvider().toString()}(context.getContentResolver()));
+            </#if>
+            </#list>
+        }
 
         @Override
         public TableDescription getTableDescription(Class<?> classDef) {
@@ -30,25 +57,33 @@ public class Q {
                 throw new IllegalStateException("Please ensure all SQL tables are annotated with @Table");
             }
         }
-    }
 
-    public static class LocalDatabaseProvider extends com.memtrip.sqlking.database.LocalDatabaseProvider {
+        @Override
+        public Class<?>[] getModelsForProvider(Class<? extends DatabaseProvider> providerClass) {
+            ArrayList<Class<?>> result = new ArrayList<>();
 
-        public LocalDatabaseProvider(Context context,
-                                     String name,
-                                     int version,
-                                     Class<?>... modelClassDef) {
-            super(context, name, version, new DefaultResolver(), modelClassDef);
+            <#list tables as table>
+            if (${table.getLocalDatabaseProvider().toString()}.class.equals(providerClass) || ${table.getContentDatabaseProvider().toString()}.class.equals(providerClass)) {
+                result.add(${table.getPackage()}.${table.getName()}.class);
+            }
+            </#list>
+
+            if (result.size() == 0) {
+                throw new IllegalStateException("This provider does not have any @Table models registered into that resolver");
+            }
+
+            return result.toArray(new Class<?>[result.size()]);
         }
 
-    }
-
-    public static class ContentDatabaseProvider extends com.memtrip.sqlking.database.ContentDatabaseProvider {
-
-        public ContentDatabaseProvider(ContentResolver contentResolver, String authority) {
-            super(contentResolver, authority, new DefaultResolver());
+        @Override
+        public BaseLocalDatabaseProvider getLocalDatabaseProviderForModel(Class<?> model) {
+            return mLocalProviders.get(model);
         }
 
+        @Override
+        public BaseContentDatabaseProvider getContentDatabaseProviderForModel(Class<?> model) {
+            return mContentProviders.get(model);
+        }
     }
 
     <#list tables as table>
@@ -171,6 +206,62 @@ public class Q {
                 </#list>
 
                 return contentValues;
+            }
+
+            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
+            public static Uri getContentUri() {
+                return Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class).getUri(${packagedTableName}.class);
+            }
+            </#if>
+
+            public static Count.Builder count() {
+                <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
+                return Count.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
+                <#else>
+                return Count.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
+                </#if>
+            }
+
+            public static Select.Builder select() {
+                <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
+                return Select.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
+                <#else>
+                return Select.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
+                </#if>
+            }
+
+            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
+            public static Delete.Builder delete() {
+                return Delete.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
+            }
+            </#if>
+
+            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
+            public static Delete.Builder deleteWithContentProvider() {
+                return Delete.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
+            }
+            </#if>
+
+            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
+            public static Insert.Builder insert(${packagedTableName}... models) {
+                return Insert.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), models);
+            }
+            </#if>
+
+            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
+            public static Insert.Builder insertWithContentProvider(${packagedTableName}... models) {
+                return Insert.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
+            }
+            </#if>
+
+            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
+            public static Raw.Builder raw() {
+                return Raw.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
+            }
+            </#if>
+
+            public static Result<${packagedTableName}> fromCursor(Cursor cursor) {
+                return new Result<>(${packagedTableName}.class, Q.getResolver(), cursor);
             }
         }
 

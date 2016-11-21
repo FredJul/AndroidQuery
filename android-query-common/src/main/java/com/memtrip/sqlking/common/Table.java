@@ -29,4 +29,8 @@ public @interface Table {
     ForeignKey[] foreignKeys() default {};
 
     String realName() default "";
+
+    Class<?> localDatabaseProvider() default Void.class;
+
+    Class<?> contentDatabaseProvider() default Void.class;
 }

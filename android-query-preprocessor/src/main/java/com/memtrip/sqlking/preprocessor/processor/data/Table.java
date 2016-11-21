@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
 
 public class Table {
     private Element mElement;
@@ -13,6 +14,8 @@ public class Table {
     private String mType;
     private List<Column> mColumns;
     private List<ForeignKey> mForeignKeys;
+    private TypeMirror mLocalDatabaseProvider;
+    private TypeMirror mContentDatabaseProvider;
 
     public Element getElement() {
         return mElement;
@@ -71,6 +74,22 @@ public class Table {
 
     public void setForeignKeys(List<ForeignKey> newVal) {
         mForeignKeys = newVal;
+    }
+
+    public TypeMirror getLocalDatabaseProvider() {
+        return mLocalDatabaseProvider;
+    }
+
+    public void setLocalDatabaseProvider(TypeMirror localDatabaseProvider) {
+        mLocalDatabaseProvider = localDatabaseProvider;
+    }
+
+    public TypeMirror getContentDatabaseProvider() {
+        return mContentDatabaseProvider;
+    }
+
+    public void setContentDatabaseProvider(TypeMirror contentDatabaseProvider) {
+        mContentDatabaseProvider = contentDatabaseProvider;
     }
 
     /**

@@ -59,17 +59,22 @@ public class Select extends Query {
         mLimit = limit;
     }
 
-    public static Builder getBuilder() {
-        return new Builder();
+    public static <T> Builder getBuilder(Class<T> classDef, DatabaseProvider databaseProvider) {
+        return new Builder<>(classDef, databaseProvider);
     }
 
-    public static class Builder {
+    public static class Builder<T> {
         private Clause[] mClause;
         private Join[] mJoin;
         private OrderBy mOrderBy;
         private Limit mLimit;
+        private Class<T> mClassDef;
+        private DatabaseProvider mDatabaseProvider;
 
-        private Builder() { }
+        private Builder(Class<T> classDef, DatabaseProvider databaseProvider) {
+            mClassDef = classDef;
+            mDatabaseProvider = databaseProvider;
+        }
 
         /**
          * Specify a Where clause for the Select query
@@ -110,62 +115,50 @@ public class Select extends Query {
 
         /**
          * Executes a Select query
-         * @param classDef The class definition that the query should run on
-         * @param databaseProvider Where the magic happens!
-         * @param <T> The model object returned from the query
          * @return The rows returned by the Select query
          */
-        public <T> Result<T> execute(Class<T> classDef, DatabaseProvider databaseProvider) {
+        public Result<T> execute() {
             return select(
                     new Select(mClause, mJoin, mOrderBy, mLimit),
-                    classDef,
-                    databaseProvider
+                    mClassDef,
+                    mDatabaseProvider
             );
         }
 
         /**
          * Executes a Select query that expects a single result
-         * @param classDef The class definition that the query should run on
-         * @param databaseProvider Where the magic happens!
-         * @param <T> The model object returned from the query
          * @return The row returned by the Select query
          */
-        public <T> T executeOne(Class<T> classDef, DatabaseProvider databaseProvider) {
+        public T executeOne() {
             return selectSingle(
                     new Select(mClause, mJoin, mOrderBy, mLimit),
-                    classDef,
-                    databaseProvider
+                    mClassDef,
+                    mDatabaseProvider
             );
         }
 
         /**
          * Executes a Select query
-         * @param classDef The class definition that the query should run on
-         * @param databaseProvider Where the magic happens!
-         * @param <T> The model object returned from the query
          * @return An RxJava Observable
          */
-        public <T> Observable<Result<T>> rx(final Class<T> classDef, final DatabaseProvider databaseProvider) {
+        public Observable<Result<T>> rx() {
             return wrapRx(new Callable<Result<T>>() {
                 @Override
                 public Result<T> call() throws Exception {
-                    return execute(classDef, databaseProvider);
+                    return execute();
                 }
             });
         }
 
         /**
          * Executes a Select query that expects a single result
-         * @param classDef The class definition that the query should run on
-         * @param databaseProvider Where the magic happens!
-         * @param <T> The model object returned from the query
          * @return An RxJava Observable
          */
-        public <T> Observable<T> rxOne(final Class<T> classDef, final DatabaseProvider databaseProvider) {
+        public Observable<T> rxOne() {
             return wrapRx(new Callable<T>() {
                 @Override
                 public T call() throws Exception {
-                    return executeOne(classDef, databaseProvider);
+                    return executeOne();
                 }
             });
         }

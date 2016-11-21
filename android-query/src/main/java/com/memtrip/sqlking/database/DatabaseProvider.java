@@ -27,15 +27,11 @@ import com.memtrip.sqlking.operation.keyword.OrderBy;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public abstract class DatabaseProvider {
-    protected Resolver mResolver;
     protected ClauseHelper mClauseHelper;
 
-    protected Resolver getResolver() {
-        return mResolver;
-    }
+    protected abstract Resolver getResolver();
 
-    protected DatabaseProvider(Resolver resolver) {
-        mResolver = resolver;
+    protected DatabaseProvider() {
         mClauseHelper = new ClauseHelper();
     }
 
