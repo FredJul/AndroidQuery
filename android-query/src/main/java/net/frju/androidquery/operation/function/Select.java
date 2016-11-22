@@ -81,12 +81,12 @@ public class Select extends Query {
          * @param clause Where clause
          * @return Call Builder#execute, Builder#rx, or Builder#rxSingle to run the query
          */
-        public Builder where(Clause... clause) {
+        public Builder<T> where(Clause... clause) {
             mClause = clause;
             return this;
         }
 
-        public Builder join(Join... joins) {
+        public Builder<T> join(Join... joins) {
             mJoin = joins;
             return this;
         }
@@ -97,7 +97,7 @@ public class Select extends Query {
          * @param order The direction of the Order By clause
          * @return Call Builder#executem Builder#rx or Builder#rxSingle to run the query
          */
-        public Builder orderBy(String column, OrderBy.Order order) {
+        public Builder<T> orderBy(String column, OrderBy.Order order) {
             mOrderBy = new OrderBy(column, order);
             return this;
         }
@@ -108,7 +108,7 @@ public class Select extends Query {
          * @param end The ending index to select from
          * @return Call Builder#execute, Builder#rx or Builder#rxSingle to run the query
          */
-        public Builder limit(int start, int end) {
+        public Builder<T> limit(int start, int end) {
             mLimit = new Limit(start, end);
             return this;
         }

@@ -67,7 +67,7 @@ public class Delete extends Query {
          * @param clause Where clause
          * @return Call Builder#execute or Builder#rx to run the query
          */
-        public Builder where(Clause... clause) {
+        public Builder<T> where(Clause... clause) {
             mClause = clause;
             return this;
         }
@@ -77,7 +77,7 @@ public class Delete extends Query {
          * @param models The models that are being deleted
          * @return Call Builder#execute or Builder#rx to run the query
          */
-        public Builder model(T... models) {
+        public Builder<T> model(T... models) {
             mModels = models;
             return this;
         }

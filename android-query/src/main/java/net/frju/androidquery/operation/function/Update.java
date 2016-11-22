@@ -77,7 +77,7 @@ public class Update extends Query {
          * @param clause Where clause
          * @return Call Builder#execute or Builder#rx to run the query
          */
-        public Builder where(Where... clause) {
+        public Builder<T> where(Where... clause) {
             mClause = clause;
             return this;
         }
@@ -87,7 +87,7 @@ public class Update extends Query {
          * @param model The model that are being updated
          * @return Call Builder#execute or Builder#rx to run the query
          */
-        public Builder model(T model) {
+        public Builder<T> model(T model) {
             mModel = model;
             return this;
         }
@@ -97,7 +97,7 @@ public class Update extends Query {
          * @param values The values that are being updated
          * @return Call Builder#execute or Builder#rx to run the query
          */
-        public Builder values(ContentValues values) {
+        public Builder<T> values(ContentValues values) {
             mValues = values;
             return this;
         }
