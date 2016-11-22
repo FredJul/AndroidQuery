@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
-import com.memtrip.sqlking.database.*;
-import com.memtrip.sqlking.operation.function.*;
+import net.frju.androidquery.database.*;
+import net.frju.androidquery.operation.function.*;
 
 import java.util.List;
 import java.util.ArrayList;

@@ -1,15 +1,13 @@
-SQLKing
+AndroidQuery
 ======================
 
-SQLKing is an Android SQLite ORM powered by an annotation preprocessor, tables are defined by @Table
+AndroidQuery is an Android SQLite ORM powered by an annotation preprocessor, tables are defined by @Table
 annotations and CRUD classes expose an expressive api for executing SQLite queries.
 ####Gradle dependencies####
-*NOTE: See https://bitbucket.org/hvisser/android-apt if you are not familiar with using annotation
-preprocessors on Android.*
 ```groovy
 dependencies {
-    apt 'com.memtrip.sqlking:preprocessor:1.1.5'
-    compile 'com.memtrip.sqlking:client:1.1.5'
+    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.0.0'
+    compile 'net.frju.androidquery:android-query:1.0.0'
 }
 ```
 
@@ -78,7 +76,7 @@ String usernameColumnFromUserTable = Q.User.USERNAME;
 ```
 
 ####Initialise the database####
-SQLKing will create a database based on the POJOs that are annotated with @Table,
+AndroidQuery will create a database based on the POJOs that are annotated with @Table,
 when these POJOs are changed or new POJOs are added, the version number argument must be incremented.
 The `SQLProvider` instance that is returned from `SQLInit` must be kept throughout the lifecycle of your application,
 it is required by the `execute()` and `rx()` methods. We recommend you attach inject it as a dependency or attach
@@ -88,7 +86,7 @@ NOTE: Incrementing the version number will drop and recreate the database.
 ```java
 public void setUp() {
     SQLProvider provider = SQLInit.createDatabase(
-         "SQLKing",
+         "AndroidQuery",
          1,
          new Q.DefaultResolver(),
          getContext(),
@@ -301,7 +299,7 @@ public class Data {
 ```
 
 ####Tests####
-The `tests/java/com/memtrip/sqlking` package contains a full set of unit and integration tests. The
+The `tests/java/com/memtrip/AndroidQuery` package contains a full set of unit and integration tests. The
 tests can be used as a good reference on how to structure queries.
 
 ####TODO####

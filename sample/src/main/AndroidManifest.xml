@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.memtrip.sqlking.sample">
+    package="net.frju.androidquery.sample">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
@@ -21,8 +21,8 @@
             </intent-filter>
         </activity>
         <provider
-            android:name="com.memtrip.sqlking.sample.provider.ModelContentProvider"
-            android:authorities="com.memtrip.sqlking.sample.provider.ModelContentProvider"
+            android:name="net.frju.androidquery.sample.provider.ModelContentProvider"
+            android:authorities="net.frju.androidquery.sample.provider.ModelContentProvider"
             android:exported="false" />
     </application>
 

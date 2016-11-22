@@ -1,7 +1,7 @@
-package com.memtrip.sqlking.preprocessor;
+package net.frju.androidquery.preprocessor;
 
-import com.memtrip.sqlking.common.Column;
-import com.memtrip.sqlking.common.Table;
+import net.frju.androidquery.annotation.Column;
+import net.frju.androidquery.annotation.Table;
 
 @Table
 public class Data {
