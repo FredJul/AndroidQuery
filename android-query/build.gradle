@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.neenbedankt.android-apt'
 
 ext {
     artifact = 'android-query'
@@ -60,7 +59,7 @@ dependencies {
 
     provided 'io.reactivex.rxjava2:rxjava:2.0.1'
 
-    androidTestApt project(':android-query-preprocessor')
+    androidTestAnnotationProcessor project(':android-query-preprocessor')
 
     androidTestCompile(
             'com.android.support.test:runner:0.3',

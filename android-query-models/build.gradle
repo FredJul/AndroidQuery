@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.neenbedankt.android-apt'
 
 ext {
     artifact = 'android-query-models'
@@ -20,22 +19,15 @@ android {
         versionName libraryVersion
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [generatedFilePackageName: 'net.frju.androidquery.models.gen']
+            }
+        }
     }
 
     sourceSets {
-        main {
-            java {
-                srcDir 'src/main/java'
-            }
-        }
-
-//TODO
-//        main {
-//            java {
-//                srcDirs = ['src/main/java', 'build/generated/source/apt/release']
-//            }
-//        }
-
         androidTest.setRoot('src/tests')
         androidTest.java.srcDirs = ['src/tests/java']
     }
@@ -64,9 +56,9 @@ android {
 
 dependencies {
     compile project(':android-query')
-    apt project(':android-query-preprocessor')
+    annotationProcessor project(':android-query-preprocessor')
 
-    androidTestApt project(':android-query-preprocessor')
+    androidTestAnnotationProcessor project(':android-query-preprocessor')
 
     androidTestCompile(
             'com.android.support.test:runner:0.3',
@@ -74,12 +66,6 @@ dependencies {
             'com.google.dexmaker:dexmaker-mockito:1.1',
             'com.google.dexmaker:dexmaker:1.1'
     )
-}
-
-apt {
-    arguments {
-        generatedFilePackageName "net.frju.androidquery.models.gen"
-    }
 }
 
 /*************** Maven & Bintray *******************/
