@@ -18,23 +18,19 @@ package net.frju.androidquery.operation.clause;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class Or implements Clause {
+public class Or extends Clause {
     private Clause[] mClause;
 
     public Clause[] getClause() {
         return mClause;
     }
 
-    private Or(Clause... clause) {
-        mClause = clause;
-    }
-
     /**
      * Specifies a SQLite OR operator
-     * @param clause  Combine multiple conditions
-     * @return Or operator
+     *
+     * @param clause Combine multiple conditions
      */
-    public static Or or(Clause... clause) {
-        return new Or(clause);
+    public Or(Clause... clause) {
+        mClause = clause;
     }
 }

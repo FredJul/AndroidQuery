@@ -111,19 +111,20 @@ public abstract class Query {
 
         if (models != null) {
             TableDescription tableDesc = getTableDescription(classDef, databaseProvider);
+            String primaryKey = tableDesc.getPrimaryKeyRealName();
 
             Object[] keys = new String[delete.getModels().length];
             for (int i = 0; i < models.length; i++) {
                 // TODO could be more efficient by retrieving the primaryKey only
                 ContentValues values = tableDesc.getContentValues(models[i]);
-                keys[i] = values.get(tableDesc.getPrimaryKeyRealName());
+                keys[i] = values.get(primaryKey);
 
                 if (models[i] instanceof ModelListener) {
                     ((ModelListener) models[i]).onPreDelete();
                 }
             }
 
-            Clause condition = In.in(tableDesc.getPrimaryKeyRealName(), keys);
+            Clause condition = new In(primaryKey, keys);
 
             return databaseProvider.delete(
                     tableDesc.getTableRealName(),

@@ -19,4 +19,25 @@ package net.frju.androidquery.operation.clause;
  * A Clause is used to provide an expressive api for querying the SQLite database.
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public interface Clause { }
+public class Clause {
+
+    public static Where where(String row, Where.Exp expression, Object value) {
+        return new Where(row, expression, value);
+    }
+
+    public static And and(Clause... clause) {
+        return new And(clause);
+    }
+
+    public static Or or(Clause... clause) {
+        return new Or(clause);
+    }
+
+    public static In in(String column, Object... values) {
+        return new In(column, values);
+    }
+
+    public static On on(String column1, String column2) {
+        return new On(column1, column2);
+    }
+}

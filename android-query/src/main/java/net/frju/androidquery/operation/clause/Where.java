@@ -18,10 +18,10 @@ package net.frju.androidquery.operation.clause;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class Where<T> implements Clause {
+public class Where extends Clause {
     private String mRow;
     private Exp mExpression;
-    private T mValue;
+    private Object mValue;
 
     public enum Exp {
         EQUAL_TO ("="),
@@ -51,25 +51,20 @@ public class Where<T> implements Clause {
         return mExpression;
     }
 
-    public T getValue() {
+    public Object getValue() {
         return mValue;
-    }
-
-    private Where(String row, Exp expression, T value) {
-        mRow = row;
-        mExpression = expression;
-        mValue = value;
     }
 
     /**
      * Specifies a SQLite WHERE clause
-     * @param row  The row to perform the clause on
+     *
+     * @param row        The row to perform the clause on
      * @param expression The type of expression that will evaluate the value
-     * @param value  The value being evaluated
-     * @return Where clause
+     * @param value      The value being evaluated
      */
-    @SuppressWarnings("unchecked")
-    public static Where where(String row, Exp expression, Object value) {
-        return new Where(row, expression, value);
+    public Where(String row, Exp expression, Object value) {
+        mRow = row;
+        mExpression = expression;
+        mValue = value;
     }
 }

@@ -114,7 +114,7 @@ public class ClauseHelper {
     }
 
     private String buildInCondition(In in) {
-        String row = in.getRow();
+        String row = in.getColumn();
         int length = in.getValues().length;
 
         StringBuilder stringBuilder = new StringBuilder();

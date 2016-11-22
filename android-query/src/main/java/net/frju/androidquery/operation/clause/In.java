@@ -18,31 +18,26 @@ package net.frju.androidquery.operation.clause;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class In <T> implements Clause {
-    private String mRow;
-    private T[] mValues;
+public class In extends Clause {
+    private String mColumn;
+    private Object[] mValues;
 
-    public String getRow() {
-        return mRow;
+    public String getColumn() {
+        return mColumn;
     }
 
-    public T[] getValues() {
+    public Object[] getValues() {
         return mValues;
-    }
-
-    private In(String row, T... values) {
-        mRow = row;
-        mValues = values;
     }
 
     /**
      * Specifies a SQLite IN operator
-     * @param row  The row to perform the operation on
+     *
+     * @param column The column to perform the operation on
      * @param values The values of the in operator
-     * @return  In operator
      */
-    @SuppressWarnings("unchecked")
-    public static In in(String row, Object... values) {
-        return new In(row, values);
+    public In(String column, Object... values) {
+        mColumn = column;
+        mValues = values;
     }
 }

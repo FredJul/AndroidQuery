@@ -18,23 +18,20 @@ package net.frju.androidquery.operation.clause;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class And implements Clause {
+public class And extends Clause {
     private Clause[] mClause;
 
     public Clause[] getClause() {
         return mClause;
     }
 
-    private And(Clause... clause) {
-        mClause = clause;
-    }
-
     /**
      * Specifies a SQLite AND operator
-     * @param clause  Combine multiple conditions
+     *
+     * @param clause Combine multiple conditions
      * @return And operator
      */
-    public static And and(Clause... clause) {
-        return new And(clause);
+    public And(Clause... clause) {
+        mClause = clause;
     }
 }

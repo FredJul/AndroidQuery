@@ -18,7 +18,7 @@ package net.frju.androidquery.operation.clause;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class On implements Clause {
+public class On extends Clause {
     private String mColumn1;
     private String mColumn2;
 
@@ -33,10 +33,5 @@ public class On implements Clause {
     public On(String column1, String column2) {
         mColumn1 = column1;
         mColumn2 = column2;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static On on(String column1, String column2) {
-        return new On(column1, column2);
     }
 }
