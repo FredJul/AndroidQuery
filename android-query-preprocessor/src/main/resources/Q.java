@@ -214,7 +214,7 @@ public class Q {
             }
             </#if>
 
-            public static Count.Builder count() {
+            public static Count.Builder<${packagedTableName}> count() {
                 <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
                 return Count.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
                 <#else>
@@ -222,7 +222,7 @@ public class Q {
                 </#if>
             }
 
-            public static Select.Builder select() {
+            public static Select.Builder<${packagedTableName}> select() {
                 <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
                 return Select.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
                 <#else>
@@ -231,25 +231,25 @@ public class Q {
             }
 
             <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
-            public static Delete.Builder delete() {
+            public static Delete.Builder<${packagedTableName}> delete() {
                 return Delete.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
             }
             </#if>
 
             <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static Delete.Builder deleteWithContentProvider() {
+            public static Delete.Builder<${packagedTableName}> deleteWithContentProvider() {
                 return Delete.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
             }
             </#if>
 
             <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
-            public static Insert.Builder insert(${packagedTableName}... models) {
+            public static Insert.Builder<${packagedTableName}> insert(${packagedTableName}... models) {
                 return Insert.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), models);
             }
             </#if>
 
             <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static Insert.Builder insertWithContentProvider(${packagedTableName}... models) {
+            public static Insert.Builder<${packagedTableName}> insertWithContentProvider(${packagedTableName}... models) {
                 return Insert.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
             }
             </#if>

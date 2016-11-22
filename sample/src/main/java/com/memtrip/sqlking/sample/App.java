@@ -2,6 +2,8 @@ package com.memtrip.sqlking.sample;
 
 import android.app.Application;
 
+import com.memtrip.sqlking.model.Contact;
+
 import net.frju.androidquery.gen.Q;
 
 public class App extends Application {
@@ -10,8 +12,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        //TODO
-        net.frju.androidquery.models.gen.Q.init(this);
+        Contact.init(this);
         Q.init(this);
     }
 }
