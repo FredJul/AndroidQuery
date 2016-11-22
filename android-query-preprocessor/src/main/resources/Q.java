@@ -248,6 +248,18 @@ public class Q {
             </#if>
 
             <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
+            public static Update.Builder<${packagedTableName}> update() {
+                return Update.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
+            }
+            </#if>
+
+            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
+            public static Update.Builder<${packagedTableName}> updateWithContentProvider() {
+                return Update.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
+            }
+            </#if>
+
+            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
             public static Insert.Builder<${packagedTableName}> insert(${packagedTableName}... models) {
                 return Insert.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), models);
             }
