@@ -28,10 +28,19 @@ import io.reactivex.Observable;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Delete extends Query {
+    private Object[] mModels;
     private Clause[] mConditions;
+
+    public Object[] getModels() {
+        return mModels;
+    }
 
     public Clause[] getConditions() {
         return mConditions;
+    }
+
+    private Delete(Object[] models) {
+        mModels = models;
     }
 
     private Delete(Clause[] conditions) {
@@ -43,6 +52,7 @@ public class Delete extends Query {
     }
 
     public static class Builder<T> {
+        private T[] mModels;
         private Clause[] mClause;
         private Class<T> mClassDef;
         private DatabaseProvider mDatabaseProvider;
@@ -63,15 +73,33 @@ public class Delete extends Query {
         }
 
         /**
+         * Specify the values for the Delete query
+         * @param models The models that are being deleted
+         * @return Call Builder#execute or Builder#rx to run the query
+         */
+        public Builder model(T... models) {
+            mModels = models;
+            return this;
+        }
+
+        /**
          * Executes a Delete query
          * @return The rows affected by the Delete query
          */
         public int execute() {
-            return delete(
-                    new Delete(mClause),
-                    mClassDef,
-                    mDatabaseProvider
-            );
+            if (mModels != null) {
+                return delete(
+                        new Delete(mModels),
+                        mClassDef,
+                        mDatabaseProvider
+                );
+            } else {
+                return delete(
+                        new Delete(mClause),
+                        mClassDef,
+                        mDatabaseProvider
+                );
+            }
         }
         /**
          * Executes a Delete query

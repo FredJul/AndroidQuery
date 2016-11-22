@@ -25,6 +25,8 @@ import android.database.Cursor;
 public interface TableDescription {
     String getTableRealName();
     String getTableInsertQuery();
+
+    String getPrimaryKeyRealName();
     String[] getIndexNames();
     String getCreateIndexQuery();
     String[] getColumnNames();

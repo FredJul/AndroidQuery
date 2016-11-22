@@ -122,6 +122,11 @@ public class Q {
             }
 
             @Override
+            public String getPrimaryKeyRealName() {
+                return "${table.getPrimaryKeyRealName()}";
+            }
+
+            @Override
             public String[] getIndexNames() {
                 return new String[]{
                 <#list table.getMutableColumns(tables) as column>

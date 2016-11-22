@@ -3,6 +3,9 @@ package net.frju.androidquery.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import net.frju.androidquery.operation.clause.Clause;
+import net.frju.androidquery.operation.clause.In;
+import net.frju.androidquery.operation.clause.Where;
 import net.frju.androidquery.operation.function.Count;
 import net.frju.androidquery.operation.function.Delete;
 import net.frju.androidquery.operation.function.Insert;
@@ -24,6 +27,9 @@ public abstract class Query {
             ContentValues[] valuesArray = new ContentValues[models.length];
             TableDescription tableDescription = getTableDescription(classDef, databaseProvider);
             for (int i = 0; i < models.length; i++) {
+                if (models[i] instanceof ModelListener) {
+                    ((ModelListener) models[i]).onPreInsert();
+                }
                 valuesArray[i] = tableDescription.getContentValues(models[i]);
             }
             return databaseProvider.bulkInsert(tableDescription.getTableRealName(), valuesArray);
@@ -66,11 +72,31 @@ public abstract class Query {
     }
 
     protected static int update(Update update, Class<?> classDef, DatabaseProvider databaseProvider) {
-        return databaseProvider.update(
-                getTableDescription(classDef, databaseProvider).getTableRealName(),
-                update.getContentValues(),
-                update.getConditions()
-        );
+        if (update.getModel() != null) {
+            TableDescription tableDesc = getTableDescription(classDef, databaseProvider);
+            Clause[] conditions = update.getConditions();
+            ContentValues values = tableDesc.getContentValues(update.getModel());
+            if (conditions == null) {
+                conditions = new Clause[1];
+                conditions[0] = Where.where(tableDesc.getPrimaryKeyRealName(), Where.Exp.EQUAL_TO, values.get(tableDesc.getPrimaryKeyRealName()));
+            }
+
+            if (update.getModel() instanceof ModelListener) {
+                ((ModelListener) update.getModel()).onPreUpdate();
+            }
+
+            return databaseProvider.update(
+                    tableDesc.getTableRealName(),
+                    values,
+                    conditions
+            );
+        } else {
+            return databaseProvider.update(
+                    getTableDescription(classDef, databaseProvider).getTableRealName(),
+                    update.getContentValues(),
+                    update.getConditions()
+            );
+        }
     }
 
     protected static long count(Count count, Class<?> classDef, DatabaseProvider databaseProvider) {
@@ -81,10 +107,34 @@ public abstract class Query {
     }
 
     protected static int delete(Delete delete, Class<?> classDef, DatabaseProvider databaseProvider) {
-        return databaseProvider.delete(
-                getTableDescription(classDef, databaseProvider).getTableRealName(),
-                delete.getConditions()
-        );
+        Object[] models = delete.getModels();
+
+        if (models != null) {
+            TableDescription tableDesc = getTableDescription(classDef, databaseProvider);
+
+            Object[] keys = new String[delete.getModels().length];
+            for (int i = 0; i < models.length; i++) {
+                // TODO could be more efficient by retrieving the primaryKey only
+                ContentValues values = tableDesc.getContentValues(models[i]);
+                keys[i] = values.get(tableDesc.getPrimaryKeyRealName());
+
+                if (models[i] instanceof ModelListener) {
+                    ((ModelListener) models[i]).onPreDelete();
+                }
+            }
+
+            Clause condition = In.in(tableDesc.getPrimaryKeyRealName(), keys);
+
+            return databaseProvider.delete(
+                    tableDesc.getTableRealName(),
+                    new Clause[]{condition}
+            );
+        } else {
+            return databaseProvider.delete(
+                    getTableDescription(classDef, databaseProvider).getTableRealName(),
+                    delete.getConditions()
+            );
+        }
     }
 
     protected static Cursor rawQuery(String query, DatabaseProvider databaseProvider) {

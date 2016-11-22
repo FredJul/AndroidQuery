@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-present memtrip LTD.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,8 +31,13 @@ import io.reactivex.Observable;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Update extends Query {
+    private Object mModel;
     private ContentValues mContentValues;
     private Clause[] mConditions;
+
+    public Object getModel() {
+        return mModel;
+    }
 
     public ContentValues getContentValues() {
         return mContentValues;
@@ -40,6 +45,10 @@ public class Update extends Query {
 
     public Clause[] getConditions() {
         return mConditions;
+    }
+
+    public Update(Object model) {
+        mModel = model;
     }
 
     public Update(ContentValues contentValues, Clause[] conditions) {
@@ -52,6 +61,7 @@ public class Update extends Query {
     }
 
     public static class Builder<T> {
+        private T mModel;
         private ContentValues mValues;
         private Clause[] mClause;
         private Class<T> mClassDef;
@@ -74,6 +84,16 @@ public class Update extends Query {
 
         /**
          * Specify the values for the Update query
+         * @param model The model that are being updated
+         * @return Call Builder#execute or Builder#rx to run the query
+         */
+        public Builder model(T model) {
+            mModel = model;
+            return this;
+        }
+
+        /**
+         * Specify the values for the Update query
          * @param values The values that are being updated
          * @return Call Builder#execute or Builder#rx to run the query
          */
@@ -87,11 +107,19 @@ public class Update extends Query {
          * @return The rows affected by the Update query
          */
         public int execute() {
-            return update(
-                    new Update(mValues, mClause),
-                    mClassDef,
-                    mDatabaseProvider
-            );
+            if (mModel != null) {
+                return update(
+                        new Update(mModel),
+                        mClassDef,
+                        mDatabaseProvider
+                );
+            } else {
+                return update(
+                        new Update(mValues, mClause),
+                        mClassDef,
+                        mDatabaseProvider
+                );
+            }
         }
 
         /**

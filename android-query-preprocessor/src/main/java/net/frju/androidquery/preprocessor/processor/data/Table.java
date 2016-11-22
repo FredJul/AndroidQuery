@@ -68,6 +68,15 @@ public class Table {
         mColumns = newVal;
     }
 
+    public String getPrimaryKeyRealName() {
+        for (Column column : mColumns) {
+            if (column.hasPrimaryKey()) {
+                return column.getRealName();
+            }
+        }
+        return "";
+    }
+
     public List<ForeignKey> getForeignKeys() {
         return mForeignKeys;
     }

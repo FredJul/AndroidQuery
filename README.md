@@ -75,7 +75,7 @@ Then tables are defined by POJOs that are annotated with `@Table`. Table columns
 ```java
 @Table(localDatabaseProvider = LocalDatabaseProvider.class)
 public class User {
-    @Column(index = true, realName = "_id", primary_key = true, auto_increment = true)
+    @Column(index = true, realName = "_id", primaryKey = true, autoIncrement = true)
     public int id;
     @Column private String username;
     @Column private long timestamp;
@@ -149,19 +149,6 @@ int count = Q.User.count().execute();
 
 ####Clauses####
 The `Where`, `And`, `In`, and `Or` classes are used to build up the query.
-`Where` is powered by the `Exp`ression enum:
-
-```java
-public enum Exp {
-	EQUAL_TO ("="),
-	MORE_THAN (">"),
-	MORE_THAN_OR_EQUAL_TO (">="),
-	LESS_THAN ("<"),
-	LESS_THAN_OR_EQUAL_TO ("<="),
-	LIKE ("LIKE");
-}
-``` 
-
 The following illustrate how to build more complex queries: 
 
 ```java
