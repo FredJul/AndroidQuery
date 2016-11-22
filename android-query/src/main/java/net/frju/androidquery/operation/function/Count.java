@@ -55,7 +55,7 @@ public class Count extends Query {
         /**
          * Specify a Where clause for the Count query
          * @param clause Where clause
-         * @return Call Builder#execute or Builder#rx to run the query
+         * @return Call Builder#query or Builder#rx to run the query
          */
         public Builder<T> where(Clause... clause) {
             mClause = clause;
@@ -66,7 +66,7 @@ public class Count extends Query {
          * Execute a Count query
          * @return The row count returned by the query
          */
-        public long execute() {
+        public long query() {
             return count(
                     new Count(mClause),
                     mClassDef,
@@ -82,7 +82,7 @@ public class Count extends Query {
             return wrapRx(new Callable<Long>() {
                 @Override
                 public Long call() throws Exception {
-                    return execute();
+                    return query();
                 }
             });
         }

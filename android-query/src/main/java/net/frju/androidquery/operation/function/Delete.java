@@ -65,7 +65,7 @@ public class Delete extends Query {
         /**
          * Specify a Where clause for the Delete query
          * @param clause Where clause
-         * @return Call Builder#execute or Builder#rx to run the query
+         * @return Call Builder#query or Builder#rx to run the query
          */
         public Builder<T> where(Clause... clause) {
             mClause = clause;
@@ -75,7 +75,7 @@ public class Delete extends Query {
         /**
          * Specify the values for the Delete query
          * @param models The models that are being deleted
-         * @return Call Builder#execute or Builder#rx to run the query
+         * @return Call Builder#query or Builder#rx to run the query
          */
         public Builder<T> model(T... models) {
             mModels = models;
@@ -86,7 +86,7 @@ public class Delete extends Query {
          * Executes a Delete query
          * @return The rows affected by the Delete query
          */
-        public int execute() {
+        public int query() {
             if (mModels != null) {
                 return delete(
                         new Delete(mModels),
@@ -109,7 +109,7 @@ public class Delete extends Query {
             return wrapRx(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
-                    return execute();
+                    return query();
                 }
             });
         }

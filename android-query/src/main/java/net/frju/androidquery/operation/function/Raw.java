@@ -31,7 +31,7 @@ public class Raw extends Query {
             return this;
         }
 
-        public Cursor execute() {
+        public Cursor query() {
             return rawQuery(mQuery, mDatabaseProvider);
         }
 
@@ -44,7 +44,7 @@ public class Raw extends Query {
             return wrapRx(new Callable<Cursor>() {
                 @Override
                 public Cursor call() throws Exception {
-                    return execute();
+                    return query();
                 }
             });
         }

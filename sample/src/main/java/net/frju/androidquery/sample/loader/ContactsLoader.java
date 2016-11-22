@@ -14,6 +14,6 @@ public class ContactsLoader extends BaseSelectLoader<Contact> {
 
     @Override
     public Result<Contact> doSelect() {
-        return Contact.select().execute();
+        return Contact.select().query();
     }
 }

@@ -54,7 +54,7 @@ public class CreateTest  extends IntegrationTest {
         Insert.getBuilder().values(user).execute(getSQLProvider());
 
         // verify
-        User responseUser = Select.getBuilder().executeOne(User.class, getSQLProvider());
+        User responseUser = Select.getBuilder().querySingle(User.class, getSQLProvider());
 
         assertTrue(user.getUsername().equals(responseUser.getUsername()));
         assertTrue(user.getTimestamp() == responseUser.getTimestamp());
@@ -106,11 +106,11 @@ public class CreateTest  extends IntegrationTest {
         // verify
         User angieUser = Select.getBuilder()
                 .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, ANGIE_USERNAME))
-                .executeOne(User.class, getSQLProvider());
+                .querySingle(User.class, getSQLProvider());
 
         User samUser = Select.getBuilder()
                 .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SAM_USERNAME))
-                .executeOne(User.class, getSQLProvider());
+                .querySingle(User.class, getSQLProvider());
 
         assertEquals(ANGIE_USERNAME, angieUser.getUsername());
         assertEquals(ANGIE_TIMESTAMP, angieUser.getTimestamp());
@@ -150,7 +150,7 @@ public class CreateTest  extends IntegrationTest {
 
         Insert.getBuilder().values(users).execute(getSQLProvider());
 
-        User[] usersInserted = Select.getBuilder().execute(User.class, getSQLProvider());
+        User[] usersInserted = Select.getBuilder().query(User.class, getSQLProvider());
 
         for (int i = 0; i < usersInserted.length; i++) {
             assertEquals(ANGIE_TIMESTAMP+i,usersInserted[i].getTimestamp());

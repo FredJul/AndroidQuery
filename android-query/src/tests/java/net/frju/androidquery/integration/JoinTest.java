@@ -56,7 +56,7 @@ public class JoinTest extends IntegrationTest {
     public void testInnerJoin() {
         User[] users = Select .getBuilder()
                 .join(innerJoin(Log.class, on("User.logId", "Log.id")))
-                .execute(User.class, getSQLProvider());
+                .query(User.class, getSQLProvider());
 
 
         assertEquals(1, users.length);
@@ -77,7 +77,7 @@ public class JoinTest extends IntegrationTest {
                             on("Post.userId", "User.id")
                         )
                 )
-                .execute(Post.class, getSQLProvider());
+                .query(Post.class, getSQLProvider());
 
 
         assertEquals(2, posts.length);
@@ -95,7 +95,7 @@ public class JoinTest extends IntegrationTest {
                         )
                 )
                 .orderBy("Post.id", OrderBy.Order.DESC)
-                .execute(Post.class, getSQLProvider());
+                .query(Post.class, getSQLProvider());
 
         assertEquals(3, posts.length);
         assertEquals(SetupPost.POST_3_ID, posts[0].getId());
@@ -113,7 +113,7 @@ public class JoinTest extends IntegrationTest {
                         )
                 )
                 .limit(0,2)
-                .execute(Post.class, getSQLProvider());
+                .query(Post.class, getSQLProvider());
 
         assertEquals(2, posts.length);
         assertEquals(SetupPost.POST_1_ID, posts[0].getId());
@@ -145,7 +145,7 @@ public class JoinTest extends IntegrationTest {
         User[] users = Select .getBuilder()
                 .join(innerJoin(Log.class, on("User.logId", "Log.id")))
                 .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.ANGIE_USER_NAME))
-                .execute(User.class, getSQLProvider());
+                .query(User.class, getSQLProvider());
 
 
         assertEquals(1, users.length);

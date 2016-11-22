@@ -53,12 +53,12 @@ public class UpdateTest extends IntegrationTest {
         int updated = Update.getBuilder()
                 .values(contentValues)
                 .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
-                .execute(User.class, getSQLProvider());
+                .query(User.class, getSQLProvider());
 
         // verify
         User user = Select.getBuilder()
                 .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
-                .executeOne(User.class, getSQLProvider());
+                .querySingle(User.class, getSQLProvider());
 
         assertEquals(true, user.getIsRegistered());
         assertEquals(timestamp, user.getTimestamp());
@@ -80,11 +80,11 @@ public class UpdateTest extends IntegrationTest {
         // exercise
         int updated = Update.getBuilder()
                 .values(contentValues)
-                .execute(User.class, getSQLProvider());
+                .query(User.class, getSQLProvider());
 
         // verify
         User[] users = Select.getBuilder()
-                .execute(User.class, getSQLProvider());
+                .query(User.class, getSQLProvider());
 
         for (User user : users) {
             assertEquals(timestamp, user.getTimestamp());
@@ -110,12 +110,12 @@ public class UpdateTest extends IntegrationTest {
         int updated = Update.getBuilder()
                 .values(contentValues)
                 .where(where(Q.User.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
-                .execute(User.class, getSQLProvider());
+                .query(User.class, getSQLProvider());
 
         // verify
         User[] users = Select.getBuilder()
                 .where(where(Q.User.TIMESTAMP, Where.Exp.EQUAL_TO, newTimestamp))
-                .execute(User.class, getSQLProvider());
+                .query(User.class, getSQLProvider());
 
         // 3 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 3 rows will be selected

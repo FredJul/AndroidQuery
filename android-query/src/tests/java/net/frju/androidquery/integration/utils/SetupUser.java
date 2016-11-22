@@ -102,7 +102,7 @@ public class SetupUser {
     }
 
     public void tearDownFourTestUsers(DatabaseProvider databaseProvider) {
-        Delete.getBuilder().execute(User.class, databaseProvider);
+        Delete.getBuilder().query(User.class, databaseProvider);
     }
 
     public static User createUser(int id,

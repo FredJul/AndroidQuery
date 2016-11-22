@@ -48,7 +48,7 @@ public class IndexTest extends IntegrationTest {
     public void testPostIndexesAreCreated() {
         Cursor cursor = Raw.getBuilder()
                 .query("PRAGMA INDEX_LIST('Post');")
-                .execute(getSQLProvider());
+                .query(getSQLProvider());
 
         List<String> indexes = getIndexes(cursor);
 
@@ -59,7 +59,7 @@ public class IndexTest extends IntegrationTest {
     public void testNoUserIndexesAreCreated() {
         Cursor cursor = Raw.getBuilder()
                 .query("PRAGMA INDEX_LIST('User');")
-                .execute(getSQLProvider());
+                .query(getSQLProvider());
 
         List<String> indexes = getIndexes(cursor);
 
@@ -68,7 +68,7 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testAutoIncrementPrimaryKey() {
-        Data[] data = Select.getBuilder().execute(Data.class, getSQLProvider());
+        Data[] data = Select.getBuilder().query(Data.class, getSQLProvider());
 
         assertEquals(3, data.length);
         assertEquals(1, data[0].getId());
@@ -78,7 +78,7 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testNoAutoIncrementPrimaryKey() {
-        Log[] log = Select.getBuilder().execute(Log.class, getSQLProvider());
+        Log[] log = Select.getBuilder().query(Log.class, getSQLProvider());
         assertEquals(3, log.length);
     }
 

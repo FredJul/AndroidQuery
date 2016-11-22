@@ -53,7 +53,7 @@ public class Insert extends Query {
         /**
          * Executes an Insert query
          */
-        public int execute() {
+        public int query() {
             return insert(
                     new Insert(mValues),
                     mValues != null && mValues.length > 0 ? mValues[0].getClass() : Object.class,
@@ -69,7 +69,7 @@ public class Insert extends Query {
             return wrapRx(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
-                    return execute();
+                    return query();
                 }
             });
         }

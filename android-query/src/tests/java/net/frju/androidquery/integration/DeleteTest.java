@@ -41,10 +41,10 @@ public class DeleteTest extends IntegrationTest {
 
     @org.junit.Test
     public void testAllUsersAreDeleted() {
-        int deletedRows = Delete.getBuilder().execute(User.class, getSQLProvider());
+        int deletedRows = Delete.getBuilder().query(User.class, getSQLProvider());
 
         // verify
-        User[] users = Select.getBuilder().execute(User.class, getSQLProvider());
+        User[] users = Select.getBuilder().query(User.class, getSQLProvider());
 
         // All of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 0 rows will be selected
@@ -56,10 +56,10 @@ public class DeleteTest extends IntegrationTest {
     public void testSingleUserIsDeleted() {
         int deletedRows = Delete.getBuilder()
             .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.ANGIE_USER_NAME))
-            .execute(User.class, getSQLProvider());
+                .query(User.class, getSQLProvider());
 
         // verify
-        User[] users = Select.getBuilder().execute(User.class, getSQLProvider());
+        User[] users = Select.getBuilder().query(User.class, getSQLProvider());
 
         // 1 of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 3 rows will be selected
@@ -71,10 +71,10 @@ public class DeleteTest extends IntegrationTest {
     public void testUsersAreDeleted() {
         int deletedRows = Delete.getBuilder()
             .where(in(Q.User.USERNAME, SetupUser.ANGIE_USER_NAME, SetupUser.CLYDE_USER_NAME, SetupUser.GILL_USER_NAME))
-            .execute(User.class, getSQLProvider());
+                .query(User.class, getSQLProvider());
 
         // verify
-        User[] users = Select.getBuilder().execute(User.class, getSQLProvider());
+        User[] users = Select.getBuilder().query(User.class, getSQLProvider());
 
         // 3 of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 1 rows will be selected

@@ -79,7 +79,7 @@ public class Select extends Query {
         /**
          * Specify a Where clause for the Select query
          * @param clause Where clause
-         * @return Call Builder#execute, Builder#rx, or Builder#rxSingle to run the query
+         * @return Call Builder#query, Builder#rx, or Builder#rxSingle to run the query
          */
         public Builder<T> where(Clause... clause) {
             mClause = clause;
@@ -106,7 +106,7 @@ public class Select extends Query {
          * Specify a Limit clause for the Select query
          * @param start The starting index to select from
          * @param end The ending index to select from
-         * @return Call Builder#execute, Builder#rx or Builder#rxSingle to run the query
+         * @return Call Builder#query, Builder#rx or Builder#rxSingle to run the query
          */
         public Builder<T> limit(int start, int end) {
             mLimit = new Limit(start, end);
@@ -117,7 +117,7 @@ public class Select extends Query {
          * Executes a Select query
          * @return The rows returned by the Select query
          */
-        public Result<T> execute() {
+        public Result<T> query() {
             return select(
                     new Select(mClause, mJoin, mOrderBy, mLimit),
                     mClassDef,
@@ -129,7 +129,7 @@ public class Select extends Query {
          * Executes a Select query that expects a single result
          * @return The row returned by the Select query
          */
-        public T executeOne() {
+        public T querySingle() {
             return selectSingle(
                     new Select(mClause, mJoin, mOrderBy, mLimit),
                     mClassDef,
@@ -145,7 +145,7 @@ public class Select extends Query {
             return wrapRx(new Callable<Result<T>>() {
                 @Override
                 public Result<T> call() throws Exception {
-                    return execute();
+                    return query();
                 }
             });
         }
@@ -154,11 +154,11 @@ public class Select extends Query {
          * Executes a Select query that expects a single result
          * @return An RxJava Observable
          */
-        public Observable<T> rxOne() {
+        public Observable<T> rxSingle() {
             return wrapRx(new Callable<T>() {
                 @Override
                 public T call() throws Exception {
-                    return executeOne();
+                    return querySingle();
                 }
             });
         }

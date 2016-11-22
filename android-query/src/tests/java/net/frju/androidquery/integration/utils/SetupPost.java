@@ -27,7 +27,7 @@ public class SetupPost {
     public static final int POST_3_USER_ID = SetupUser.CLYDE_ID;
 
     public void tearDownTestPosts(DatabaseProvider databaseProvider) {
-        Delete.getBuilder().execute(Log.class, databaseProvider);
+        Delete.getBuilder().query(Log.class, databaseProvider);
     }
 
     public void setupTestPosts(DatabaseProvider databaseProvider) {

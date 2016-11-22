@@ -9,7 +9,7 @@ import net.frju.androidquery.operation.function.Insert;
 public class SetupData {
 
     public void tearDownTestData(DatabaseProvider databaseProvider) {
-        Delete.getBuilder().execute(Log.class, databaseProvider);
+        Delete.getBuilder().query(Log.class, databaseProvider);
     }
 
     public void setupTestData(DatabaseProvider databaseProvider) {

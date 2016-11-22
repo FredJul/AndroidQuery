@@ -75,7 +75,7 @@ public class Update extends Query {
         /**
          * Specify a Where clause for the Update query
          * @param clause Where clause
-         * @return Call Builder#execute or Builder#rx to run the query
+         * @return Call Builder#query or Builder#rx to run the query
          */
         public Builder<T> where(Where... clause) {
             mClause = clause;
@@ -85,7 +85,7 @@ public class Update extends Query {
         /**
          * Specify the values for the Update query
          * @param model The model that are being updated
-         * @return Call Builder#execute or Builder#rx to run the query
+         * @return Call Builder#query or Builder#rx to run the query
          */
         public Builder<T> model(T model) {
             mModel = model;
@@ -95,7 +95,7 @@ public class Update extends Query {
         /**
          * Specify the values for the Update query
          * @param values The values that are being updated
-         * @return Call Builder#execute or Builder#rx to run the query
+         * @return Call Builder#query or Builder#rx to run the query
          */
         public Builder<T> values(ContentValues values) {
             mValues = values;
@@ -106,7 +106,7 @@ public class Update extends Query {
          * Executes an Update query
          * @return The rows affected by the Update query
          */
-        public int execute() {
+        public int query() {
             if (mModel != null) {
                 return update(
                         new Update(mModel),
@@ -130,7 +130,7 @@ public class Update extends Query {
             return wrapRx(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
-                    return execute();
+                    return query();
                 }
             });
         }

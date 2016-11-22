@@ -10,7 +10,7 @@ public class SetupLog {
     public static final long LOG_1_TIMESTAMP = 123456789;
 
     public void tearDownTestLogs(DatabaseProvider databaseProvider) {
-        Delete.getBuilder().execute(Log.class, databaseProvider);
+        Delete.getBuilder().query(Log.class, databaseProvider);
     }
 
     public void setupTestLogs(DatabaseProvider databaseProvider) {
