@@ -40,7 +40,7 @@ public abstract class DatabaseProvider {
     abstract protected int update(String tableName, ContentValues values, Clause[] clause);
 
     abstract protected Cursor query(String tableName, String[] columns, Clause[] clause, Join[] joins,
-                                    String groupBy, String having, OrderBy orderBy, Limit limit);
+                                    String groupBy, String having, OrderBy[] orderBy, Limit limit);
 
     abstract protected int delete(String tableName, Clause[] clause);
 

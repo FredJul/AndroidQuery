@@ -134,7 +134,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
     }
 
     protected Cursor query(String tableName, String[] columns, Clause[] clause, Join[] joins,
-                           String groupBy, String having, OrderBy orderBy, Limit limit) {
+                           String groupBy, String having, OrderBy[] orderBy, Limit limit) {
 
         if (joins != null && joins.length > 0) {
             try {

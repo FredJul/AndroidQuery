@@ -22,6 +22,7 @@ import net.frju.androidquery.operation.join.Join;
 import net.frju.androidquery.operation.keyword.Limit;
 import net.frju.androidquery.operation.keyword.OrderBy;
 
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -33,7 +34,7 @@ import io.reactivex.Observable;
 public class Select extends Query {
     private Clause[] mClause;
     private Join[] mJoin;
-    private OrderBy mOrderBy;
+    private OrderBy[] mOrderBy;
     private Limit mLimit;
 
     public Clause[] getClause() {
@@ -44,7 +45,7 @@ public class Select extends Query {
         return mJoin;
     }
 
-    public OrderBy getOrderBy() {
+    public OrderBy[] getOrderBy() {
         return mOrderBy;
     }
 
@@ -52,7 +53,7 @@ public class Select extends Query {
         return mLimit;
     }
 
-    private Select(Clause[] clause, Join[] join, OrderBy orderBy, Limit limit) {
+    private Select(Clause[] clause, Join[] join, OrderBy[] orderBy, Limit limit) {
         mClause = clause;
         mJoin = join;
         mOrderBy = orderBy;
@@ -66,7 +67,7 @@ public class Select extends Query {
     public static class Builder<T> {
         private Clause[] mClause;
         private Join[] mJoin;
-        private OrderBy mOrderBy;
+        private OrderBy[] mOrderBy;
         private Limit mLimit;
         private Class<T> mClassDef;
         private DatabaseProvider mDatabaseProvider;
@@ -98,7 +99,23 @@ public class Select extends Query {
          * @return Call Builder#executem Builder#rx or Builder#rxSingle to run the query
          */
         public Builder<T> orderBy(String column, OrderBy.Order order) {
-            mOrderBy = new OrderBy(column, order);
+            if (mOrderBy == null) {
+                mOrderBy = new OrderBy[]{new OrderBy(column, order)};
+            } else {
+                mOrderBy = Arrays.copyOf(mOrderBy, mOrderBy.length + 1);
+                mOrderBy[mOrderBy.length - 1] = new OrderBy(column, order);
+            }
+            return this;
+        }
+
+        /**
+         * Specify an Order By clause for the Select query
+         *
+         * @param orderBy the list of order of
+         * @return Call Builder#executem Builder#rx or Builder#rxSingle to run the query
+         */
+        public Builder<T> orderBy(OrderBy... orderBy) {
+            mOrderBy = orderBy;
             return this;
         }
 

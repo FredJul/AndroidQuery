@@ -210,16 +210,22 @@ public class ClauseHelper {
         return args;
     }
 
-    public String getOrderBy(OrderBy orderBy) {
+    public String getOrderBy(OrderBy[] orderByArray) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        if (orderBy != null) {
-            if (orderBy.getOrder() == OrderBy.Order.RANDOM) {
-                stringBuilder.append(orderBy.getOrder().toString() + "()");
-            } else {
-                stringBuilder.append(orderBy.getField());
-                stringBuilder.append(SPACE);
-                stringBuilder.append(orderBy.getOrder().toString());
+        if (orderByArray != null && orderByArray.length > 0) {
+            for (OrderBy orderBy : orderByArray) {
+                if (stringBuilder.length() > 0) {
+                    stringBuilder.append(COMMA);
+                }
+
+                if (orderBy.getOrder() == OrderBy.Order.RANDOM) {
+                    stringBuilder.append(orderBy.getOrder().toString() + "()");
+                } else {
+                    stringBuilder.append(orderBy.getField());
+                    stringBuilder.append(SPACE);
+                    stringBuilder.append(orderBy.getOrder().toString());
+                }
             }
         }
 
@@ -263,7 +269,7 @@ public class ClauseHelper {
     }
 
     public String buildJoinQuery(String[] tableColumns, Join[] joins, String tableName, Clause[] clause,
-                                  OrderBy orderBy, Limit limit, Resolver resolver) {
+                                 OrderBy[] orderBy, Limit limit, Resolver resolver) {
 
         String[] joinColumns = getJoinColumns(joins, resolver);
 
