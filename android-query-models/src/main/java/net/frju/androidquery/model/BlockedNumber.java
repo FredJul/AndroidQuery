@@ -12,7 +12,9 @@ import net.frju.androidquery.operation.function.Count;
 import net.frju.androidquery.operation.function.Delete;
 import net.frju.androidquery.operation.function.Insert;
 import net.frju.androidquery.operation.function.Result;
+import net.frju.androidquery.operation.function.Save;
 import net.frju.androidquery.operation.function.Select;
+import net.frju.androidquery.operation.function.Update;
 
 @SuppressWarnings("unused")
 @TargetApi(24)
@@ -46,6 +48,14 @@ public class BlockedNumber {
 
     public static Insert.Builder<BlockedNumber> insert(BlockedNumber... models) {
         return Q.BlockedNumber.insertViaContentProvider(models);
+    }
+
+    public static Update.Builder<BlockedNumber> update() {
+        return Q.BlockedNumber.updateViaContentProvider();
+    }
+
+    public static Save.Builder<BlockedNumber> save(BlockedNumber... models) {
+        return Q.BlockedNumber.saveViaContentProvider(models);
     }
 
     public static Result<BlockedNumber> fromCursor(Cursor cursor) {

@@ -12,7 +12,9 @@ import net.frju.androidquery.operation.function.Count;
 import net.frju.androidquery.operation.function.Delete;
 import net.frju.androidquery.operation.function.Insert;
 import net.frju.androidquery.operation.function.Result;
+import net.frju.androidquery.operation.function.Save;
 import net.frju.androidquery.operation.function.Select;
+import net.frju.androidquery.operation.function.Update;
 
 @SuppressWarnings("unused")
 @Table(realName = "contacts", contentDatabaseProvider = ContactContentDatabaseProvider.class)
@@ -57,6 +59,14 @@ public class Contact {
 
     public static Insert.Builder<Contact> insert(Contact... models) {
         return Q.Contact.insertViaContentProvider(models);
+    }
+
+    public static Update.Builder<Contact> update() {
+        return Q.Contact.updateViaContentProvider();
+    }
+
+    public static Save.Builder<Contact> save(Contact... models) {
+        return Q.Contact.saveViaContentProvider(models);
     }
 
     public static Result<Contact> fromCursor(Cursor cursor) {
