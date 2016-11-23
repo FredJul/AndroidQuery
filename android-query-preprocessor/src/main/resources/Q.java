@@ -204,7 +204,7 @@ public class Q {
             public Object getPrimaryKeyValue(Object model) {
                 ${packagedTableName} ${table.getName()?lower_case} = (${packagedTableName})model;
 
-                return ${getPrimaryKeyValue("${table.getName()?lower_case}", ${table.getName()?lower_case})};
+                return ${getPrimaryKeyValue(table.getName()?lower_case, table)};
             }
 
             @Override
@@ -247,7 +247,6 @@ public class Q {
                 return Delete.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
             }
             </#if>
-
             <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
             public static Delete.Builder<${packagedTableName}> deleteWithContentProvider() {
                 return Delete.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
@@ -259,10 +258,20 @@ public class Q {
                 return Update.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
             }
             </#if>
-
             <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
             public static Update.Builder<${packagedTableName}> updateWithContentProvider() {
                 return Update.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
+            }
+            </#if>
+
+            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
+            public static Save.Builder<${packagedTableName}> save(${packagedTableName}... models) {
+                return Save.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), models);
+            }
+            </#if>
+            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
+            public static Save.Builder<${packagedTableName}> saveWithContentProvider(${packagedTableName}... models) {
+                return Save.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
             }
             </#if>
 
@@ -271,7 +280,6 @@ public class Q {
                 return Insert.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), models);
             }
             </#if>
-
             <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
             public static Insert.Builder<${packagedTableName}> insertWithContentProvider(${packagedTableName}... models) {
                 return Insert.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);

@@ -10,9 +10,11 @@ import net.frju.androidquery.operation.function.Count;
 import net.frju.androidquery.operation.function.Delete;
 import net.frju.androidquery.operation.function.Insert;
 import net.frju.androidquery.operation.function.Result;
+import net.frju.androidquery.operation.function.Save;
 import net.frju.androidquery.operation.function.Select;
 import net.frju.androidquery.operation.function.Update;
 
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -20,6 +22,24 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 
 public abstract class Query {
+
+    protected static int save(Save save, Class<?> classDef, DatabaseProvider databaseProvider) {
+        int nb = 0;
+
+        ArrayList<Object> modelsToInsert = new ArrayList<>();
+        for (Object model : save.getModels()) {
+            //noinspection unchecked
+            if (Update.getBuilder(classDef, databaseProvider).model(model).query() <= 0) {
+                modelsToInsert.add(model);
+            } else {
+                nb++;
+            }
+        }
+
+        nb += Insert.getBuilder(databaseProvider, modelsToInsert.toArray()).query();
+
+        return nb;
+    }
 
     protected static int insert(Insert insert, Class<?> classDef, DatabaseProvider databaseProvider) {
         if (insert.getModels() != null && insert.getModels().length > 0) {

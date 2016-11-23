@@ -47,11 +47,11 @@ public class Update extends Query {
         return mConditions;
     }
 
-    public Update(Object model) {
+    private Update(Object model) {
         mModel = model;
     }
 
-    public Update(ContentValues contentValues, Clause[] conditions) {
+    private Update(ContentValues contentValues, Clause[] conditions) {
         mContentValues = contentValues;
         mConditions = conditions;
     }

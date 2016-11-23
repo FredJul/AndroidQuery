@@ -34,7 +34,7 @@ public class Count extends Query {
         return mClause;
     }
 
-    public Count(Clause[] clause) {
+    private Count(Clause[] clause) {
         mClause = clause;
     }
 

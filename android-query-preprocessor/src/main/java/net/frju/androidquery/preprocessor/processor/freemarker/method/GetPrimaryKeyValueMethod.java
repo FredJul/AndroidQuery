@@ -55,6 +55,13 @@ public class GetPrimaryKeyValueMethod implements TemplateMethodModelEx {
                     case "float":
                         result = "java.lang.Float.valueOf(" + result + ")";
                         break;
+                    case "java.lang.Long":
+                    case "java.lang.Integer":
+                    case "java.lang.Short":
+                    case "java.lang.Double":
+                    case "java.lang.Float":
+                    case "java.lang.String":
+                        break; // Nothing to do
                     default:
                         throw new IllegalStateException("PrimaryKey can not have the type: " + column.getType());
                 }
@@ -62,7 +69,7 @@ public class GetPrimaryKeyValueMethod implements TemplateMethodModelEx {
             }
         }
 
-        return "";
+        return "null";
     }
 
     @Override
@@ -79,7 +86,7 @@ public class GetPrimaryKeyValueMethod implements TemplateMethodModelEx {
             StringModel stringModel = (StringModel) tableNameValue;
             table = (Table) stringModel.getAdaptedObject(Table.class);
         } else {
-            throw new IllegalStateException("The assembleCreateTable argument must be type of " +
+            throw new IllegalStateException("The getPrimaryKeyValue argument must be type of " +
                     "net.frju.androidquery.preprocessor.processor.data.Table");
         }
 
