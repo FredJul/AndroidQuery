@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         comment.timestamp = System.currentTimeMillis();
         comment.userId = 1;
 
-        mCompositeDisposable.add(Q.Comment.insertWithContentProvider(comment)
+        mCompositeDisposable.add(Q.Comment.insertViaContentProvider(comment)
                 .rx()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

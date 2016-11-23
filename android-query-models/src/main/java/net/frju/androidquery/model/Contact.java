@@ -52,11 +52,11 @@ public class Contact {
     }
 
     public static Delete.Builder<Contact> delete() {
-        return Q.Contact.deleteWithContentProvider();
+        return Q.Contact.deleteViaContentProvider();
     }
 
     public static Insert.Builder<Contact> insert(Contact... models) {
-        return Q.Contact.insertWithContentProvider(models);
+        return Q.Contact.insertViaContentProvider(models);
     }
 
     public static Result<Contact> fromCursor(Cursor cursor) {

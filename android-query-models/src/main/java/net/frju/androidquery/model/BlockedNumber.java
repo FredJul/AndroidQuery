@@ -41,11 +41,11 @@ public class BlockedNumber {
     }
 
     public static Delete.Builder<BlockedNumber> delete() {
-        return Q.BlockedNumber.deleteWithContentProvider();
+        return Q.BlockedNumber.deleteViaContentProvider();
     }
 
     public static Insert.Builder<BlockedNumber> insert(BlockedNumber... models) {
-        return Q.BlockedNumber.insertWithContentProvider(models);
+        return Q.BlockedNumber.insertViaContentProvider(models);
     }
 
     public static Result<BlockedNumber> fromCursor(Cursor cursor) {

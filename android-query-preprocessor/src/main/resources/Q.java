@@ -248,7 +248,7 @@ public class Q {
             }
             </#if>
             <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static Delete.Builder<${packagedTableName}> deleteWithContentProvider() {
+            public static Delete.Builder<${packagedTableName}> deleteViaContentProvider() {
                 return Delete.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
             }
             </#if>
@@ -259,7 +259,7 @@ public class Q {
             }
             </#if>
             <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static Update.Builder<${packagedTableName}> updateWithContentProvider() {
+            public static Update.Builder<${packagedTableName}> updateViaContentProvider() {
                 return Update.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
             }
             </#if>
@@ -270,7 +270,7 @@ public class Q {
             }
             </#if>
             <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static Save.Builder<${packagedTableName}> saveWithContentProvider(${packagedTableName}... models) {
+            public static Save.Builder<${packagedTableName}> saveViaContentProvider(${packagedTableName}... models) {
                 return Save.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
             }
             </#if>
@@ -281,7 +281,7 @@ public class Q {
             }
             </#if>
             <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static Insert.Builder<${packagedTableName}> insertWithContentProvider(${packagedTableName}... models) {
+            public static Insert.Builder<${packagedTableName}> insertViaContentProvider(${packagedTableName}... models) {
                 return Insert.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
             }
             </#if>
