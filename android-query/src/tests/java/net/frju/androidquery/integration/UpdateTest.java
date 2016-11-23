@@ -52,12 +52,12 @@ public class UpdateTest extends IntegrationTest {
         // exercise
         int updated = Update.getBuilder()
                 .values(contentValues)
-                .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
+                .where(where(Q.User.USERNAME, Where.Op.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
                 .query(User.class, getSQLProvider());
 
         // verify
         User user = Select.getBuilder()
-                .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
+                .where(where(Q.User.USERNAME, Where.Op.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
                 .querySingle(User.class, getSQLProvider());
 
         assertEquals(true, user.getIsRegistered());
@@ -109,12 +109,12 @@ public class UpdateTest extends IntegrationTest {
         // exercise
         int updated = Update.getBuilder()
                 .values(contentValues)
-                .where(where(Q.User.TIMESTAMP, Where.Exp.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
+                .where(where(Q.User.TIMESTAMP, Where.Op.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
                 .query(User.class, getSQLProvider());
 
         // verify
         User[] users = Select.getBuilder()
-                .where(where(Q.User.TIMESTAMP, Where.Exp.EQUAL_TO, newTimestamp))
+                .where(where(Q.User.TIMESTAMP, Where.Op.EQUAL_TO, newTimestamp))
                 .query(User.class, getSQLProvider());
 
         // 3 of the users created by #setupFourTestUsers will match the

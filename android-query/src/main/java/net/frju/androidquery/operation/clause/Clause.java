@@ -21,8 +21,8 @@ package net.frju.androidquery.operation.clause;
  */
 public class Clause {
 
-    public static Where where(String row, Where.Exp expression, Object value) {
-        return new Where(row, expression, value);
+    public static Where where(String column, Where.Op operator, Object value) {
+        return new Where(column, operator, value);
     }
 
     public static And and(Clause... clause) {

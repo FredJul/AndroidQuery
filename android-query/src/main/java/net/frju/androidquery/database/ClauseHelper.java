@@ -104,9 +104,9 @@ public class ClauseHelper {
     private String buildWhereCondition(Where where) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append(where.getRow());
+        stringBuilder.append(where.getColumn());
         stringBuilder.append(SPACE);
-        stringBuilder.append(where.getExpression().toString());
+        stringBuilder.append(where.getOperator().toString());
         stringBuilder.append(SPACE);
         stringBuilder.append(VALUE);
 

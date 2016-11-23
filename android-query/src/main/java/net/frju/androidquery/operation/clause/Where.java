@@ -19,11 +19,11 @@ package net.frju.androidquery.operation.clause;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Where extends Clause {
-    private String mRow;
-    private Exp mExpression;
+    private String mColumn;
+    private Op mOperator;
     private Object mValue;
 
-    public enum Exp {
+    public enum Op {
         EQUAL_TO ("="),
         MORE_THAN (">"),
         MORE_THAN_OR_EQUAL_TO (">="),
@@ -33,7 +33,7 @@ public class Where extends Clause {
 
         private final String mValue;
 
-        Exp(String value) {
+        Op(String value) {
             mValue = value;
         }
 
@@ -43,12 +43,12 @@ public class Where extends Clause {
         }
     }
 
-    public String getRow() {
-        return mRow;
+    public String getColumn() {
+        return mColumn;
     }
 
-    public Exp getExpression() {
-        return mExpression;
+    public Op getOperator() {
+        return mOperator;
     }
 
     public Object getValue() {
@@ -58,13 +58,13 @@ public class Where extends Clause {
     /**
      * Specifies a SQLite WHERE clause
      *
-     * @param row        The row to perform the clause on
-     * @param expression The type of expression that will evaluate the value
+     * @param column        The column to perform the clause on
+     * @param operator The type of operator that will evaluate the value
      * @param value      The value being evaluated
      */
-    public Where(String row, Exp expression, Object value) {
-        mRow = row;
-        mExpression = expression;
+    public Where(String column, Op operator, Object value) {
+        mColumn = column;
+        mOperator = operator;
         mValue = value;
     }
 }

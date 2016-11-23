@@ -144,7 +144,7 @@ public class JoinTest extends IntegrationTest {
     public void testJoinWithCondition() {
         User[] users = Select .getBuilder()
                 .join(innerJoin(Log.class, on("User.logId", "Log.id")))
-                .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.ANGIE_USER_NAME))
+                .where(where(Q.User.USERNAME, Where.Op.EQUAL_TO, SetupUser.ANGIE_USER_NAME))
                 .query(User.class, getSQLProvider());
 
 

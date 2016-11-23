@@ -98,7 +98,7 @@ public abstract class Query {
             ContentValues values = tableDesc.getContentValues(update.getModel());
             if (conditions == null) {
                 conditions = new Clause[1];
-                conditions[0] = Where.where(tableDesc.getPrimaryKeyRealName(), Where.Exp.EQUAL_TO, values.get(tableDesc.getPrimaryKeyRealName()));
+                conditions[0] = Where.where(tableDesc.getPrimaryKeyRealName(), Where.Op.EQUAL_TO, values.get(tableDesc.getPrimaryKeyRealName()));
             }
 
             if (update.getModel() instanceof ModelListener) {

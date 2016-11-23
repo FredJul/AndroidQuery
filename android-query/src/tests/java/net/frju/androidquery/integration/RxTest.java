@@ -51,7 +51,7 @@ public class RxTest extends IntegrationTest {
         sub.assertNoErrors();
 
         Observable<User> verify = Select.getBuilder()
-                .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, USER_ID))
+                .where(where(Q.User.USERNAME, Where.Op.EQUAL_TO, USER_ID))
                 .rxSingle(User.class, getSQLProvider());
 
         TestSubscriber<User> subVerify = new TestSubscriber<>();
@@ -81,7 +81,7 @@ public class RxTest extends IntegrationTest {
     public void testRxReadOne() {
         // exercise
         Observable<User> read = Select.getBuilder()
-                .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
+                .where(where(Q.User.USERNAME, Where.Op.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
                 .rxSingle(User.class, getSQLProvider());
 
         TestSubscriber<User> sub = new TestSubscriber<>();

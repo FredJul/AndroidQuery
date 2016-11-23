@@ -55,7 +55,7 @@ public class DeleteTest extends IntegrationTest {
     @org.junit.Test
     public void testSingleUserIsDeleted() {
         int deletedRows = Delete.getBuilder()
-            .where(where(Q.User.USERNAME, Where.Exp.EQUAL_TO, SetupUser.ANGIE_USER_NAME))
+                .where(where(Q.User.USERNAME, Where.Op.EQUAL_TO, SetupUser.ANGIE_USER_NAME))
                 .query(User.class, getSQLProvider());
 
         // verify

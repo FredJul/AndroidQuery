@@ -41,7 +41,7 @@ public class ClauseHelperTest {
     public void testWhereQueryIsBuiltFromClauseCollection() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        Where where = where(Q.User.USERNAME, Where.Exp.EQUAL_TO, "sam");
+        Where where = where(Q.User.USERNAME, Where.Op.EQUAL_TO, "sam");
 
         String clause = clauseHelper.getClause(new Clause[]{where});
         String[] args = clauseHelper.getClauseArgs(new Clause[]{where});
@@ -71,8 +71,8 @@ public class ClauseHelperTest {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
         And and = and(
-                where(Q.User.TIMESTAMP, Where.Exp.MORE_THAN, 10),
-                where(Q.User.TIMESTAMP, Where.Exp.EQUAL_TO, 20)
+                where(Q.User.TIMESTAMP, Where.Op.MORE_THAN, 10),
+                where(Q.User.TIMESTAMP, Where.Op.EQUAL_TO, 20)
         );
 
         String clause = clauseHelper.getClause(new Clause[]{and});
@@ -90,11 +90,11 @@ public class ClauseHelperTest {
 
         And and = and(
                 or(
-                        where(Q.User.USERNAME, Where.Exp.EQUAL_TO, "sam"),
-                        where(Q.User.USERNAME, Where.Exp.EQUAL_TO, "angie")
+                        where(Q.User.USERNAME, Where.Op.EQUAL_TO, "sam"),
+                        where(Q.User.USERNAME, Where.Op.EQUAL_TO, "angie")
                 ),
                 and(
-                        where(Q.User.TIMESTAMP, Where.Exp.MORE_THAN_OR_EQUAL_TO, 1234567890)
+                        where(Q.User.TIMESTAMP, Where.Op.MORE_THAN_OR_EQUAL_TO, 1234567890)
                 )
         );
 
@@ -113,7 +113,7 @@ public class ClauseHelperTest {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
         Or or = or(
-            where(Q.User.USERNAME, Where.Exp.EQUAL_TO, "sam"),
+                where(Q.User.USERNAME, Where.Op.EQUAL_TO, "sam"),
             in(Q.User.TIMESTAMP, 10, 20)
         );
 
