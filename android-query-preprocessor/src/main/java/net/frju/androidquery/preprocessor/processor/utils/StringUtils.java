@@ -33,6 +33,10 @@ public class StringUtils {
             case "int":
                 getter = "cursor.getInt(x)";
                 break;
+            case "java.lang.Short":
+            case "short":
+                getter = "cursor.getShort(x)";
+                break;
             case "java.lang.Boolean":
             case "boolean":
                 getter = "cursor.getInt(x) == 1 ? true : false";

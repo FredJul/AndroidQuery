@@ -5,6 +5,7 @@ import net.frju.androidquery.preprocessor.processor.freemarker.method.AssembleCr
 import net.frju.androidquery.preprocessor.processor.freemarker.method.FormatConstantMethod;
 import net.frju.androidquery.preprocessor.processor.freemarker.method.GetContentValueMethod;
 import net.frju.androidquery.preprocessor.processor.freemarker.method.GetCursorGetterMethod;
+import net.frju.androidquery.preprocessor.processor.freemarker.method.GetPrimaryKeyValueMethod;
 import net.frju.androidquery.preprocessor.processor.freemarker.method.JoinReferencesMethod;
 import net.frju.androidquery.preprocessor.processor.freemarker.method.JoinSettersMethod;
 
@@ -23,6 +24,7 @@ public class DataModel {
         map.put(TABLES, data.getTables());
         map.putAll(GetCursorGetterMethod.getMethodMap(data));
         map.putAll(GetContentValueMethod.getMethodMap(data));
+        map.putAll(GetPrimaryKeyValueMethod.getMethodMap(data));
         map.putAll(AssembleCreateTableMethod.getMethodMap(data));
         map.putAll(FormatConstantMethod.getMethodMap());
         map.putAll(JoinSettersMethod.getMethodMap(data));

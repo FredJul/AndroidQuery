@@ -21,7 +21,6 @@ import android.database.Cursor;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-@SuppressWarnings("WeakerAccess")
 public interface TableDescription {
     String getTableRealName();
     String getTableInsertQuery();
@@ -33,6 +32,8 @@ public interface TableDescription {
 
     String[] getColumnNamesWithTablePrefix();
     ContentValues getContentValues(Object model);
+
+    Object getPrimaryKeyValue(Object model);
 
     <T> T getSingleResult(Cursor cursor);
 

@@ -201,6 +201,13 @@ public class Q {
             }
 
             @Override
+            public Object getPrimaryKeyValue(Object model) {
+                ${packagedTableName} ${table.getName()?lower_case} = (${packagedTableName})model;
+
+                return ${getPrimaryKeyValue("${table.getName()?lower_case}", ${table.getName()?lower_case})};
+            }
+
+            @Override
             public ContentValues getContentValues(Object model) {
                 ${packagedTableName} ${table.getName()?lower_case} = (${packagedTableName})model;
 

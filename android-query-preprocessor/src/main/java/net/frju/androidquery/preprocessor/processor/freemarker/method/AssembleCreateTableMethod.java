@@ -104,7 +104,9 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
             case "long":
                 return SQL_LONG;
             case "java.lang.Integer":
+            case "java.lang.Short":
             case "int":
+            case "short":
                 return SQL_INTEGER;
             case "java.lang.Boolean":
             case "boolean":
