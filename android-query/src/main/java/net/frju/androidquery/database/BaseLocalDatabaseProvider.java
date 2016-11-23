@@ -23,7 +23,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import net.frju.androidquery.operation.clause.Clause;
+import net.frju.androidquery.operation.condition.Condition;
 import net.frju.androidquery.operation.join.Join;
 import net.frju.androidquery.operation.keyword.Limit;
 import net.frju.androidquery.operation.keyword.OrderBy;
@@ -124,16 +124,16 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         return nbInsert;
     }
 
-    protected int update(String tableName, ContentValues values, Clause[] clause) {
+    protected int update(String tableName, ContentValues values, Condition[] condition) {
         return mDatabase.update(
                 tableName,
                 values,
-                mClauseHelper.getClause(clause),
-                mClauseHelper.getClauseArgs(clause)
+                mClauseHelper.getCondition(condition),
+                mClauseHelper.getConditionArgs(condition)
         );
     }
 
-    protected Cursor query(String tableName, String[] columns, Clause[] clause, Join[] joins,
+    protected Cursor query(String tableName, String[] columns, Condition[] condition, Join[] joins,
                            String groupBy, String having, OrderBy[] orderBy, Limit limit) {
 
         if (joins != null && joins.length > 0) {
@@ -142,13 +142,13 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
                         columns,
                         joins,
                         tableName,
-                        clause,
+                        condition,
                         orderBy,
                         limit,
                         getResolver()
                 );
 
-                return mDatabase.rawQuery(joinQuery, mClauseHelper.getClauseArgs(clause));
+                return mDatabase.rawQuery(joinQuery, mClauseHelper.getConditionArgs(condition));
             } catch (Exception e) {
                 throw new SQLException(e.getMessage());
             }
@@ -156,8 +156,8 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
             return mDatabase.query(
                     tableName,
                     columns,
-                    mClauseHelper.getClause(clause),
-                    mClauseHelper.getClauseArgs(clause),
+                    mClauseHelper.getCondition(condition),
+                    mClauseHelper.getConditionArgs(condition),
                     groupBy,
                     having,
                     mClauseHelper.getOrderBy(orderBy),
@@ -166,20 +166,20 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         }
     }
 
-    protected int delete(String tableName, Clause[] clause) {
+    protected int delete(String tableName, Condition[] condition) {
         return mDatabase.delete(
                 tableName,
-                mClauseHelper.getClause(clause),
-                mClauseHelper.getClauseArgs(clause)
+                mClauseHelper.getCondition(condition),
+                mClauseHelper.getConditionArgs(condition)
         );
     }
 
-    protected long count(String tableName, Clause[] clause) {
+    protected long count(String tableName, Condition[] condition) {
         return DatabaseUtils.queryNumEntries(
                 mDatabase,
                 tableName,
-                mClauseHelper.getClause(clause),
-                mClauseHelper.getClauseArgs(clause)
+                mClauseHelper.getCondition(condition),
+                mClauseHelper.getConditionArgs(condition)
         );
     }
 

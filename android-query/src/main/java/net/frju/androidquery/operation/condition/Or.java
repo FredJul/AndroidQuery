@@ -13,31 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.frju.androidquery.operation.clause;
+package net.frju.androidquery.operation.condition;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class In extends Clause {
-    private String mColumn;
-    private Object[] mValues;
+public class Or extends Condition {
+    private Condition[] mCondition;
 
-    public String getColumn() {
-        return mColumn;
-    }
-
-    public Object[] getValues() {
-        return mValues;
+    public Condition[] getCondition() {
+        return mCondition;
     }
 
     /**
-     * Specifies a SQLite IN operator
+     * Specifies a SQLite OR operator
      *
-     * @param column The column to perform the operation on
-     * @param values The values of the in operator
+     * @param condition Combine multiple conditions
      */
-    public In(String column, Object... values) {
-        mColumn = column;
-        mValues = values;
+    public Or(Condition... condition) {
+        mCondition = condition;
     }
 }

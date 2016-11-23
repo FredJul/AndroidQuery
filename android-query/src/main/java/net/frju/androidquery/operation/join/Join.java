@@ -15,7 +15,7 @@
  */
 package net.frju.androidquery.operation.join;
 
-import net.frju.androidquery.operation.clause.Clause;
+import net.frju.androidquery.operation.condition.Condition;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -23,7 +23,7 @@ import net.frju.androidquery.operation.clause.Clause;
 public abstract class Join<J> {
     private Class<J> mTable;
     private Join mJoin;
-    private Clause[] mClauses;
+    private Condition[] mConditions;
 
     public Class<J> getTable() {
         return mTable;
@@ -33,13 +33,13 @@ public abstract class Join<J> {
         return mJoin;
     }
 
-    public Clause[] getClauses() {
-        return mClauses;
+    public Condition[] getClauses() {
+        return mConditions;
     }
 
-    public Join(Class<J> table, Join join, Clause... clauses) {
+    public Join(Class<J> table, Join join, Condition... conditions) {
         mTable = table;
         mJoin = join;
-        mClauses = clauses;
+        mConditions = conditions;
     }
 }

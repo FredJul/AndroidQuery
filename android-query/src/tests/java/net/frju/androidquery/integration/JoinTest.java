@@ -22,15 +22,15 @@ import net.frju.androidquery.integration.models.User;
 import net.frju.androidquery.integration.utils.SetupLog;
 import net.frju.androidquery.integration.utils.SetupPost;
 import net.frju.androidquery.integration.utils.SetupUser;
-import net.frju.androidquery.operation.clause.Where;
+import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.function.Select;
 import net.frju.androidquery.operation.keyword.OrderBy;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import static net.frju.androidquery.operation.clause.On.on;
-import static net.frju.androidquery.operation.clause.Where.where;
+import static net.frju.androidquery.operation.condition.On.on;
+import static net.frju.androidquery.operation.condition.Where.where;
 import static net.frju.androidquery.operation.join.InnerJoin.innerJoin;
 
 /**

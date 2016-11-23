@@ -19,8 +19,8 @@ import android.content.ContentValues;
 
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
-import net.frju.androidquery.operation.clause.Clause;
-import net.frju.androidquery.operation.clause.Where;
+import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.Where;
 
 import java.util.concurrent.Callable;
 
@@ -33,7 +33,7 @@ import io.reactivex.Observable;
 public class Update extends Query {
     private Object mModel;
     private ContentValues mContentValues;
-    private Clause[] mConditions;
+    private Condition[] mConditions;
 
     public Object getModel() {
         return mModel;
@@ -43,7 +43,7 @@ public class Update extends Query {
         return mContentValues;
     }
 
-    public Clause[] getConditions() {
+    public Condition[] getConditions() {
         return mConditions;
     }
 
@@ -51,7 +51,7 @@ public class Update extends Query {
         mModel = model;
     }
 
-    private Update(ContentValues contentValues, Clause[] conditions) {
+    private Update(ContentValues contentValues, Condition[] conditions) {
         mContentValues = contentValues;
         mConditions = conditions;
     }
@@ -63,7 +63,7 @@ public class Update extends Query {
     public static class Builder<T> {
         private T mModel;
         private ContentValues mValues;
-        private Clause[] mClause;
+        private Condition[] mCondition;
         private Class<T> mClassDef;
         private DatabaseProvider mDatabaseProvider;
 
@@ -78,7 +78,7 @@ public class Update extends Query {
          * @return Call Builder#query or Builder#rx to run the query
          */
         public Builder<T> where(Where... clause) {
-            mClause = clause;
+            mCondition = clause;
             return this;
         }
 
@@ -115,7 +115,7 @@ public class Update extends Query {
                 );
             } else {
                 return update(
-                        new Update(mValues, mClause),
+                        new Update(mValues, mCondition),
                         mClassDef,
                         mDatabaseProvider
                 );

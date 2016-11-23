@@ -17,19 +17,19 @@ package net.frju.androidquery.unit;
 
 import net.frju.androidquery.database.ClauseHelper;
 import net.frju.androidquery.gen.Q;
-import net.frju.androidquery.operation.clause.And;
-import net.frju.androidquery.operation.clause.Clause;
-import net.frju.androidquery.operation.clause.In;
-import net.frju.androidquery.operation.clause.Or;
-import net.frju.androidquery.operation.clause.Where;
+import net.frju.androidquery.operation.condition.And;
+import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.In;
+import net.frju.androidquery.operation.condition.Or;
+import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.keyword.Limit;
 import net.frju.androidquery.operation.keyword.OrderBy;
 import net.frju.androidquery.unit.mock.ClauseHelperStub;
 
-import static net.frju.androidquery.operation.clause.And.and;
-import static net.frju.androidquery.operation.clause.In.in;
-import static net.frju.androidquery.operation.clause.Or.or;
-import static net.frju.androidquery.operation.clause.Where.where;
+import static net.frju.androidquery.operation.condition.And.and;
+import static net.frju.androidquery.operation.condition.In.in;
+import static net.frju.androidquery.operation.condition.Or.or;
+import static net.frju.androidquery.operation.condition.Where.where;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -43,8 +43,8 @@ public class ClauseHelperTest {
 
         Where where = where(Q.User.USERNAME, Where.Op.EQUAL_TO, "sam");
 
-        String clause = clauseHelper.getClause(new Clause[]{where});
-        String[] args = clauseHelper.getClauseArgs(new Clause[]{where});
+        String clause = clauseHelper.getCondition(new Condition[]{where});
+        String[] args = clauseHelper.getConditionArgs(new Condition[]{where});
 
         assertEquals("username = ?", clause);
         assertEquals(1, args.length);
@@ -57,8 +57,8 @@ public class ClauseHelperTest {
 
         In in = in(Q.User.USERNAME, "sam", "josh");
 
-        String clause = clauseHelper.getClause(new Clause[]{in});
-        String[] args = clauseHelper.getClauseArgs(new Clause[]{in});
+        String clause = clauseHelper.getCondition(new Condition[]{in});
+        String[] args = clauseHelper.getConditionArgs(new Condition[]{in});
 
         assertEquals("username IN (?,?)", clause);
         assertEquals(2, args.length);
@@ -75,8 +75,8 @@ public class ClauseHelperTest {
                 where(Q.User.TIMESTAMP, Where.Op.EQUAL_TO, 20)
         );
 
-        String clause = clauseHelper.getClause(new Clause[]{and});
-        String[] args = clauseHelper.getClauseArgs(new Clause[]{and});
+        String clause = clauseHelper.getCondition(new Condition[]{and});
+        String[] args = clauseHelper.getConditionArgs(new Condition[]{and});
 
         assertEquals("(timestamp > ? AND timestamp = ?)", clause);
         assertEquals(2, args.length);
@@ -98,8 +98,8 @@ public class ClauseHelperTest {
                 )
         );
 
-        String clause = clauseHelper.getClause(new Clause[]{and});
-        String[] args = clauseHelper.getClauseArgs(new Clause[]{and});
+        String clause = clauseHelper.getCondition(new Condition[]{and});
+        String[] args = clauseHelper.getConditionArgs(new Condition[]{and});
 
         assertEquals("((username = ? OR username = ?) AND (timestamp >= ?))", clause);
         assertEquals(3, args.length);
@@ -117,8 +117,8 @@ public class ClauseHelperTest {
             in(Q.User.TIMESTAMP, 10, 20)
         );
 
-        String clause = clauseHelper.getClause(new Clause[]{or});
-        String[] args = clauseHelper.getClauseArgs(new Clause[]{or});
+        String clause = clauseHelper.getCondition(new Condition[]{or});
+        String[] args = clauseHelper.getConditionArgs(new Condition[]{or});
 
         assertEquals("(username = ? OR timestamp IN (?,?))", clause);
         assertEquals(3, args.length);

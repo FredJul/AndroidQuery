@@ -17,7 +17,7 @@ package net.frju.androidquery.operation.function;
 
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
-import net.frju.androidquery.operation.clause.Clause;
+import net.frju.androidquery.operation.condition.Condition;
 
 import java.util.concurrent.Callable;
 
@@ -29,13 +29,13 @@ import io.reactivex.Observable;
  */
 public class Delete extends Query {
     private Object[] mModels;
-    private Clause[] mConditions;
+    private Condition[] mConditions;
 
     public Object[] getModels() {
         return mModels;
     }
 
-    public Clause[] getConditions() {
+    public Condition[] getConditions() {
         return mConditions;
     }
 
@@ -43,7 +43,7 @@ public class Delete extends Query {
         mModels = models;
     }
 
-    private Delete(Clause[] conditions) {
+    private Delete(Condition[] conditions) {
         mConditions = conditions;
     }
 
@@ -53,7 +53,7 @@ public class Delete extends Query {
 
     public static class Builder<T> {
         private T[] mModels;
-        private Clause[] mClause;
+        private Condition[] mCondition;
         private Class<T> mClassDef;
         private DatabaseProvider mDatabaseProvider;
 
@@ -63,12 +63,12 @@ public class Delete extends Query {
         }
 
         /**
-         * Specify a Where clause for the Delete query
-         * @param clause Where clause
+         * Specify a Where condition for the Delete query
+         * @param condition Where condition
          * @return Call Builder#query or Builder#rx to run the query
          */
-        public Builder<T> where(Clause... clause) {
-            mClause = clause;
+        public Builder<T> where(Condition... condition) {
+            mCondition = condition;
             return this;
         }
 
@@ -95,7 +95,7 @@ public class Delete extends Query {
                 );
             } else {
                 return delete(
-                        new Delete(mClause),
+                        new Delete(mCondition),
                         mClassDef,
                         mDatabaseProvider
                 );

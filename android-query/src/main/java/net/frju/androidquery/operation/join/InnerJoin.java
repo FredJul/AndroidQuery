@@ -15,7 +15,7 @@
  */
 package net.frju.androidquery.operation.join;
 
-import net.frju.androidquery.operation.clause.Clause;
+import net.frju.androidquery.operation.condition.Condition;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -23,15 +23,15 @@ import net.frju.androidquery.operation.clause.Clause;
 @SuppressWarnings("unchecked")
 public class InnerJoin<J> extends Join {
 
-    public InnerJoin(Class<J> table, Join join, Clause... clauses) {
-        super(table, join, clauses);
+    public InnerJoin(Class<J> table, Join join, Condition... conditions) {
+        super(table, join, conditions);
     }
 
-    public static InnerJoin innerJoin(Class<?> table, Clause... clauses) {
-        return new InnerJoin(table, null, clauses);
+    public static InnerJoin innerJoin(Class<?> table, Condition... conditions) {
+        return new InnerJoin(table, null, conditions);
     }
 
-    public static InnerJoin innerJoin(Class<?> table, Join join, Clause... clauses) {
-        return new InnerJoin(table, join, clauses);
+    public static InnerJoin innerJoin(Class<?> table, Join join, Condition... conditions) {
+        return new InnerJoin(table, join, conditions);
     }
 }

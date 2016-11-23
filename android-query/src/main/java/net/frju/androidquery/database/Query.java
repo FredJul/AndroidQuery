@@ -3,9 +3,9 @@ package net.frju.androidquery.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import net.frju.androidquery.operation.clause.Clause;
-import net.frju.androidquery.operation.clause.In;
-import net.frju.androidquery.operation.clause.Where;
+import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.In;
+import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.function.Count;
 import net.frju.androidquery.operation.function.Delete;
 import net.frju.androidquery.operation.function.Insert;
@@ -94,10 +94,10 @@ public abstract class Query {
     protected static int update(Update update, Class<?> classDef, DatabaseProvider databaseProvider) {
         if (update.getModel() != null) {
             TableDescription tableDesc = getTableDescription(classDef, databaseProvider);
-            Clause[] conditions = update.getConditions();
+            Condition[] conditions = update.getConditions();
             ContentValues values = tableDesc.getContentValues(update.getModel());
             if (conditions == null) {
-                conditions = new Clause[1];
+                conditions = new Condition[1];
                 conditions[0] = Where.where(tableDesc.getPrimaryKeyRealName(), Where.Op.EQUAL_TO, values.get(tableDesc.getPrimaryKeyRealName()));
             }
 
@@ -141,11 +141,11 @@ public abstract class Query {
                 }
             }
 
-            Clause condition = new In(tableDesc.getPrimaryKeyRealName(), keys);
+            Condition condition = new In(tableDesc.getPrimaryKeyRealName(), keys);
 
             return databaseProvider.delete(
                     tableDesc.getTableRealName(),
-                    new Clause[]{condition}
+                    new Condition[]{condition}
             );
         } else {
             return databaseProvider.delete(

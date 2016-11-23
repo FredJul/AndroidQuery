@@ -15,7 +15,7 @@
  */
 package net.frju.androidquery.operation.join;
 
-import net.frju.androidquery.operation.clause.Clause;
+import net.frju.androidquery.operation.condition.Condition;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -23,15 +23,15 @@ import net.frju.androidquery.operation.clause.Clause;
 @SuppressWarnings("unchecked")
 public class CrossInnerJoin<J> extends Join {
 
-    public CrossInnerJoin(Class<J> table, Join join, Clause... clauses) {
-        super(table, join, clauses);
+    public CrossInnerJoin(Class<J> table, Join join, Condition... conditions) {
+        super(table, join, conditions);
     }
 
-    public static CrossInnerJoin crossInnerJoin(Class<?> table, Clause... clauses) {
-        return new CrossInnerJoin(table, null, clauses);
+    public static CrossInnerJoin crossInnerJoin(Class<?> table, Condition... conditions) {
+        return new CrossInnerJoin(table, null, conditions);
     }
 
-    public static CrossInnerJoin crossInnerJoin(Class<?> table, Join join, Clause... clauses) {
-        return new CrossInnerJoin(table, join, clauses);
+    public static CrossInnerJoin crossInnerJoin(Class<?> table, Join join, Condition... conditions) {
+        return new CrossInnerJoin(table, join, conditions);
     }
 }

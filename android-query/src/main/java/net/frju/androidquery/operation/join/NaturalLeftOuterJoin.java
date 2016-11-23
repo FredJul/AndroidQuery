@@ -15,7 +15,7 @@
  */
 package net.frju.androidquery.operation.join;
 
-import net.frju.androidquery.operation.clause.Clause;
+import net.frju.androidquery.operation.condition.Condition;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -23,15 +23,15 @@ import net.frju.androidquery.operation.clause.Clause;
 @SuppressWarnings("unchecked")
 public class NaturalLeftOuterJoin<J> extends Join {
 
-    public NaturalLeftOuterJoin(Class<J> table, Join join, Clause... clauses) {
-        super(table, join, clauses);
+    public NaturalLeftOuterJoin(Class<J> table, Join join, Condition... conditions) {
+        super(table, join, conditions);
     }
 
-    public static NaturalLeftOuterJoin naturalLeftOuterJoin(Class<?> table, Clause... clauses) {
-        return new NaturalLeftOuterJoin(table, null, clauses);
+    public static NaturalLeftOuterJoin naturalLeftOuterJoin(Class<?> table, Condition... conditions) {
+        return new NaturalLeftOuterJoin(table, null, conditions);
     }
 
-    public static NaturalLeftOuterJoin naturalLeftOuterJoin(Class<?> table, Join join, Clause... clauses) {
-        return new NaturalLeftOuterJoin(table, join, clauses);
+    public static NaturalLeftOuterJoin naturalLeftOuterJoin(Class<?> table, Join join, Condition... conditions) {
+        return new NaturalLeftOuterJoin(table, join, conditions);
     }
 }

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.frju.androidquery.operation.clause;
+package net.frju.androidquery.operation.condition;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class Where extends Clause {
+public class Where extends Condition {
     private String mColumn;
     private Op mOperator;
     private Object mValue;

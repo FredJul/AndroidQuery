@@ -32,7 +32,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-import static net.frju.androidquery.operation.clause.On.on;
+import static net.frju.androidquery.operation.condition.On.on;
 import static net.frju.androidquery.operation.join.InnerJoin.innerJoin;
 
 public class MainActivity extends AppCompatActivity {

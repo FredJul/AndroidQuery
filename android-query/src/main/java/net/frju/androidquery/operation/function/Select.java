@@ -17,7 +17,7 @@ package net.frju.androidquery.operation.function;
 
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
-import net.frju.androidquery.operation.clause.Clause;
+import net.frju.androidquery.operation.condition.Condition;
 import net.frju.androidquery.operation.join.Join;
 import net.frju.androidquery.operation.keyword.Limit;
 import net.frju.androidquery.operation.keyword.OrderBy;
@@ -32,13 +32,13 @@ import io.reactivex.Observable;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Select extends Query {
-    private Clause[] mClause;
+    private Condition[] mCondition;
     private Join[] mJoin;
     private OrderBy[] mOrderBy;
     private Limit mLimit;
 
-    public Clause[] getClause() {
-        return mClause;
+    public Condition[] getClause() {
+        return mCondition;
     }
 
     public Join[] getJoin() {
@@ -53,8 +53,8 @@ public class Select extends Query {
         return mLimit;
     }
 
-    private Select(Clause[] clause, Join[] join, OrderBy[] orderBy, Limit limit) {
-        mClause = clause;
+    private Select(Condition[] condition, Join[] join, OrderBy[] orderBy, Limit limit) {
+        mCondition = condition;
         mJoin = join;
         mOrderBy = orderBy;
         mLimit = limit;
@@ -65,7 +65,7 @@ public class Select extends Query {
     }
 
     public static class Builder<T> {
-        private Clause[] mClause;
+        private Condition[] mCondition;
         private Join[] mJoin;
         private OrderBy[] mOrderBy;
         private Limit mLimit;
@@ -78,12 +78,12 @@ public class Select extends Query {
         }
 
         /**
-         * Specify a Where clause for the Select query
-         * @param clause Where clause
+         * Specify a Where condition for the Select query
+         * @param condition Where condition
          * @return Call Builder#query, Builder#rx, or Builder#rxSingle to run the query
          */
-        public Builder<T> where(Clause... clause) {
-            mClause = clause;
+        public Builder<T> where(Condition... condition) {
+            mCondition = condition;
             return this;
         }
 
@@ -136,7 +136,7 @@ public class Select extends Query {
          */
         public Result<T> query() {
             return select(
-                    new Select(mClause, mJoin, mOrderBy, mLimit),
+                    new Select(mCondition, mJoin, mOrderBy, mLimit),
                     mClassDef,
                     mDatabaseProvider
             );
@@ -148,7 +148,7 @@ public class Select extends Query {
          */
         public T querySingle() {
             return selectSingle(
-                    new Select(mClause, mJoin, mOrderBy, mLimit),
+                    new Select(mCondition, mJoin, mOrderBy, mLimit),
                     mClassDef,
                     mDatabaseProvider
             );

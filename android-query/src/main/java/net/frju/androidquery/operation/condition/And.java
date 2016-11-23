@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.frju.androidquery.operation.clause;
+package net.frju.androidquery.operation.condition;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class On extends Clause {
-    private String mColumn1;
-    private String mColumn2;
+public class And extends Condition {
+    private Condition[] mCondition;
 
-    public String getColumn1() {
-        return mColumn1;
+    public Condition[] getCondition() {
+        return mCondition;
     }
 
-    public String getColumn2() {
-        return mColumn2;
-    }
-
-    public On(String column1, String column2) {
-        mColumn1 = column1;
-        mColumn2 = column2;
+    /**
+     * Specifies a SQLite AND operator
+     *
+     * @param condition Combine multiple conditions
+     * @return And operator
+     */
+    public And(Condition... condition) {
+        mCondition = condition;
     }
 }

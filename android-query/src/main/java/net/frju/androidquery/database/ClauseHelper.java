@@ -15,12 +15,12 @@
  */
 package net.frju.androidquery.database;
 
-import net.frju.androidquery.operation.clause.And;
-import net.frju.androidquery.operation.clause.Clause;
-import net.frju.androidquery.operation.clause.In;
-import net.frju.androidquery.operation.clause.On;
-import net.frju.androidquery.operation.clause.Or;
-import net.frju.androidquery.operation.clause.Where;
+import net.frju.androidquery.operation.condition.And;
+import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.In;
+import net.frju.androidquery.operation.condition.On;
+import net.frju.androidquery.operation.condition.Or;
+import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.join.CrossInnerJoin;
 import net.frju.androidquery.operation.join.InnerJoin;
 import net.frju.androidquery.operation.join.Join;
@@ -49,32 +49,32 @@ public class ClauseHelper {
 
     protected ClauseHelper() { }
 
-    public String getClause(Clause[] clause) {
+    public String getCondition(Condition[] condition) {
         StringBuilder clauseBuilder = new StringBuilder();
 
-        if (clause != null) {
-            for (Clause item : clause) {
-                clauseBuilder.append(getClause(item));
+        if (condition != null) {
+            for (Condition item : condition) {
+                clauseBuilder.append(getCondition(item));
             }
         }
 
         return clauseBuilder.toString();
     }
 
-    private String getClause(Clause clause) {
+    private String getCondition(Condition condition) {
         StringBuilder clauseBuilder = new StringBuilder();
 
-        if (clause instanceof In) {
-            clauseBuilder.append(buildInCondition((In) clause));
-        } else if (clause instanceof Where) {
-            clauseBuilder.append(buildWhereCondition((Where) clause));
-        }else if (clause instanceof On) {
-            clauseBuilder.append(buildOnCondition((On) clause));
-        } else if (clause instanceof And) {
+        if (condition instanceof In) {
+            clauseBuilder.append(buildInCondition((In) condition));
+        } else if (condition instanceof Where) {
+            clauseBuilder.append(buildWhereCondition((Where) condition));
+        } else if (condition instanceof On) {
+            clauseBuilder.append(buildOnCondition((On) condition));
+        } else if (condition instanceof And) {
             clauseBuilder.append(BRACKET_START);
-            And and = (And)clause;
-            for (Clause item : and.getClause()) {
-                clauseBuilder.append(getClause(item));
+            And and = (And) condition;
+            for (Condition item : and.getCondition()) {
+                clauseBuilder.append(getCondition(item));
                 clauseBuilder.append(SPACE);
                 clauseBuilder.append(AND);
                 clauseBuilder.append(SPACE);
@@ -83,11 +83,11 @@ public class ClauseHelper {
             // remove the excess AND with its 2 spaces
             clauseBuilder.delete(clauseBuilder.length() - 5, clauseBuilder.length());
             clauseBuilder.append(BRACKET_END);
-        } else if (clause instanceof Or) {
+        } else if (condition instanceof Or) {
             clauseBuilder.append(BRACKET_START);
-            Or or = (Or)clause;
-            for (Clause item : or.getClause()) {
-                clauseBuilder.append(getClause(item));
+            Or or = (Or) condition;
+            for (Condition item : or.getCondition()) {
+                clauseBuilder.append(getCondition(item));
                 clauseBuilder.append(SPACE);
                 clauseBuilder.append(OR);
                 clauseBuilder.append(SPACE);
@@ -154,34 +154,34 @@ public class ClauseHelper {
         return stringBuilder.toString();
     }
 
-    public String[] getClauseArgs(Clause[] clause) {
+    public String[] getConditionArgs(Condition[] condition) {
         List<String> args = new ArrayList<>();
 
-        if (clause != null) {
-            for (Clause item : clause) {
-                args.addAll(getClauseArgs(item));
+        if (condition != null) {
+            for (Condition item : condition) {
+                args.addAll(getConditionArgs(item));
             }
         }
 
         return args.toArray(new String[args.size()]);
     }
 
-    private List<String> getClauseArgs(Clause clause) {
+    private List<String> getConditionArgs(Condition condition) {
         List<String> args = new ArrayList<>();
 
-        if (clause instanceof In) {
-            args.addAll(buildInArgs((In) clause));
-        } else if (clause instanceof Where) {
-            args.add(buildWhereArgs((Where) clause));
-        } else if (clause instanceof And)  {
-            And and = (And)clause;
-            for (Clause item : and.getClause()) {
-                args.addAll(getClauseArgs(item));
+        if (condition instanceof In) {
+            args.addAll(buildInArgs((In) condition));
+        } else if (condition instanceof Where) {
+            args.add(buildWhereArgs((Where) condition));
+        } else if (condition instanceof And) {
+            And and = (And) condition;
+            for (Condition item : and.getCondition()) {
+                args.addAll(getConditionArgs(item));
             }
-        } else if (clause instanceof Or) {
-            Or or = (Or)clause;
-            for (Clause item : or.getClause()) {
-                args.addAll(getClauseArgs(item));
+        } else if (condition instanceof Or) {
+            Or or = (Or) condition;
+            for (Condition item : or.getCondition()) {
+                args.addAll(getConditionArgs(item));
             }
         }
 
@@ -257,7 +257,7 @@ public class ClauseHelper {
                     .append(" ")
                     .append(tableRealName)
                     .append(" ")
-                    .append(getClause(join.getClauses()));
+                    .append(getCondition(join.getClauses()));
 
             if (join.getJoin() != null) {
                 stringBuilder.append(" ")
@@ -268,7 +268,7 @@ public class ClauseHelper {
         return stringBuilder.toString();
     }
 
-    public String buildJoinQuery(String[] tableColumns, Join[] joins, String tableName, Clause[] clause,
+    public String buildJoinQuery(String[] tableColumns, Join[] joins, String tableName, Condition[] condition,
                                  OrderBy[] orderBy, Limit limit, Resolver resolver) {
 
         String[] joinColumns = getJoinColumns(joins, resolver);
@@ -292,7 +292,7 @@ public class ClauseHelper {
         // remove the trailing comma
         stringBuilder.delete(stringBuilder.length()-2, stringBuilder.length());
 
-        String clauseString = getClause(clause);
+        String clauseString = getCondition(condition);
         if (clauseString != null && clauseString.length() > 0) {
             clauseString = "WHERE " + clauseString;
         }

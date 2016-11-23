@@ -18,14 +18,14 @@ package net.frju.androidquery.integration;
 import net.frju.androidquery.gen.Q;
 import net.frju.androidquery.integration.models.User;
 import net.frju.androidquery.integration.utils.SetupUser;
-import net.frju.androidquery.operation.clause.Where;
+import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.function.Insert;
 import net.frju.androidquery.operation.function.Select;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import static net.frju.androidquery.operation.clause.Where.where;
+import static net.frju.androidquery.operation.condition.Where.where;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]

@@ -22,7 +22,7 @@ import android.database.SQLException;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import net.frju.androidquery.operation.clause.Clause;
+import net.frju.androidquery.operation.condition.Condition;
 import net.frju.androidquery.operation.join.Join;
 import net.frju.androidquery.operation.keyword.Limit;
 import net.frju.androidquery.operation.keyword.OrderBy;
@@ -54,45 +54,45 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         return mContentResolver.bulkInsert(getUri(tableName), valuesArray);
     }
 
-    protected int update(String tableName, ContentValues values, Clause[] clause) {
+    protected int update(String tableName, ContentValues values, Condition[] condition) {
         return mContentResolver.update(getUri(tableName),
                 values,
-                mClauseHelper.getClause(clause),
-                mClauseHelper.getClauseArgs(clause)
+                mClauseHelper.getCondition(condition),
+                mClauseHelper.getConditionArgs(condition)
         );
     }
 
-    protected Cursor query(String tableName, String[] columns, Clause[] clause, Join[] joins,
+    protected Cursor query(String tableName, String[] columns, Condition[] condition, Join[] joins,
                            String groupBy, String having, OrderBy[] orderBy, Limit limit) {
 
         if (joins != null && joins.length > 0) {
-            throw new SQLException("Join clause not supported by ContentProvider");
+            throw new SQLException("Join condition not supported by ContentProvider");
         } else if (groupBy != null) {
-            throw new SQLException("GroupBy clause not supported by ContentProvider");
+            throw new SQLException("GroupBy condition not supported by ContentProvider");
         } else if (having != null) {
-            throw new SQLException("Having clause not supported by ContentProvider");
+            throw new SQLException("Having condition not supported by ContentProvider");
         } else if (limit != null) {
-            throw new SQLException("Limit clause not supported by ContentProvider");
+            throw new SQLException("Limit condition not supported by ContentProvider");
         } else {
             return mContentResolver.query(
                     getUri(tableName),
                     columns,
-                    mClauseHelper.getClause(clause),
-                    mClauseHelper.getClauseArgs(clause),
+                    mClauseHelper.getCondition(condition),
+                    mClauseHelper.getConditionArgs(condition),
                     mClauseHelper.getOrderBy(orderBy)
             );
         }
     }
 
-    protected int delete(String tableName, Clause[] clause) {
+    protected int delete(String tableName, Condition[] condition) {
         return mContentResolver.delete(
                 getUri(tableName),
-                mClauseHelper.getClause(clause),
-                mClauseHelper.getClauseArgs(clause)
+                mClauseHelper.getCondition(condition),
+                mClauseHelper.getConditionArgs(condition)
         );
     }
 
-    protected long count(String tableName, Clause[] clause) {
+    protected long count(String tableName, Condition[] condition) {
         Cursor c = null;
 
         // First try with the SQL method
@@ -100,8 +100,8 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
             c = mContentResolver.query(
                     getUri(tableName),
                     new String[]{"COUNT(*)"},
-                    mClauseHelper.getClause(clause),
-                    mClauseHelper.getClauseArgs(clause),
+                    mClauseHelper.getCondition(condition),
+                    mClauseHelper.getConditionArgs(condition),
                     null
             );
 
@@ -113,8 +113,8 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
                 c = mContentResolver.query(
                         getUri(tableName),
                         new String[]{BaseColumns._COUNT},
-                        mClauseHelper.getClause(clause),
-                        mClauseHelper.getClauseArgs(clause),
+                        mClauseHelper.getCondition(condition),
+                        mClauseHelper.getConditionArgs(condition),
                         null
                 );
 

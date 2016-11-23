@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.frju.androidquery.operation.clause;
+package net.frju.androidquery.operation.condition;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class Or extends Clause {
-    private Clause[] mClause;
+public class On extends Condition {
+    private String mColumn1;
+    private String mColumn2;
 
-    public Clause[] getClause() {
-        return mClause;
+    public String getColumn1() {
+        return mColumn1;
     }
 
-    /**
-     * Specifies a SQLite OR operator
-     *
-     * @param clause Combine multiple conditions
-     */
-    public Or(Clause... clause) {
-        mClause = clause;
+    public String getColumn2() {
+        return mColumn2;
+    }
+
+    public On(String column1, String column2) {
+        mColumn1 = column1;
+        mColumn2 = column2;
     }
 }

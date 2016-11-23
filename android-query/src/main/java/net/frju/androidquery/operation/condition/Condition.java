@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.frju.androidquery.operation.clause;
+package net.frju.androidquery.operation.condition;
 
 /**
- * A Clause is used to provide an expressive api for querying the SQLite database.
+ * A Condition is used to provide an expressive api for querying the database.
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class Clause {
+public class Condition {
 
     public static Where where(String column, Where.Op operator, Object value) {
         return new Where(column, operator, value);
     }
 
-    public static And and(Clause... clause) {
-        return new And(clause);
+    public static And and(Condition... condition) {
+        return new And(condition);
     }
 
-    public static Or or(Clause... clause) {
-        return new Or(clause);
+    public static Or or(Condition... condition) {
+        return new Or(condition);
     }
 
     public static In in(String column, Object... values) {

@@ -5,7 +5,7 @@ import android.content.ContentValues;
 import net.frju.androidquery.gen.Q;
 import net.frju.androidquery.integration.models.User;
 import net.frju.androidquery.integration.utils.SetupUser;
-import net.frju.androidquery.operation.clause.Where;
+import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.function.Count;
 import net.frju.androidquery.operation.function.Delete;
 import net.frju.androidquery.operation.function.Insert;
@@ -19,7 +19,7 @@ import java.util.List;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
-import static net.frju.androidquery.operation.clause.Where.where;
+import static net.frju.androidquery.operation.condition.Where.where;
 
 public class RxTest extends IntegrationTest {
 
