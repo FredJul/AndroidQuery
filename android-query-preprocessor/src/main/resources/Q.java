@@ -214,7 +214,9 @@ public class Q {
                 ContentValues contentValues = new ContentValues();
 
                 <#list table.getMutableColumns(tables) as column>
+                    <#if !column.hasAutoIncrement()>
                     contentValues.put(${formatConstant(column.getName())}, ${getContentValue(table.getName()?lower_case, column)});
+                    </#if>
                 </#list>
 
                 return contentValues;
@@ -287,8 +289,8 @@ public class Q {
             </#if>
 
             <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
-            public static Raw.Builder raw() {
-                return Raw.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
+            public static Raw.Builder raw(String query) {
+                return Raw.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), query);
             }
             </#if>
 

@@ -3,12 +3,12 @@ package net.frju.androidquery.integration.models;
 import net.frju.androidquery.annotation.Column;
 import net.frju.androidquery.annotation.Table;
 
-@Table
+@Table(localDatabaseProvider = LocalDatabaseProvider.class)
 public class Data {
     @Column(primaryKey = true, autoIncrement = true)
-    int id;
+    public int id;
     @Column
-    String name;
+    public String name;
 
     public int getId() {
         return id;

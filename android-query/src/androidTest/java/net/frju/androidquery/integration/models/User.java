@@ -11,18 +11,30 @@ import net.frju.androidquery.annotation.Table;
                         targetColumn = "id",
                         localColumn = "logId"
                 )
-        }
+        },
+        localDatabaseProvider = LocalDatabaseProvider.class
 )
-public class User  {
-    @Column int id; // no index supplied for the @Test testNoUserIndexesAreCreated()
-    @Column String username;
-    @Column long timestamp;
-    @Column boolean isRegistered;
-    @Column byte[] profilePicture;
-    @Column double rating;
-    @Column int count;
-    @Column int logId;
-    @Column Log log;
+public class User {
+    @Column
+    public int id; // no index supplied for the @Test testNoUserIndexesAreCreated()
+    @Column
+    public String username;
+    @Column
+    public long timestamp;
+    @Column
+    public boolean isRegistered;
+    @Column
+    public byte[] profilePicture;
+    @Column
+    public double rating;
+    @Column
+    public int count;
+    @Column
+    public int logId;
+    @Column
+    public Log log;
+    @Column
+    public String nullField;
 
     public int getId() {
         return id;

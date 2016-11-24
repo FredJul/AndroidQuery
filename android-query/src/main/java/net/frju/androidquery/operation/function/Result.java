@@ -27,11 +27,11 @@ public class Result<T> extends CursorWrapper {
         return mQuery.getSingleResult(this);
     }
 
-    public T[] asArray() {
+    public T[] toArray() {
         return mQuery.getArrayResult(this);
     }
 
-    public List<T> asList() {
-        return Arrays.asList(asArray());
+    public List<T> toList() {
+        return Arrays.asList(toArray());
     }
 }

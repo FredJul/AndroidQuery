@@ -115,14 +115,14 @@ public class Table {
      * @return  all columns ignoring any object mappings
      */
     public List<Column> getMutableColumns(List<Table> tables) {
-        List<Column> withoutObjects = new ArrayList<>();
+        List<Column> withoutOtherModels = new ArrayList<>();
 
         for (Column column : mColumns) {
             if (!column.isJoinable(tables)) {
-                withoutObjects.add(column);
+                withoutOtherModels.add(column);
             }
         }
 
-        return withoutObjects;
+        return withoutOtherModels;
     }
 }

@@ -24,11 +24,12 @@ public class Where extends Condition {
     private Object mValue;
 
     public enum Op {
-        EQUAL_TO ("="),
+        IS("IS"),
+        IS_NOT("IS NOT"),
         MORE_THAN (">"),
-        MORE_THAN_OR_EQUAL_TO (">="),
+        MORE_THAN_OR_IS(">="),
         LESS_THAN ("<"),
-        LESS_THAN_OR_EQUAL_TO ("<="),
+        LESS_THAN_OR_IS("<="),
         LIKE ("LIKE");
 
         private final String mValue;

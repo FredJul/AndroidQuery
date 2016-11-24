@@ -40,6 +40,7 @@ import java.util.List;
 public class ClauseHelper {
     private static final String SPACE = " ";
     private static final String VALUE = "?";
+    private static final String NULL = "NULL";
     private static final String BRACKET_START = "(";
     private static final String BRACKET_END = ")";
     private static final String COMMA = ",";
@@ -108,7 +109,11 @@ public class ClauseHelper {
         stringBuilder.append(SPACE);
         stringBuilder.append(where.getOperator().toString());
         stringBuilder.append(SPACE);
-        stringBuilder.append(VALUE);
+        if (where.getValue() == null) {
+            stringBuilder.append(NULL);
+        } else {
+            stringBuilder.append(VALUE);
+        }
 
         return stringBuilder.toString();
     }
@@ -172,7 +177,10 @@ public class ClauseHelper {
         if (condition instanceof In) {
             args.addAll(buildInArgs((In) condition));
         } else if (condition instanceof Where) {
-            args.add(buildWhereArgs((Where) condition));
+            String arg = buildWhereArgs((Where) condition);
+            if (arg != null) {
+                args.add(arg);
+            }
         } else if (condition instanceof And) {
             And and = (And) condition;
             for (Condition item : and.getCondition()) {
@@ -189,15 +197,19 @@ public class ClauseHelper {
     }
 
     private String buildWhereArgs(Where where) {
-        String value = String.valueOf(where.getValue());
+        if (where.getValue() == null) {
+            return null;
+        } else {
+            String value = String.valueOf(where.getValue());
 
-        if (value != null && value.equals("true")) {
-            return "1";
-        } else if (value != null && value.equals("false")) {
-            return "0";
+            if (value.equals("true")) {
+                return "1";
+            } else if (value.equals("false")) {
+                return "0";
+            }
+
+            return value;
         }
-
-        return value;
     }
 
     private List<String> buildInArgs(In in) {

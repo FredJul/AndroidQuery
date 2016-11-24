@@ -27,11 +27,6 @@ android {
         }
     }
 
-    sourceSets {
-        androidTest.setRoot('src/tests')
-        androidTest.java.srcDirs = ['src/tests/java']
-    }
-
 //    signingConfigs {
 //        config{
 //            storeFile file(properties.getProperty("keystore.storeFile"))
@@ -61,10 +56,8 @@ dependencies {
     androidTestAnnotationProcessor project(':android-query-preprocessor')
 
     androidTestCompile(
-            'com.android.support.test:runner:0.3',
-            'com.android.support.test:rules:0.3',
-            'com.google.dexmaker:dexmaker-mockito:1.1',
-            'com.google.dexmaker:dexmaker:1.1'
+            'com.android.support.test:runner:0.4',
+            'com.android.support.test:rules:0.4'
     )
 }
 

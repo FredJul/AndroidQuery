@@ -95,16 +95,16 @@ public abstract class Query {
         if (update.getModel() != null) {
             TableDescription tableDesc = getTableDescription(classDef, databaseProvider);
             Condition[] conditions = update.getConditions();
-            ContentValues values = tableDesc.getContentValues(update.getModel());
             if (conditions == null) {
                 conditions = new Condition[1];
-                conditions[0] = Where.where(tableDesc.getPrimaryKeyRealName(), Where.Op.EQUAL_TO, values.get(tableDesc.getPrimaryKeyRealName()));
+                conditions[0] = Where.where(tableDesc.getPrimaryKeyRealName(), Where.Op.IS, tableDesc.getPrimaryKeyValue(update.getModel()));
             }
 
             if (update.getModel() instanceof ModelListener) {
                 ((ModelListener) update.getModel()).onPreUpdate();
             }
 
+            ContentValues values = tableDesc.getContentValues(update.getModel());
             return databaseProvider.update(
                     tableDesc.getTableRealName(),
                     values,

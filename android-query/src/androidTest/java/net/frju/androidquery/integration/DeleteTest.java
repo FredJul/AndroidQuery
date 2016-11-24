@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-present memtrip LTD.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,13 +19,13 @@ import net.frju.androidquery.gen.Q;
 import net.frju.androidquery.integration.models.User;
 import net.frju.androidquery.integration.utils.SetupUser;
 import net.frju.androidquery.operation.condition.Where;
-import net.frju.androidquery.operation.function.Delete;
-import net.frju.androidquery.operation.function.Select;
 
 import org.junit.Before;
+import org.junit.Test;
 
 import static net.frju.androidquery.operation.condition.In.in;
 import static net.frju.androidquery.operation.condition.Where.where;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -35,16 +35,16 @@ public class DeleteTest extends IntegrationTest {
     @Before
     public void setUp() {
         super.setUp();
-        getSetupUser().tearDownFourTestUsers(getSQLProvider());
-        getSetupUser().setupFourTestUsers(getSQLProvider());
+        getSetupUser().tearDownFourTestUsers();
+        getSetupUser().setupFourTestUsers();
     }
 
-    @org.junit.Test
+    @Test
     public void testAllUsersAreDeleted() {
-        int deletedRows = Delete.getBuilder().query(User.class, getSQLProvider());
+        int deletedRows = Q.User.delete().query();
 
         // verify
-        User[] users = Select.getBuilder().query(User.class, getSQLProvider());
+        User[] users = Q.User.select().query().toArray();
 
         // All of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 0 rows will be selected
@@ -52,14 +52,14 @@ public class DeleteTest extends IntegrationTest {
         assertEquals(4, deletedRows);
     }
 
-    @org.junit.Test
+    @Test
     public void testSingleUserIsDeleted() {
-        int deletedRows = Delete.getBuilder()
-                .where(where(Q.User.USERNAME, Where.Op.EQUAL_TO, SetupUser.ANGIE_USER_NAME))
-                .query(User.class, getSQLProvider());
+        int deletedRows = Q.User.delete()
+                .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.ANGIE_USER_NAME))
+                .query();
 
         // verify
-        User[] users = Select.getBuilder().query(User.class, getSQLProvider());
+        User[] users = Q.User.select().query().toArray();
 
         // 1 of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 3 rows will be selected
@@ -67,14 +67,14 @@ public class DeleteTest extends IntegrationTest {
         assertEquals(1, deletedRows);
     }
 
-    @org.junit.Test
+    @Test
     public void testUsersAreDeleted() {
-        int deletedRows = Delete.getBuilder()
-            .where(in(Q.User.USERNAME, SetupUser.ANGIE_USER_NAME, SetupUser.CLYDE_USER_NAME, SetupUser.GILL_USER_NAME))
-                .query(User.class, getSQLProvider());
+        int deletedRows = Q.User.delete()
+                .where(in(Q.User.USERNAME, SetupUser.ANGIE_USER_NAME, SetupUser.CLYDE_USER_NAME, SetupUser.GILL_USER_NAME))
+                .query();
 
         // verify
-        User[] users = Select.getBuilder().query(User.class, getSQLProvider());
+        User[] users = Q.User.select().query().toArray();
 
         // 3 of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 1 rows will be selected

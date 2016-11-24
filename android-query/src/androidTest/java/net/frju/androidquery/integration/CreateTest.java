@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-present memtrip LTD.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,23 +19,23 @@ import net.frju.androidquery.gen.Q;
 import net.frju.androidquery.integration.models.User;
 import net.frju.androidquery.integration.utils.SetupUser;
 import net.frju.androidquery.operation.condition.Where;
-import net.frju.androidquery.operation.function.Insert;
-import net.frju.androidquery.operation.function.Select;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import static net.frju.androidquery.operation.condition.Where.where;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class CreateTest  extends IntegrationTest {
+public class CreateTest extends IntegrationTest {
 
     @Before
     public void setUp() {
         super.setUp();
-        getSetupUser().tearDownFourTestUsers(getSQLProvider());
+        getSetupUser().tearDownFourTestUsers();
     }
 
     @Test
@@ -51,10 +51,10 @@ public class CreateTest  extends IntegrationTest {
         user.setTimestamp(USER_TIMESTAMP);
 
         // exercise
-        Insert.getBuilder().values(user).execute(getSQLProvider());
+        Q.User.insert(user).query();
 
         // verify
-        User responseUser = Select.getBuilder().querySingle(User.class, getSQLProvider());
+        User responseUser = Q.User.select().querySingle();
 
         assertTrue(user.getUsername().equals(responseUser.getUsername()));
         assertTrue(user.getTimestamp() == responseUser.getTimestamp());
@@ -78,7 +78,7 @@ public class CreateTest  extends IntegrationTest {
         double SAM_RATING = 2.7;
         int SAM_COUNT = 10024;
 
-        User[] users = new User[] {
+        User[] users = new User[]{
                 SetupUser.createUser(
                         ANGIE_ID,
                         ANGIE_USERNAME,
@@ -101,27 +101,27 @@ public class CreateTest  extends IntegrationTest {
         };
 
         // exercise
-        Insert.getBuilder().values(users).execute(getSQLProvider());
+        Q.User.insert(users).query();
 
         // verify
-        User angieUser = Select.getBuilder()
-                .where(where(Q.User.USERNAME, Where.Op.EQUAL_TO, ANGIE_USERNAME))
-                .querySingle(User.class, getSQLProvider());
+        User angieUser = Q.User.select()
+                .where(where(Q.User.USERNAME, Where.Op.IS, ANGIE_USERNAME))
+                .querySingle();
 
-        User samUser = Select.getBuilder()
-                .where(where(Q.User.USERNAME, Where.Op.EQUAL_TO, SAM_USERNAME))
-                .querySingle(User.class, getSQLProvider());
+        User samUser = Q.User.select()
+                .where(where(Q.User.USERNAME, Where.Op.IS, SAM_USERNAME))
+                .querySingle();
 
         assertEquals(ANGIE_USERNAME, angieUser.getUsername());
         assertEquals(ANGIE_TIMESTAMP, angieUser.getTimestamp());
         assertEquals(ANGIE_IS_REGISTERED, angieUser.getIsRegistered());
-        assertEquals(ANGIE_RATING, angieUser.getRating());
+        assertEquals(ANGIE_RATING, angieUser.getRating(), 0.1f);
         assertEquals(ANGIE_COUNT, angieUser.getCount());
 
         assertEquals(SAM_USERNAME, samUser.getUsername());
         assertEquals(SAM_TIMESTAMP, samUser.getTimestamp());
         assertEquals(SAM_IS_REGISTERED, samUser.getIsRegistered());
-        assertEquals(SAM_RATING, samUser.getRating());
+        assertEquals(SAM_RATING, samUser.getRating(), 0.1f);
         assertEquals(SAM_COUNT, samUser.getCount());
     }
 
@@ -140,7 +140,7 @@ public class CreateTest  extends IntegrationTest {
             users[i] = SetupUser.createUser(
                     ANGIE_ID,
                     ANGIE_USERNAME,
-                    ANGIE_TIMESTAMP+i,
+                    ANGIE_TIMESTAMP + i,
                     ANGIE_IS_REGISTERED,
                     ANGIE_RATING,
                     ANGIE_COUNT,
@@ -148,12 +148,12 @@ public class CreateTest  extends IntegrationTest {
             );
         }
 
-        Insert.getBuilder().values(users).execute(getSQLProvider());
+        Q.User.insert(users).query();
 
-        User[] usersInserted = Select.getBuilder().query(User.class, getSQLProvider());
+        User[] usersInserted = Q.User.select().query().toArray();
 
         for (int i = 0; i < usersInserted.length; i++) {
-            assertEquals(ANGIE_TIMESTAMP+i,usersInserted[i].getTimestamp());
+            assertEquals(ANGIE_TIMESTAMP + i, usersInserted[i].getTimestamp());
         }
 
         assertEquals(COLUMN_COUNT, usersInserted.length);

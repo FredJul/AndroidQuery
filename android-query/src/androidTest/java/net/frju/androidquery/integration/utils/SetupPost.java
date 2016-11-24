@@ -1,10 +1,7 @@
 package net.frju.androidquery.integration.utils;
 
-import net.frju.androidquery.database.DatabaseProvider;
-import net.frju.androidquery.integration.models.Log;
+import net.frju.androidquery.gen.Q;
 import net.frju.androidquery.integration.models.Post;
-import net.frju.androidquery.operation.function.Delete;
-import net.frju.androidquery.operation.function.Insert;
 
 public class SetupPost {
 
@@ -26,11 +23,11 @@ public class SetupPost {
     public static final long POST_3_TIMESTAMP = System.currentTimeMillis();
     public static final int POST_3_USER_ID = SetupUser.CLYDE_ID;
 
-    public void tearDownTestPosts(DatabaseProvider databaseProvider) {
-        Delete.getBuilder().query(Log.class, databaseProvider);
+    public void tearDownTestPosts() {
+        Q.Post.delete().query();
     }
 
-    public void setupTestPosts(DatabaseProvider databaseProvider) {
+    public void setupTestPosts() {
         Post[] posts = {
                 createPost(
                         POST_1_ID,
@@ -55,9 +52,7 @@ public class SetupPost {
                 )
         };
 
-        Insert.getBuilder()
-                .values(posts)
-                .execute(databaseProvider);
+        Q.Post.insert(posts).query();
     }
 
     public static Post createPost(int id, String title,

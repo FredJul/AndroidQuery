@@ -14,21 +14,17 @@ public class Raw extends Query {
     private Raw() {
     }
 
-    public static Builder getBuilder(DatabaseProvider databaseProvider) {
-        return new Builder(databaseProvider);
+    public static Builder getBuilder(DatabaseProvider databaseProvider, String query) {
+        return new Builder(databaseProvider, query);
     }
 
     public static class Builder {
         private String mQuery;
         private DatabaseProvider mDatabaseProvider;
 
-        private Builder(DatabaseProvider databaseProvider) {
-            mDatabaseProvider = databaseProvider;
-        }
-
-        public Builder query(String query) {
+        private Builder(DatabaseProvider databaseProvider, String query) {
             mQuery = query;
-            return this;
+            mDatabaseProvider = databaseProvider;
         }
 
         public Cursor query() {

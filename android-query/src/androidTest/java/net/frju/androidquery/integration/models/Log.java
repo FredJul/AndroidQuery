@@ -3,12 +3,12 @@ package net.frju.androidquery.integration.models;
 import net.frju.androidquery.annotation.Column;
 import net.frju.androidquery.annotation.Table;
 
-@Table
+@Table(localDatabaseProvider = LocalDatabaseProvider.class)
 public class Log {
     @Column(primaryKey = true)
-    int id;
+    public int id;
     @Column
-    long timestamp;
+    public long timestamp;
 
     public int getId() {
         return id;

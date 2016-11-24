@@ -11,16 +11,24 @@ import net.frju.androidquery.annotation.Table;
                         targetColumn = "id",
                         localColumn = "userId"
                 )
-        }
+        },
+        localDatabaseProvider = LocalDatabaseProvider.class
 )
 public class Post {
-    @Column(index = true) int id;
-    @Column String title;
-    @Column String body;
-    @Column long timestamp;
-    @Column int userId;
-    @Column User user;
-    @Column Data data;
+    @Column(index = true)
+    public int id;
+    @Column
+    public String title;
+    @Column
+    public String body;
+    @Column
+    public long timestamp;
+    @Column
+    public int userId;
+    @Column
+    public User user;
+    @Column
+    public Data data;
 
     public int getId() {
         return id;

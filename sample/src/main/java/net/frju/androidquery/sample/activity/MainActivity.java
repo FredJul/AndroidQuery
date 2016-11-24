@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(new Consumer<Result<Comment>>() {
                     @Override
                     public void accept(Result<Comment> comments) throws Exception {
-                        mCommentAdapter.setComments(comments.asArray());
+                        mCommentAdapter.setComments(comments.toArray());
                     }
                 }));
     }

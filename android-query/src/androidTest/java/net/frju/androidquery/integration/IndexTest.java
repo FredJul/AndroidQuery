@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-present memtrip LTD.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,16 +17,19 @@ package net.frju.androidquery.integration;
 
 import android.database.Cursor;
 
+import net.frju.androidquery.gen.Q;
 import net.frju.androidquery.integration.models.Data;
 import net.frju.androidquery.integration.models.Log;
-import net.frju.androidquery.operation.function.Raw;
-import net.frju.androidquery.operation.function.Select;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -37,18 +40,17 @@ public class IndexTest extends IntegrationTest {
     public void setUp() {
         super.setUp();
 
-        getSetupData().tearDownTestData(getSQLProvider());
-        getSetupData().setupTestData(getSQLProvider());
+        getSetupData().tearDownTestData();
+        getSetupData().setupTestData();
 
-        getSetupLog().tearDownTestLogs(getSQLProvider());
-        getSetupLog().setupTestLogs(getSQLProvider());
+        getSetupLog().tearDownTestLogs();
+        getSetupLog().setupTestLogs();
     }
 
     @Test
     public void testPostIndexesAreCreated() {
-        Cursor cursor = Raw.getBuilder()
-                .query("PRAGMA INDEX_LIST('Post');")
-                .query(getSQLProvider());
+        Cursor cursor = Q.Post.raw("PRAGMA INDEX_LIST('Post');")
+                .query();
 
         List<String> indexes = getIndexes(cursor);
 
@@ -57,9 +59,8 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testNoUserIndexesAreCreated() {
-        Cursor cursor = Raw.getBuilder()
-                .query("PRAGMA INDEX_LIST('User');")
-                .query(getSQLProvider());
+        Cursor cursor = Q.User.raw("PRAGMA INDEX_LIST('User');")
+                .query();
 
         List<String> indexes = getIndexes(cursor);
 
@@ -68,18 +69,18 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testAutoIncrementPrimaryKey() {
-        Data[] data = Select.getBuilder().query(Data.class, getSQLProvider());
+        Data[] data = Q.Data.select().query().toArray();
 
         assertEquals(3, data.length);
-        assertEquals(1, data[0].getId());
-        assertEquals(2, data[1].getId());
-        assertEquals(3, data[2].getId());
+        assertNotEquals(0, data[0].getId());
+        assertNotEquals(0, data[1].getId());
+        assertNotEquals(0, data[2].getId());
     }
 
     @Test
     public void testNoAutoIncrementPrimaryKey() {
-        Log[] log = Select.getBuilder().query(Log.class, getSQLProvider());
-        assertEquals(3, log.length);
+        Log[] log = Q.Log.select().query().toArray();
+        assertEquals(2, log.length);
     }
 
     private List<String> getIndexes(Cursor cursor) {

@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-present memtrip LTD.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,12 +21,12 @@ import net.frju.androidquery.gen.Q;
 import net.frju.androidquery.integration.models.User;
 import net.frju.androidquery.integration.utils.SetupUser;
 import net.frju.androidquery.operation.condition.Where;
-import net.frju.androidquery.operation.function.Select;
-import net.frju.androidquery.operation.function.Update;
 
 import org.junit.Before;
+import org.junit.Test;
 
 import static net.frju.androidquery.operation.condition.Where.where;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -36,11 +36,11 @@ public class UpdateTest extends IntegrationTest {
     @Before
     public void setUp() {
         super.setUp();
-        getSetupUser().tearDownFourTestUsers(getSQLProvider());
-        getSetupUser().setupFourTestUsers(getSQLProvider());
+        getSetupUser().tearDownFourTestUsers();
+        getSetupUser().setupFourTestUsers();
     }
 
-    @org.junit.Test
+    @Test
     public void testSingleUpdate() {
         // setup
         long timestamp = System.currentTimeMillis();
@@ -50,15 +50,15 @@ public class UpdateTest extends IntegrationTest {
         contentValues.put(Q.User.TIMESTAMP, timestamp);
 
         // exercise
-        int updated = Update.getBuilder()
+        int updated = Q.User.update()
                 .values(contentValues)
-                .where(where(Q.User.USERNAME, Where.Op.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
-                .query(User.class, getSQLProvider());
+                .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME))
+                .query();
 
         // verify
-        User user = Select.getBuilder()
-                .where(where(Q.User.USERNAME, Where.Op.EQUAL_TO, SetupUser.CLYDE_USER_NAME))
-                .querySingle(User.class, getSQLProvider());
+        User user = Q.User.select()
+                .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME))
+                .querySingle();
 
         assertEquals(true, user.getIsRegistered());
         assertEquals(timestamp, user.getTimestamp());
@@ -66,7 +66,7 @@ public class UpdateTest extends IntegrationTest {
         assertEquals(updated, 1);
     }
 
-    @org.junit.Test
+    @Test
     public void testBulkUpdate() {
         // setup
         long timestamp = System.currentTimeMillis();
@@ -78,24 +78,24 @@ public class UpdateTest extends IntegrationTest {
         contentValues.put(Q.User.USERNAME, newUsername);
 
         // exercise
-        int updated = Update.getBuilder()
+        int updated = Q.User.update()
                 .values(contentValues)
-                .query(User.class, getSQLProvider());
+                .query();
 
         // verify
-        User[] users = Select.getBuilder()
-                .query(User.class, getSQLProvider());
+        User[] users = Q.User.select()
+                .query().toArray();
 
         for (User user : users) {
             assertEquals(timestamp, user.getTimestamp());
-            assertEquals(true, user.getIsRegistered() );
+            assertEquals(true, user.getIsRegistered());
             assertEquals(newUsername, user.getUsername());
         }
 
         assertEquals(updated, users.length);
     }
 
-    @org.junit.Test
+    @Test
     public void testMoreThanUpdate() {
         // setup
         long newTimestamp = 0;
@@ -107,15 +107,15 @@ public class UpdateTest extends IntegrationTest {
         contentValues.put(Q.User.USERNAME, newUsername);
 
         // exercise
-        int updated = Update.getBuilder()
+        int updated = Q.User.update()
                 .values(contentValues)
                 .where(where(Q.User.TIMESTAMP, Where.Op.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
-                .query(User.class, getSQLProvider());
+                .query();
 
         // verify
-        User[] users = Select.getBuilder()
-                .where(where(Q.User.TIMESTAMP, Where.Op.EQUAL_TO, newTimestamp))
-                .query(User.class, getSQLProvider());
+        User[] users = Q.User.select()
+                .where(where(Q.User.TIMESTAMP, Where.Op.IS, newTimestamp))
+                .query().toArray();
 
         // 3 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 3 rows will be selected

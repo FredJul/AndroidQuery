@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-present memtrip LTD.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,15 +15,14 @@
  */
 package net.frju.androidquery.integration.utils;
 
-import net.frju.androidquery.database.DatabaseProvider;
+import net.frju.androidquery.gen.Q;
 import net.frju.androidquery.integration.models.User;
-import net.frju.androidquery.operation.function.Delete;
-import net.frju.androidquery.operation.function.Insert;
 
 /**
  * The test data is a hard dependency of all the integration tests, changing
  * these constants will cause failures in the ReadTest suite. It is advised that
  * new constants are added if further test suites are required
+ *
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class SetupUser {
@@ -56,53 +55,51 @@ public class SetupUser {
     public static final double CLYDE_RATING = 90.2;
     public static final int CLYDE_COUNT = 62;
 
-    public void setupFourTestUsers(DatabaseProvider databaseProvider) {
+    public void setupFourTestUsers() {
         User[] users = {
-            createUser(
-                    ANGIE_ID,
-                    ANGIE_USER_NAME,
-                    ANGIE_TIMESTAMP,
-                    ANGIE_IS_REGISTERED,
-                    ANGIE_RATING,
-                    ANGIE_COUNT,
-                    ANGIE_LOG_ID
-            ),
-            createUser(
-                    JOSH_ID,
-                    JOSH_USER_NAME,
-                    JOSH_TIMESTAMP,
-                    JOSH_IS_REGISTERED,
-                    JOSH_RATING,
-                    JOSH_COUNT,
-                    0
-            ),
-            createUser(
-                    GILL_ID,
-                    GILL_USER_NAME,
-                    GILL_TIMESTAMP,
-                    GILL_IS_REGISTERED,
-                    GILL_RATING,
-                    GILL_COUNT,
-                    0
-            ),
-            createUser(
-                    CLYDE_ID,
-                    CLYDE_USER_NAME,
-                    CLYDE_TIMESTAMP,
-                    CLYDE_IS_REGISTERED,
-                    CLYDE_RATING,
-                    CLYDE_COUNT,
-                    0
-            ),
+                createUser(
+                        ANGIE_ID,
+                        ANGIE_USER_NAME,
+                        ANGIE_TIMESTAMP,
+                        ANGIE_IS_REGISTERED,
+                        ANGIE_RATING,
+                        ANGIE_COUNT,
+                        ANGIE_LOG_ID
+                ),
+                createUser(
+                        JOSH_ID,
+                        JOSH_USER_NAME,
+                        JOSH_TIMESTAMP,
+                        JOSH_IS_REGISTERED,
+                        JOSH_RATING,
+                        JOSH_COUNT,
+                        0
+                ),
+                createUser(
+                        GILL_ID,
+                        GILL_USER_NAME,
+                        GILL_TIMESTAMP,
+                        GILL_IS_REGISTERED,
+                        GILL_RATING,
+                        GILL_COUNT,
+                        0
+                ),
+                createUser(
+                        CLYDE_ID,
+                        CLYDE_USER_NAME,
+                        CLYDE_TIMESTAMP,
+                        CLYDE_IS_REGISTERED,
+                        CLYDE_RATING,
+                        CLYDE_COUNT,
+                        0
+                ),
         };
 
-        Insert.getBuilder()
-            .values(users)
-                .execute(databaseProvider);
+        Q.User.insert(users).query();
     }
 
-    public void tearDownFourTestUsers(DatabaseProvider databaseProvider) {
-        Delete.getBuilder().query(User.class, databaseProvider);
+    public void tearDownFourTestUsers() {
+        Q.User.delete().query();
     }
 
     public static User createUser(int id,
