@@ -31,7 +31,7 @@ public class SetupUser {
     public static final long ANGIE_TIMESTAMP = 123456789;
     public static final boolean ANGIE_IS_REGISTERED = true;
     public static final double ANGIE_RATING = 100.2342;
-    public static final int ANGIE_COUNT = 12;
+    public static final int ANGIE_COUNT = 100;
     public static final int ANGIE_LOG_ID = 1;
 
     public static final int JOSH_ID = 2;
@@ -39,7 +39,7 @@ public class SetupUser {
     public static final long JOSH_TIMESTAMP = 23456789;
     public static final boolean JOSH_IS_REGISTERED = true;
     public static final double JOSH_RATING = 10.2342;
-    public static final int JOSH_COUNT = 192;
+    public static final int JOSH_COUNT = 100;
 
     public static final int GILL_ID = 3;
     public static final String GILL_USER_NAME = "gill";
@@ -53,7 +53,7 @@ public class SetupUser {
     public static final long CLYDE_TIMESTAMP = 456789;
     public static final boolean CLYDE_IS_REGISTERED = false;
     public static final double CLYDE_RATING = 90.2;
-    public static final int CLYDE_COUNT = 62;
+    public static final int CLYDE_COUNT = 100;
 
     public void setupFourTestUsers() {
         User[] users = {

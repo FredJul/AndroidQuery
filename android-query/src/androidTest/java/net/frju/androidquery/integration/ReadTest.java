@@ -281,6 +281,23 @@ public class ReadTest extends IntegrationTest {
     }
 
     @Test
+    public void testNumericDoubleOrderByAscSelection() {
+        User[] users = Q.User.select()
+                .orderBy(Q.User.COUNT, OrderBy.Order.ASC)
+                .orderBy(Q.User.TIMESTAMP, OrderBy.Order.ASC)
+                .query().toArray();
+
+        // clyde, gill, josh, angie is the timestamp ascending order of the users created
+        // by #setupFourTestUsers, therefore, we assert that the rows will be
+        // selected in this order
+        assertEquals(4, users.length);
+        assertEquals(SetupUser.GILL_USER_NAME, users[0].getUsername());
+        assertEquals(SetupUser.CLYDE_USER_NAME, users[1].getUsername());
+        assertEquals(SetupUser.JOSH_USER_NAME, users[2].getUsername());
+        assertEquals(SetupUser.ANGIE_USER_NAME, users[3].getUsername());
+    }
+
+    @Test
     public void testNumericOrderByDescSelection() {
         User[] users = Q.User.select()
                 .orderBy(Q.User.TIMESTAMP, OrderBy.Order.DESC)
