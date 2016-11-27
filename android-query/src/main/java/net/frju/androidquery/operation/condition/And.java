@@ -29,7 +29,6 @@ public class And extends Condition {
      * Specifies a SQLite AND operator
      *
      * @param condition Combine multiple conditions
-     * @return And operator
      */
     public And(Condition... condition) {
         mCondition = condition;
