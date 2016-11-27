@@ -114,7 +114,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testMoreThanOrEqualToSelection() {
         User[] users = Q.User.select()
-                .where(where(Q.User.TIMESTAMP, Where.Op.MORE_THAN_OR_IS, SetupUser.CLYDE_TIMESTAMP))
+                .where(where(Q.User.TIMESTAMP, Where.Op.MORE_THAN_OR_EQUAL, SetupUser.CLYDE_TIMESTAMP))
                 .query().toArray();
 
         // All 4 of the users created by #setupFourTestUsers will match the
@@ -136,7 +136,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testLessThanOrEqualToSelection() {
         User[] users = Q.User.select()
-                .where(where(Q.User.TIMESTAMP, Where.Op.LESS_THAN_OR_IS, SetupUser.ANGIE_TIMESTAMP))
+                .where(where(Q.User.TIMESTAMP, Where.Op.LESS_THAN_OR_EQUAL, SetupUser.ANGIE_TIMESTAMP))
                 .query().toArray();
 
         // 4 of the users created by #setupFourTestUsers will match the
@@ -253,7 +253,7 @@ public class ReadTest extends IntegrationTest {
                                         where(Q.User.USERNAME, Where.Op.IS, SetupUser.ANGIE_USER_NAME)
                                 ),
                                 and(
-                                        where(Q.User.TIMESTAMP, Where.Op.MORE_THAN_OR_IS, SetupUser.ANGIE_TIMESTAMP)
+                                        where(Q.User.TIMESTAMP, Where.Op.MORE_THAN_OR_EQUAL, SetupUser.ANGIE_TIMESTAMP)
                                 )
                         )
                 )

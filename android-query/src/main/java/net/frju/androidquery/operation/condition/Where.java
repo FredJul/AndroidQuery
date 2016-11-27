@@ -27,9 +27,9 @@ public class Where extends Condition {
         IS("IS"),
         IS_NOT("IS NOT"),
         MORE_THAN (">"),
-        MORE_THAN_OR_IS(">="),
+        MORE_THAN_OR_EQUAL(">="),
         LESS_THAN ("<"),
-        LESS_THAN_OR_IS("<="),
+        LESS_THAN_OR_EQUAL("<="),
         LIKE ("LIKE");
 
         private final String mValue;

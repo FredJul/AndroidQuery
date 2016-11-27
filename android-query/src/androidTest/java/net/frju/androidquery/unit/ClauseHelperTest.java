@@ -96,7 +96,7 @@ public class ClauseHelperTest {
                         where(Q.User.USERNAME, Where.Op.IS, "angie")
                 ),
                 and(
-                        where(Q.User.TIMESTAMP, Where.Op.MORE_THAN_OR_IS, 1234567890)
+                        where(Q.User.TIMESTAMP, Where.Op.MORE_THAN_OR_EQUAL, 1234567890)
                 )
         );
 
