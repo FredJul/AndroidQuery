@@ -6,8 +6,8 @@ annotations and CRUD classes expose an expressive api for executing SQLite queri
 ####Gradle dependencies####
 ```groovy
 dependencies {
-    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.0'
-    compile 'net.frju.androidquery:android-query:1.2.0'
+    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.2'
+    compile 'net.frju.androidquery:android-query:1.2.2'
 }
 ```
 
@@ -77,10 +77,14 @@ Then tables are defined by POJOs that are annotated with `@Table`. Table columns
 public class User {
     @Column(index = true, realName = "_id", primaryKey = true, autoIncrement = true)
     public int id;
-    @Column private String username;
-    @Column private long timestamp;
-    @Column private boolean isRegistered;
-    @Column private byte[] profilePicture;
+    @Column
+    public String username;
+    @Column
+    public long timestamp;
+    @Column
+    public boolean isRegistered;
+    @Column
+    public byte[] profilePicture;
 }
 ```
 
@@ -108,7 +112,7 @@ Q.User.select()
         })
 ```
 
-The `execute()` method returns results directly. NOTE: `execute()` will block the ui thread, 
+The `query()` method returns results directly. NOTE: `query()` will block the ui thread, 
 we recommend you use RxJava.
 
 ```java
@@ -118,12 +122,14 @@ user.setIsRegistered(true);
 user.setTimestamp(System.currentTimeMillis());
 
 // INSERT INTO User (username, isRegistered, timestamp) VALUES ('12345678',true,632348968244);
-Insert.getBuilder().values(users).execute(User.class, sqlProvider);
+Q.User.insert(users).query();
 ```
 
 ```java
 // SELECT * FROM User;
-Result<User> users = Select.getBuilder().execute(User.class, sqlProvider);
+Result<User> users = Q.User.select().query();
+...
+users.close();
 ```
 
 ```java
@@ -134,17 +140,17 @@ contentValues.put(Q.User.TIMESTAMP, System.currentTimeMillis());
 // UPDATE User SET isRegistered = 'true', timestamp = '123456789'
 int rowsUpdated = Q.User.update()
         .values(contentValues)
-        .execute();
+        .query();
 ```
 
 ```java
 // DELETE FROM User;
-int rowsDeleted = Q.User.delete().execute();
+int rowsDeleted = Q.User.delete().query();
 ```
 
 ```java
 // SELECT Count(*) FROM User;
-int count = Q.User.count().execute();
+int count = Q.User.count().query();
 ```
 
 ####Clauses####
@@ -154,36 +160,40 @@ The following illustrate how to build more complex queries:
 ```java
 // SELECT * FROM User WHERE isRegistered = 'true';
 Result<User> users = Q.User.select()
-        .where(new Where(Q.User.IS_REGISTERED, Where.Exp.EQUAL_TO, true))
-        .execute();
+        .where(Condition.where(Q.User.IS_REGISTERED, Where.Op.IS, true))
+        .query();
+...
+users.close();
 ```
 
 ```java
 // SELECT * FROM User WHERE username LIKE 'jo%'
 Result<User> users = Q.User.select()
-        .where(new Where(Q.User.USERNAME, Where.Exp.LIKE, "jo%"))
-        .execute();
+        .where(Condition.where(Q.User.USERNAME, Where.Op.LIKE, "jo%"))
+        .query();
+...
+users.close();
 ```
 
 ```java
 // SELECT * FROM User WHERE username IN ("sam","josh");
 Result<User> users = Q.User.select()
-        .where(new In(Q.User.USERNAME, "sam", "josh"))
-        .execute();
+        .where(Condition.in(Q.User.USERNAME, "sam", "josh"))
+        .query();
 ```
 
 ```java
 // SELECT * FROM User WHERE ((username = "sam" OR username = "angie") AND (timestamp >= 1234567890));
 Result<User> users = Q.User.select()
-		.where(new And(
-                new Or(
-                        new Where(Q.User.USERNAME, Where.Exp.EQUAL_TO, "sam"),
-                        new Where(Q.User.USERNAME, Where.Exp.EQUAL_TO, "angie")
+		.where(Condition.and(
+                Condition.or(
+                        Condition.where(Q.User.USERNAME, Where.Op.IS, "sam"),
+                        Condition.where(Q.User.USERNAME, Where.Op.IS, "angie")
                 ),
-                new And(
-                        new Where(Q.User.TIMESTAMP, Where.Exp.MORE_THAN_OR_EQUAL_TO, 1234567890)
+                Condition.and(
+                        Condition.where(Q.User.TIMESTAMP, Where.Op.MORE_THAN_OR_EQUAL_TO, 1234567890)
                 )))
-        .execute();
+        .query();
 ```
 
 ####Keywords####
@@ -193,7 +203,7 @@ The `OrderBy` and `Limit` classes are used to manipulate the results of the `sel
 // SELECT * FROM user ORDER BY username DESC
 Result<User> users = Q.User.select()
         .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
-        .execute();
+        .query();
 ```
 
 ```java
@@ -201,7 +211,7 @@ Result<User> users = Q.User.select()
 Result<User> users = Q.User.select()
         .limit(2,4)
         .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
-        .execute();
+        .query();
 ```
 
 ####Joins####
@@ -211,20 +221,20 @@ The target table for the join must be defined as an @Column, the object will be 
 ```java
 @Table(localDatabaseProvider = LocalDatabaseProvider.class)
 public class Comment {
-    @Column(index = true) int id;
-    @Column int userId;
-    @Column User user; // The target table for a potential join
+    @Column(index = true) public int id;
+    @Column public int userId;
+    @Column public User user; // The target table for a potential join
 }
 
 @Table
 @Table(localDatabaseProvider = LocalDatabaseProvider.class)
 public class User {
-    @Column(index = true) int id;
+    @Column(index = true) public int id;
 }
 
 Result<Comment> comments = Q.Comment.select()
-                .join(innerJoin(User.class, on(Comment.class.getSimpleName() + '.' + Q.Comment.USER_ID, User.class.getSimpleName() + '.' + Q.User.ID)))
-        .execute();
+                .join(innerJoin(User.class, Condition.on(Comment.class.getSimpleName() + '.' + Q.Comment.USER_ID, User.class.getSimpleName() + '.' + Q.User.ID)))
+        .query();
         
 User user = comments.toArray()[0].getUser(); // The nested User object is populated by the join
 ```
