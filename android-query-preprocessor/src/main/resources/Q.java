@@ -208,6 +208,11 @@ public class Q {
             }
 
             @Override
+            public boolean isPrimaryKeyAutoIncrement() {
+                return ${isPrimaryKeyAutoIncrement(table)};
+            }
+
+            @Override
             public ContentValues getContentValues(Object model) {
                 ${packagedTableName} ${table.getName()?lower_case} = (${packagedTableName})model;
 

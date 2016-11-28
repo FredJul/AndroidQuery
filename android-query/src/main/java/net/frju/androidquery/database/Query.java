@@ -26,10 +26,20 @@ public abstract class Query {
     protected static int save(Save save, Class<?> classDef, DatabaseProvider databaseProvider) {
         int nb = 0;
 
+        TableDescription table = databaseProvider.getResolver().getTableDescription(classDef);
+        boolean isPrimaryKeyAutoIncrement = table.isPrimaryKeyAutoIncrement();
+
         ArrayList<Object> modelsToInsert = new ArrayList<>();
         for (Object model : save.getModels()) {
+            long id = 1; // first valid autoincrement id is always >= 1
+            if (isPrimaryKeyAutoIncrement) {
+                // Try to guess if we for sure need to insert thanks to primary key
+                Object primaryKeyValue = table.getPrimaryKeyValue(model);
+                id = Long.parseLong(primaryKeyValue.toString()); // should be a short, int or long
+            }
+
             //noinspection unchecked
-            if (Update.getBuilder(classDef, databaseProvider).model(model).query() <= 0) {
+            if (id <= 0 || Update.getBuilder(classDef, databaseProvider).model(model).query() <= 0) {
                 modelsToInsert.add(model);
             } else {
                 nb++;

@@ -35,6 +35,8 @@ public interface TableDescription {
 
     Object getPrimaryKeyValue(Object model);
 
+    boolean isPrimaryKeyAutoIncrement();
+
     <T> T getSingleResult(Cursor cursor);
 
     <T> T[] getArrayResult(Cursor cursor);
