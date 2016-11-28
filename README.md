@@ -94,10 +94,11 @@ your data and a series of static variables that can be used to reference @Table 
 these variables should be used whenever you reference a table column.
 
 ####Querying the database####
-The `insert()`, `select()`, `update()`, `delete()`, `count()` and `raw()` methods are used to query the database tables.
-The quey finishes by using either the `execute()` method or the `rx()` method.
+The `insert()`, `select()`, `update()`, `save()`, `delete()`, `count()` and `raw()` methods are used to query the database tables. The `save()` method will either insert the data if not in database or will update it, since this can be slower you should use that method only if you don't know if the data has been already inserted.
 
-The `rx()` method returns an RxJava Observable.
+The query finishes by using either the `query()`/`querySingle()` methods or the `rx()` method.
+
+The `rx()` method returns an RxJava2 Observable.
 
 ```java
 Q.User.select()
@@ -112,8 +113,8 @@ Q.User.select()
         })
 ```
 
-The `query()` method returns results directly. NOTE: `query()` will block the ui thread, 
-we recommend you use RxJava.
+The `query()` method returns results directly. NOTE: `query()` will block the UI thread, 
+so we recommend you to do that in background (via RxJava or Loaders, see below).
 
 ```java
 User user = new User();
@@ -153,9 +154,8 @@ int rowsDeleted = Q.User.delete().query();
 int count = Q.User.count().query();
 ```
 
-####Clauses####
-The `Where`, `And`, `In`, and `Or` classes are used to build up the query.
-The following illustrate how to build more complex queries: 
+####Conditions####
+The `Condition` class is used to build up the where query:
 
 ```java
 // SELECT * FROM User WHERE isRegistered = 'true';
@@ -238,6 +238,33 @@ Result<Comment> comments = Q.Comment.select()
         
 User user = comments.toArray()[0].getUser(); // The nested User object is populated by the join
 ```
+
+####ContentProvider####
+Your data can also be accessed through a ContentProvider if you need to share your data across several apps or if you want to use CursorLoader or ContentObserver inside your app.
+
+To do so, you first need to declare your ContentProvider:
+```java
+TODO
+```
+```xml
+TODO
+```
+
+Then you need to declare which model is accessible through it:
+```java
+```
+
+Once done, you'll be able to call the `insertViaContentProvider()`, `updateViaContentProvider()`, `deleteViaContentProvider()` or `saveViaContentProvider()` methods directly.
+```java
+TODO
+```
+
+To listen the data changes, you can create a ContentObserver or a Loader this way:
+```java
+TODO
+```
+
+####Default Android models####
 
 ####TODO####
 - Validate that object relationships defined by @Column are annotated with @Table
