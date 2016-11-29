@@ -27,8 +27,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="android-query-common.android-query-common-1.2.2" level="project" />
-    <orderEntry type="library" exported="" name="android-query-common.android-query-common-1.2.2-sources" level="project" />
-    <orderEntry type="library" exported="" name="android-query-common.android-query-common-1.2.2-javadoc" level="project" />
   </component>
 </module>
