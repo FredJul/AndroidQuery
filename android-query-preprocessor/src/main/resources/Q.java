@@ -33,12 +33,19 @@ public class Q {
         private static HashMap<Class<?>, BaseContentDatabaseProvider> mContentProviders = new HashMap<>();
 
         public void init(Context context) {
+            BaseLocalDatabaseProvider localProvider;
+            BaseContentDatabaseProvider contentProvider;
+
             <#list tables as table>
             <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
-                    mLocalProviders.put(${table.getPackage()}.${table.getName()}.class, new ${table.getLocalDatabaseProvider().toString()}(context.getApplicationContext()));
+                    localProvider = new ${table.getLocalDatabaseProvider().toString()}(context.getApplicationContext());
+                    mLocalProviders.put(${table.getPackage()}.${table.getName()}.class, localProvider);
+                    mLocalProviders.put(${table.getName()}.class, localProvider); // to be more error-tolerent
             </#if>
             <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-                    mContentProviders.put(${table.getPackage()}.${table.getName()}.class, new ${table.getContentDatabaseProvider().toString()}(context.getContentResolver()));
+                    contentProvider = new ${table.getContentDatabaseProvider().toString()}(context.getContentResolver());
+                    mContentProviders.put(${table.getPackage()}.${table.getName()}.class, contentProvider);
+                    mContentProviders.put(${table.getName()}.class, contentProvider); // to be more error-tolerent
             </#if>
             </#list>
         }
