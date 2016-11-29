@@ -25,6 +25,8 @@ import net.frju.androidquery.operation.condition.Where;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static net.frju.androidquery.operation.condition.Where.where;
 import static org.junit.Assert.assertEquals;
 
@@ -64,6 +66,32 @@ public class UpdateTest extends IntegrationTest {
         assertEquals(timestamp, user.getTimestamp());
 
         assertEquals(updated, 1);
+    }
+
+    @Test
+    public void testListUpdate() {
+        // setup
+        long timestamp = System.currentTimeMillis();
+
+        List<User> users = Q.User.select().query().toList();
+        for (User user : users) {
+            user.timestamp = timestamp;
+        }
+
+        // exercise
+        int updated = Q.User.update()
+                .model(users)
+                .query();
+
+        // verify
+        users = Q.User.select().query().toList();
+        assertEquals(4, users.size());
+
+        for (User user : users) {
+            assertEquals(timestamp, user.getTimestamp());
+        }
+
+        assertEquals(updated, 4);
     }
 
     @Test

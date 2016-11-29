@@ -124,13 +124,23 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         return nbInsert;
     }
 
-    protected int update(String tableName, ContentValues values, Condition[] condition) {
-        return mDatabase.update(
-                tableName,
-                values,
-                mClauseHelper.getCondition(condition),
-                mClauseHelper.getConditionArgs(condition)
-        );
+    protected int bulkUpdate(String tableName, ContentValues[] valuesArray, Condition[][] conditionsArray) {
+        int nbUpdate = 0;
+        mDatabase.beginTransaction();
+
+        for (int i = 0; i < valuesArray.length; i++) {
+            nbUpdate += mDatabase.update(
+                    tableName,
+                    valuesArray[i],
+                    mClauseHelper.getCondition(conditionsArray[i]),
+                    mClauseHelper.getConditionArgs(conditionsArray[i])
+            );
+        }
+
+        mDatabase.setTransactionSuccessful();
+        mDatabase.endTransaction();
+
+        return nbUpdate;
     }
 
     protected Cursor query(String tableName, String[] columns, Condition[] condition, Join[] joins,

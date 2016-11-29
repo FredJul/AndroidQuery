@@ -177,17 +177,21 @@ public class Q {
 
             @Override
             public ${packagedTableName}[] getArrayResult(Cursor cursor) {
-                ${packagedTableName}[] result = new ${packagedTableName}[cursor.getCount()];
+                if (cursor != null){
+                    ${packagedTableName}[]result = new ${packagedTableName}[cursor.getCount()];
 
-                cursor.moveToFirst();
-                for (int i = 0; !cursor.isAfterLast(); i++) {
-                    result[i] = getSingleResult(cursor);
-                    cursor.moveToNext();
+                    cursor.moveToFirst();
+                    for(int i=0;!cursor.isAfterLast();i++){
+                        result[i]=getSingleResult(cursor);
+                        cursor.moveToNext();
+                    }
+
+                    cursor.close();
+
+                    return result;
                 }
 
-                cursor.close();
-
-                return result;
+                return null;
             }
 
             @Override
@@ -281,6 +285,16 @@ public class Q {
                 return Save.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
             }
             </#if>
+            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
+            public static Save.Builder<${packagedTableName}> save(List<${packagedTableName}> models) {
+                return Save.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), models);
+            }
+            </#if>
+            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
+            public static Save.Builder<${packagedTableName}> saveViaContentProvider(List<${packagedTableName}> models) {
+                return Save.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
+            }
+            </#if>
 
             <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
             public static Insert.Builder<${packagedTableName}> insert(${packagedTableName}... models) {
@@ -289,6 +303,16 @@ public class Q {
             </#if>
             <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
             public static Insert.Builder<${packagedTableName}> insertViaContentProvider(${packagedTableName}... models) {
+                return Insert.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
+            }
+            </#if>
+            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
+            public static Insert.Builder<${packagedTableName}> insert(List<${packagedTableName}> models) {
+                return Insert.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), models);
+            }
+            </#if>
+            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
+            public static Insert.Builder<${packagedTableName}> insertViaContentProvider(List<${packagedTableName}> models) {
                 return Insert.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
             }
             </#if>

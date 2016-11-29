@@ -3,6 +3,7 @@ package net.frju.androidquery.operation.function;
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -22,16 +23,21 @@ public class Save extends Query {
         mModels = models;
     }
 
-    public static <T> Save.Builder getBuilder(DatabaseProvider databaseProvider, T... values) {
-        return new Save.Builder<>(databaseProvider, values);
+    public static <T> Save.Builder getBuilder(DatabaseProvider databaseProvider, T... models) {
+        return new Save.Builder<>(databaseProvider, models);
+    }
+
+    public static <T> Save.Builder getBuilder(DatabaseProvider databaseProvider, List<T> models) {
+        //noinspection unchecked,SuspiciousToArrayCall
+        return new Save.Builder<>(databaseProvider, (T[]) models.toArray(new Object[models.size()]));
     }
 
     public static class Builder<T> {
-        private T[] mValues;
+        private T[] mModels;
         private DatabaseProvider mDatabaseProvider;
 
-        private Builder(DatabaseProvider databaseProvider, T... values) {
-            mValues = values;
+        private Builder(DatabaseProvider databaseProvider, T... models) {
+            mModels = models;
             mDatabaseProvider = databaseProvider;
         }
 
@@ -40,8 +46,8 @@ public class Save extends Query {
          */
         public int query() {
             return save(
-                    new Save(mValues),
-                    mValues != null && mValues.length > 0 ? mValues[0].getClass() : Object.class,
+                    new Save(mModels),
+                    mModels != null && mModels.length > 0 ? mModels[0].getClass() : Object.class,
                     mDatabaseProvider
             );
         }

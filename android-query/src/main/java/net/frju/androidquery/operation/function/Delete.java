@@ -19,6 +19,7 @@ import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
 import net.frju.androidquery.operation.condition.Condition;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -79,6 +80,18 @@ public class Delete extends Query {
          */
         public Builder<T> model(T... models) {
             mModels = models;
+            return this;
+        }
+
+        /**
+         * Specify the values for the Delete query
+         *
+         * @param models The models that are being deleted
+         * @return Call Builder#query or Builder#rx to run the query
+         */
+        public Builder<T> model(List<T> models) {
+            //noinspection unchecked,SuspiciousToArrayCall
+            mModels = (T[]) models.toArray(new Object[models.size()]);
             return this;
         }
 

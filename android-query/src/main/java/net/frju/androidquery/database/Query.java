@@ -2,6 +2,7 @@ package net.frju.androidquery.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import net.frju.androidquery.operation.condition.Condition;
 import net.frju.androidquery.operation.condition.In;
@@ -102,29 +103,40 @@ public abstract class Query {
     }
 
     protected static int update(Update update, Class<?> classDef, DatabaseProvider databaseProvider) {
-        if (update.getModel() != null) {
+        Object[] models = update.getModels();
+        if (models != null) {
             TableDescription tableDesc = getTableDescription(classDef, databaseProvider);
-            Condition[] conditions = update.getConditions();
-            if (conditions == null) {
-                conditions = new Condition[1];
-                conditions[0] = Where.where(tableDesc.getPrimaryKeyRealName(), Where.Op.IS, tableDesc.getPrimaryKeyValue(update.getModel()));
-            }
+            String primaryKeyName = tableDesc.getPrimaryKeyRealName();
+            ContentValues[] valuesArray = new ContentValues[models.length];
+            Condition[][] conditionsArray = new Condition[models.length][];
+            for (int i = 0; i < models.length; i++) {
+                Object model = models[i];
 
-            if (update.getModel() instanceof ModelListener) {
-                ((ModelListener) update.getModel()).onPreUpdate();
-            }
+                conditionsArray[i] = update.getConditions();
+                if (conditionsArray[i] == null) {
+                    if (TextUtils.isEmpty(primaryKeyName)) {
+                        throw new IllegalStateException("update with model() method require a primary key");
+                    }
+                    conditionsArray[i] = new Condition[1];
+                    conditionsArray[i][0] = Where.where(primaryKeyName, Where.Op.IS, tableDesc.getPrimaryKeyValue(model));
+                }
 
-            ContentValues values = tableDesc.getContentValues(update.getModel());
-            return databaseProvider.update(
+                if (model instanceof ModelListener) {
+                    ((ModelListener) model).onPreUpdate();
+                }
+
+                valuesArray[i] = tableDesc.getContentValues(model);
+            }
+            return databaseProvider.bulkUpdate(
                     tableDesc.getTableRealName(),
-                    values,
-                    conditions
+                    valuesArray,
+                    conditionsArray
             );
         } else {
-            return databaseProvider.update(
+            return databaseProvider.bulkUpdate(
                     getTableDescription(classDef, databaseProvider).getTableRealName(),
-                    update.getContentValues(),
-                    update.getConditions()
+                    new ContentValues[]{update.getContentValues()},
+                    new Condition[][]{update.getConditions()}
             );
         }
     }
@@ -141,6 +153,10 @@ public abstract class Query {
 
         if (models != null) {
             TableDescription tableDesc = getTableDescription(classDef, databaseProvider);
+            String primaryKeyName = tableDesc.getPrimaryKeyRealName();
+            if (TextUtils.isEmpty(primaryKeyName)) {
+                throw new IllegalStateException("delete with model() method require a primary key");
+            }
 
             Object[] keys = new String[delete.getModels().length];
             for (int i = 0; i < models.length; i++) {
@@ -151,7 +167,7 @@ public abstract class Query {
                 }
             }
 
-            Condition condition = new In(tableDesc.getPrimaryKeyRealName(), keys);
+            Condition condition = new In(primaryKeyName, keys);
 
             return databaseProvider.delete(
                     tableDesc.getTableRealName(),

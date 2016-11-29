@@ -37,7 +37,7 @@ public abstract class DatabaseProvider {
 
     abstract protected int bulkInsert(String tableName, ContentValues[] valuesArray);
 
-    abstract protected int update(String tableName, ContentValues values, Condition[] condition);
+    abstract protected int bulkUpdate(String tableName, ContentValues[] valuesArray, Condition[][] conditionsArray);
 
     abstract protected Cursor query(String tableName, String[] columns, Condition[] condition, Join[] joins,
                                     String groupBy, String having, OrderBy[] orderBy, Limit limit);

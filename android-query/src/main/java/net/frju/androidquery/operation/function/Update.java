@@ -22,6 +22,7 @@ import net.frju.androidquery.database.Query;
 import net.frju.androidquery.operation.condition.Condition;
 import net.frju.androidquery.operation.condition.Where;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -31,12 +32,12 @@ import io.reactivex.Observable;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Update extends Query {
-    private Object mModel;
+    private Object[] mModels;
     private ContentValues mContentValues;
     private Condition[] mConditions;
 
-    public Object getModel() {
-        return mModel;
+    public Object[] getModels() {
+        return mModels;
     }
 
     public ContentValues getContentValues() {
@@ -47,8 +48,8 @@ public class Update extends Query {
         return mConditions;
     }
 
-    private Update(Object model) {
-        mModel = model;
+    private Update(Object... models) {
+        mModels = models;
     }
 
     private Update(ContentValues contentValues, Condition[] conditions) {
@@ -61,7 +62,7 @@ public class Update extends Query {
     }
 
     public static class Builder<T> {
-        private T mModel;
+        private T[] mModels;
         private ContentValues mValues;
         private Condition[] mCondition;
         private Class<T> mClassDef;
@@ -84,11 +85,23 @@ public class Update extends Query {
 
         /**
          * Specify the values for the Update query
-         * @param model The model that are being updated
+         * @param models The models that are being updated
          * @return Call Builder#query or Builder#rx to run the query
          */
-        public Builder<T> model(T model) {
-            mModel = model;
+        public Builder<T> model(T... models) {
+            mModels = models;
+            return this;
+        }
+
+        /**
+         * Specify the values for the Update query
+         *
+         * @param models The models that are being updated
+         * @return Call Builder#query or Builder#rx to run the query
+         */
+        public Builder<T> model(List<T> models) {
+            //noinspection unchecked,SuspiciousToArrayCall
+            mModels = (T[]) models.toArray(new Object[models.size()]);
             return this;
         }
 
@@ -107,9 +120,9 @@ public class Update extends Query {
          * @return The rows affected by the Update query
          */
         public int query() {
-            if (mModel != null) {
+            if (mModels != null) {
                 return update(
-                        new Update(mModel),
+                        new Update(mModels),
                         mClassDef,
                         mDatabaseProvider
                 );

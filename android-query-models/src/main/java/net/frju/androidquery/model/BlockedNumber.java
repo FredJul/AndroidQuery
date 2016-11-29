@@ -16,6 +16,8 @@ import net.frju.androidquery.operation.function.Save;
 import net.frju.androidquery.operation.function.Select;
 import net.frju.androidquery.operation.function.Update;
 
+import java.util.List;
+
 @SuppressWarnings("unused")
 @TargetApi(24)
 @Table(realName = "blocked", contentDatabaseProvider = BlockedNumberContentDatabaseProvider.class)
@@ -50,11 +52,19 @@ public class BlockedNumber {
         return Q.BlockedNumber.insertViaContentProvider(models);
     }
 
+    public static Insert.Builder<BlockedNumber> insert(List<BlockedNumber> models) {
+        return Q.BlockedNumber.insertViaContentProvider(models);
+    }
+
     public static Update.Builder<BlockedNumber> update() {
         return Q.BlockedNumber.updateViaContentProvider();
     }
 
     public static Save.Builder<BlockedNumber> save(BlockedNumber... models) {
+        return Q.BlockedNumber.saveViaContentProvider(models);
+    }
+
+    public static Save.Builder<BlockedNumber> save(List<BlockedNumber> models) {
         return Q.BlockedNumber.saveViaContentProvider(models);
     }
 

@@ -54,12 +54,18 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         return mContentResolver.bulkInsert(getUri(tableName), valuesArray);
     }
 
-    protected int update(String tableName, ContentValues values, Condition[] condition) {
-        return mContentResolver.update(getUri(tableName),
-                values,
-                mClauseHelper.getCondition(condition),
-                mClauseHelper.getConditionArgs(condition)
-        );
+    protected int bulkUpdate(String tableName, ContentValues[] valuesArray, Condition[][] conditionsArray) {
+        int nbUpdate = 0;
+
+        for (int i = 0; i < valuesArray.length; i++) {
+            nbUpdate += mContentResolver.update(getUri(tableName),
+                    valuesArray[i],
+                    mClauseHelper.getCondition(conditionsArray[i]),
+                    mClauseHelper.getConditionArgs(conditionsArray[i])
+            );
+        }
+
+        return nbUpdate;
     }
 
     protected Cursor query(String tableName, String[] columns, Condition[] condition, Join[] joins,

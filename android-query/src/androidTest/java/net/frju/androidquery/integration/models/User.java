@@ -15,7 +15,7 @@ import net.frju.androidquery.annotation.Table;
         localDatabaseProvider = LocalDatabaseProvider.class
 )
 public class User {
-    @Column
+    @Column(primaryKey = true)
     public int id; // no index supplied for the @Test testNoUserIndexesAreCreated()
     @Column
     public String username;

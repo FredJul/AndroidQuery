@@ -121,6 +121,16 @@ public class Select extends Query {
 
         /**
          * Specify a Limit clause for the Select query
+         * @param n The number of wanted results
+         * @return Call Builder#query, Builder#rx or Builder#rxSingle to run the query
+         */
+        public Builder<T> limit(int n) {
+            mLimit = new Limit(0, n);
+            return this;
+        }
+
+        /**
+         * Specify a Limit clause for the Select query
          * @param start The starting index to select from
          * @param end The ending index to select from
          * @return Call Builder#query, Builder#rx or Builder#rxSingle to run the query
@@ -147,8 +157,9 @@ public class Select extends Query {
          * @return The row returned by the Select query
          */
         public T querySingle() {
+            // For a single query, always put a limit for performance reasons
             return selectSingle(
-                    new Select(mCondition, mJoin, mOrderBy, mLimit),
+                    new Select(mCondition, mJoin, mOrderBy, new Limit(0, 1)),
                     mClassDef,
                     mDatabaseProvider
             );
