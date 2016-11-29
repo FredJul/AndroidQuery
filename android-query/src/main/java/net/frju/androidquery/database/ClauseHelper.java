@@ -53,9 +53,11 @@ public class ClauseHelper {
     public String getCondition(Condition[] condition) {
         StringBuilder clauseBuilder = new StringBuilder();
 
-        if (condition != null) {
-            for (Condition item : condition) {
-                clauseBuilder.append(getCondition(item));
+        if (condition != null && condition.length > 0) {
+            if (condition.length == 1) {
+                clauseBuilder.append(getCondition(condition[0]));
+            } else {
+                clauseBuilder.append(getCondition(Condition.and(condition)));
             }
         }
 
