@@ -40,12 +40,12 @@ public class Q {
             <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
                     localProvider = new ${table.getLocalDatabaseProvider().toString()}(context.getApplicationContext());
                     mLocalProviders.put(${table.getPackage()}.${table.getName()}.class, localProvider);
-                    mLocalProviders.put(${table.getName()}.class, localProvider); // to be more error-tolerent
+                    mLocalProviders.put(${table.getName()}.class, localProvider); // to be more error-tolerant
             </#if>
             <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
                     contentProvider = new ${table.getContentDatabaseProvider().toString()}(context.getContentResolver());
                     mContentProviders.put(${table.getPackage()}.${table.getName()}.class, contentProvider);
-                    mContentProviders.put(${table.getName()}.class, contentProvider); // to be more error-tolerent
+                    mContentProviders.put(${table.getName()}.class, contentProvider); // to be more error-tolerant
             </#if>
             </#list>
         }
