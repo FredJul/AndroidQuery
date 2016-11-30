@@ -252,13 +252,16 @@ public class Q {
                 </#if>
             }
 
+            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
             public static Select.Builder<${packagedTableName}> select() {
-                <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
                 return Select.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
-                <#else>
-                return Select.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
-                </#if>
             }
+            </#if>
+            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
+            public static Select.Builder<${packagedTableName}> selectViaContentProvider() {
+                return Select.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
+            }
+            </#if>
 
             <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
             public static Delete.Builder<${packagedTableName}> delete() {

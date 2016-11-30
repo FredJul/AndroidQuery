@@ -52,7 +52,7 @@ public class Contact {
     }
 
     public static Select.Builder<Contact> select() {
-        return Q.Contact.select();
+        return Q.Contact.selectViaContentProvider();
     }
 
     public static Delete.Builder<Contact> delete() {

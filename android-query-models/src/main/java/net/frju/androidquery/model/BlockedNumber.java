@@ -41,7 +41,7 @@ public class BlockedNumber {
     }
 
     public static Select.Builder<BlockedNumber> select() {
-        return Q.BlockedNumber.select();
+        return Q.BlockedNumber.selectViaContentProvider();
     }
 
     public static Delete.Builder<BlockedNumber> delete() {
