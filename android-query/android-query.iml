@@ -116,8 +116,8 @@
     <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.4" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="rules-0.4" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="support-annotations-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="rxjava-2.0.1" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="support-annotations-23.0.1" level="project" />
     <orderEntry type="module" module-name="android-query-common" exported="" />
   </component>
 </module>
