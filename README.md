@@ -1,8 +1,7 @@
 AndroidQuery
 ======================
 
-AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotation preprocessor, tables are defined by @Table
-annotations and CRUD classes expose an expressive api for executing SQLite queries.
+AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotation preprocessor. It focus on easy of use without sacrificing performances.
 
 ###Setup###
 
@@ -40,7 +39,7 @@ And then declare it into your AndroidManifest.xml:
         android:name=".App">
 ```
 
-####Define your models###
+####Define your models####
 You first need to declare your database. It can be a LocalDatabaseProvider (SQLite) or a ContentDatabaseProvider (ContentProvider) 
 ```java
 public class LocalDatabaseProvider extends BaseLocalDatabaseProvider {
@@ -88,6 +87,26 @@ public class User {
     public boolean isRegistered;
     @Column
     public byte[] profilePicture;
+}
+```
+
+####Use custom types####
+
+By default AndroidQuery supports several Java/Android types, but you are not restricted to them and can define some additional types:
+
+```java
+@TypeConverter(dbClass = String.class, modelClass = Uri.class)
+public class UriConverter extends BaseTypeConverter<String, Uri> {
+
+    @Override
+    public String convertToDb(Uri model) {
+        return model == null ? null : model.toString();
+    }
+
+    @Override
+    public Uri convertFromDb(String data) {
+        return data == null ? null : Uri.parse(data);
+    }
 }
 ```
 
@@ -283,17 +302,19 @@ The `OrderBy` and `Limit` classes are used to manipulate the results of the `sel
 
 ```java
 // SELECT * FROM user ORDER BY username DESC
-Result<User> users = Q.User.select()
+User[] users = Q.User.select()
         .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
-        .query();
+        .query()
+        .toArray();
 ```
 
 ```java
 // SELECT * FROM user ORDER BY username DESC LIMIT 2,4
-Result<User> users = Q.User.select()
+User[] users = Q.User.select()
         .limit(2,4)
         .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
-        .query();
+        .query()
+        .toArray();
 ```
 
 ####Joins####
@@ -470,3 +491,10 @@ You can queries them this way:
 ```java
 Contact[] contacts = Contact.select().query().toArray();
 ```
+
+###TODO###
+- Support for more constraints (notably UNIQUE)
+- Better default database updater (which does not erase everything)
+- Improve javadoc and add annotations like @NotNull
+- Support for more types by default (ArrayList<String>, Bitmap, byte, Byte, Byte[], Set/Map, ...)
+- Add more android models
