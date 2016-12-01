@@ -3,6 +3,7 @@ package net.frju.androidquery.preprocessor.processor.freemarker;
 import net.frju.androidquery.preprocessor.processor.data.Data;
 import net.frju.androidquery.preprocessor.processor.freemarker.method.AssembleCreateTableMethod;
 import net.frju.androidquery.preprocessor.processor.freemarker.method.FormatConstantMethod;
+import net.frju.androidquery.preprocessor.processor.freemarker.method.GetColumnsSqlArrayMethod;
 import net.frju.androidquery.preprocessor.processor.freemarker.method.GetContentValueMethod;
 import net.frju.androidquery.preprocessor.processor.freemarker.method.GetCursorGetterMethod;
 import net.frju.androidquery.preprocessor.processor.freemarker.method.GetPrimaryKeyValueMethod;
@@ -28,6 +29,7 @@ public class DataModel {
         map.putAll(GetPrimaryKeyValueMethod.getMethodMap(data));
         map.putAll(IsPrimaryKeyAutoIncrementMethod.getMethodMap());
         map.putAll(AssembleCreateTableMethod.getMethodMap(data));
+        map.putAll(GetColumnsSqlArrayMethod.getMethodMap(data));
         map.putAll(FormatConstantMethod.getMethodMap());
         map.putAll(JoinSettersMethod.getMethodMap(data));
         map.putAll(JoinReferencesMethod.getMethodMap());

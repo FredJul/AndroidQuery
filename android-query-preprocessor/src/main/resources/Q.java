@@ -125,8 +125,13 @@ public class Q {
             }
 
             @Override
-            public @NonNull String getTableInsertQuery() {
+            public @NonNull String getTableCreateQuery() {
                 return ${assembleCreateTable(table, tables)}
+            }
+
+            @Override
+            public @NonNull String[] getColumnsSqlArray() {
+                return ${getColumnsSqlArray(table, tables)};
             }
 
             @Override

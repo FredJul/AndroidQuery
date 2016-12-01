@@ -27,7 +27,10 @@ public interface TableDescription {
     String getTableRealName();
 
     @NonNull
-    String getTableInsertQuery();
+    String getTableCreateQuery();
+
+    @NonNull
+    String[] getColumnsSqlArray();
 
     String getPrimaryKeyRealName();
     String[] getIndexNames();

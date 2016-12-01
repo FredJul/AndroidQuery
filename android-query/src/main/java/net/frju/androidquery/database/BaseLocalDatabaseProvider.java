@@ -39,6 +39,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
     private final SQLiteDatabase mDatabase;
     private final String[] mSchemaArray;
+    private final String[][] mColumnsSqlArray;
     private final String[] mTableRealNameArray;
     private final String[] mCreateIndexQuery;
     private final List<String> mIndexNames;
@@ -50,12 +51,14 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
         mSchemaArray = new String[modelCount];
         mTableRealNameArray = new String[modelCount];
+        mColumnsSqlArray = new String[modelCount][];
         mCreateIndexQuery = new String[modelCount];
         mIndexNames = new ArrayList<>();
 
         for (int i = 0; i < modelClassDef.length; i++) {
             TableDescription tableDescription = getResolver().getTableDescription(modelClassDef[i]);
-            mSchemaArray[i] = tableDescription.getTableInsertQuery();
+            mSchemaArray[i] = tableDescription.getTableCreateQuery();
+            mColumnsSqlArray[i] = tableDescription.getColumnsSqlArray();
             mTableRealNameArray[i] = tableDescription.getTableRealName();
             mCreateIndexQuery[i] = tableDescription.getCreateIndexQuery();
 
@@ -96,15 +99,20 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
     protected void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (newVersion > oldVersion) {
-            //TODO: for now it destroy everything...
-            for (String tableName : mTableRealNameArray) {
-                db.execSQL("DROP TABLE IF EXISTS " + tableName);
-            }
+            for (int i = 0; i < mTableRealNameArray.length; i++) {
+                String tableName = mTableRealNameArray[i];
 
-            for (String index : mIndexNames) {
-                db.execSQL("DROP INDEX IF EXISTS " + index);
+                // By default, create new columns
+                for (String columnsSql : mColumnsSqlArray[i]) {
+                    try {
+                        db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnsSql + ";");
+                    } catch (SQLException e) {
+                        // columns already exists, nothing to do
+                    }
+                }
+
+                //TODO also create new indexes, constraints, ...
             }
-            onCreate(db);
         }
     }
 
