@@ -15,6 +15,8 @@
  */
 package net.frju.androidquery.operation.function;
 
+import android.support.annotation.NonNull;
+
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
 
@@ -39,11 +41,15 @@ public class Insert extends Query {
     }
 
     @SafeVarargs
-    public static <T> Insert.Builder getBuilder(DatabaseProvider databaseProvider, T... models) {
+    public static
+    @NonNull
+    <T> Insert.Builder getBuilder(@NonNull DatabaseProvider databaseProvider, @NonNull T... models) {
         return new Insert.Builder<>(databaseProvider, models);
     }
 
-    public static <T> Insert.Builder getBuilder(DatabaseProvider databaseProvider, List<T> models) {
+    public static
+    @NonNull
+    <T> Insert.Builder getBuilder(@NonNull DatabaseProvider databaseProvider, @NonNull List<T> models) {
         //noinspection unchecked,SuspiciousToArrayCall
         return new Insert.Builder<>(databaseProvider, (T[]) models.toArray(new Object[models.size()]));
     }
@@ -53,7 +59,7 @@ public class Insert extends Query {
         private final DatabaseProvider mDatabaseProvider;
 
         @SafeVarargs
-        private Builder(DatabaseProvider databaseProvider, T... models) {
+        private Builder(@NonNull DatabaseProvider databaseProvider, @NonNull T... models) {
             mModels = models;
             mDatabaseProvider = databaseProvider;
         }
@@ -73,7 +79,9 @@ public class Insert extends Query {
          * Executes an Insert query
          * @return An RxJava Observable
          */
-        public Observable<Integer> rx() {
+        public
+        @NonNull
+        Observable<Integer> rx() {
             return wrapRx(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {

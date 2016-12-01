@@ -74,6 +74,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
             }
         };
 
+        //TODO should handle error cases and notably the corrupted database one: we could reconstruct it
         mDatabase = openHelper.getWritableDatabase();
     }
 

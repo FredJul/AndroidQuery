@@ -15,6 +15,8 @@
  */
 package net.frju.androidquery.operation.function;
 
+import android.support.annotation.NonNull;
+
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
 import net.frju.androidquery.operation.condition.Condition;
@@ -38,7 +40,9 @@ public class Count extends Query {
         mCondition = condition;
     }
 
-    public static <T> Count.Builder getBuilder(Class<T> classDef, DatabaseProvider databaseProvider) {
+    public static
+    @NonNull
+    <T> Count.Builder getBuilder(@NonNull Class<T> classDef, @NonNull DatabaseProvider databaseProvider) {
         return new Count.Builder<>(classDef, databaseProvider);
     }
 
@@ -47,7 +51,7 @@ public class Count extends Query {
         private final Class<T> mClassDef;
         private final DatabaseProvider mDatabaseProvider;
 
-        private Builder(Class<T> classDef, DatabaseProvider databaseProvider) {
+        private Builder(@NonNull Class<T> classDef, @NonNull DatabaseProvider databaseProvider) {
             mClassDef = classDef;
             mDatabaseProvider = databaseProvider;
         }
@@ -57,7 +61,9 @@ public class Count extends Query {
          * @param condition Where condition
          * @return Call Builder#query or Builder#rx to run the query
          */
-        public Builder<T> where(Condition... condition) {
+        public
+        @NonNull
+        Builder<T> where(Condition... condition) {
             mCondition = condition;
             return this;
         }
@@ -78,7 +84,9 @@ public class Count extends Query {
          * Execute a Count query
          * @return An RxJava Observable
          */
-        public Observable<Long> rx() {
+        public
+        @NonNull
+        Observable<Long> rx() {
             return wrapRx(new Callable<Long>() {
                 @Override
                 public Long call() throws Exception {

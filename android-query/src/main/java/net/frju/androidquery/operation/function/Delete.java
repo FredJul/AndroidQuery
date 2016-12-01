@@ -15,6 +15,8 @@
  */
 package net.frju.androidquery.operation.function;
 
+import android.support.annotation.NonNull;
+
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
 import net.frju.androidquery.operation.condition.Condition;
@@ -48,7 +50,9 @@ public class Delete extends Query {
         mConditions = conditions;
     }
 
-    public static <T> Delete.Builder getBuilder(Class<T> classDef, DatabaseProvider databaseProvider) {
+    public static
+    @NonNull
+    <T> Delete.Builder getBuilder(@NonNull Class<T> classDef, @NonNull DatabaseProvider databaseProvider) {
         return new Delete.Builder<>(classDef, databaseProvider);
     }
 
@@ -58,7 +62,7 @@ public class Delete extends Query {
         private final Class<T> mClassDef;
         private final DatabaseProvider mDatabaseProvider;
 
-        private Builder(Class<T> classDef, DatabaseProvider databaseProvider) {
+        private Builder(@NonNull Class<T> classDef, @NonNull DatabaseProvider databaseProvider) {
             mClassDef = classDef;
             mDatabaseProvider = databaseProvider;
         }
@@ -68,7 +72,9 @@ public class Delete extends Query {
          * @param condition Where condition
          * @return Call Builder#query or Builder#rx to run the query
          */
-        public Builder<T> where(Condition... condition) {
+        public
+        @NonNull
+        Builder<T> where(Condition... condition) {
             mCondition = condition;
             return this;
         }
@@ -79,7 +85,9 @@ public class Delete extends Query {
          * @return Call Builder#query or Builder#rx to run the query
          */
         @SafeVarargs
-        public final Builder<T> model(T... models) {
+        public final
+        @NonNull
+        Builder<T> model(T... models) {
             mModels = models;
             return this;
         }
@@ -90,7 +98,9 @@ public class Delete extends Query {
          * @param models The models that are being deleted
          * @return Call Builder#query or Builder#rx to run the query
          */
-        public Builder<T> model(List<T> models) {
+        public
+        @NonNull
+        Builder<T> model(List<T> models) {
             //noinspection unchecked,SuspiciousToArrayCall
             mModels = (T[]) models.toArray(new Object[models.size()]);
             return this;
@@ -119,7 +129,9 @@ public class Delete extends Query {
          * Executes a Delete query
          * @return An RxJava Observable
          */
-        public Observable<Integer> rx() {
+        public
+        @NonNull
+        Observable<Integer> rx() {
             return wrapRx(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {

@@ -16,6 +16,7 @@
 package net.frju.androidquery.operation.function;
 
 import android.content.ContentValues;
+import android.support.annotation.NonNull;
 
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
@@ -57,7 +58,9 @@ public class Update extends Query {
         mConditions = conditions;
     }
 
-    public static <T> Update.Builder getBuilder(Class<T> classDef, DatabaseProvider databaseProvider) {
+    public static
+    @NonNull
+    <T> Update.Builder getBuilder(@NonNull Class<T> classDef, @NonNull DatabaseProvider databaseProvider) {
         return new Update.Builder<>(classDef, databaseProvider);
     }
 
@@ -68,7 +71,7 @@ public class Update extends Query {
         private final Class<T> mClassDef;
         private final DatabaseProvider mDatabaseProvider;
 
-        private Builder(Class<T> classDef, DatabaseProvider databaseProvider) {
+        private Builder(@NonNull Class<T> classDef, @NonNull DatabaseProvider databaseProvider) {
             mClassDef = classDef;
             mDatabaseProvider = databaseProvider;
         }
@@ -78,7 +81,9 @@ public class Update extends Query {
          * @param clause Where clause
          * @return Call Builder#query or Builder#rx to run the query
          */
-        public Builder<T> where(Where... clause) {
+        public
+        @NonNull
+        Builder<T> where(Where... clause) {
             mCondition = clause;
             return this;
         }
@@ -89,7 +94,9 @@ public class Update extends Query {
          * @return Call Builder#query or Builder#rx to run the query
          */
         @SafeVarargs
-        public final Builder<T> model(T... models) {
+        public final
+        @NonNull
+        Builder<T> model(T... models) {
             mModels = models;
             return this;
         }
@@ -100,7 +107,9 @@ public class Update extends Query {
          * @param models The models that are being updated
          * @return Call Builder#query or Builder#rx to run the query
          */
-        public Builder<T> model(List<T> models) {
+        public
+        @NonNull
+        Builder<T> model(@NonNull List<T> models) {
             //noinspection unchecked,SuspiciousToArrayCall
             mModels = (T[]) models.toArray(new Object[models.size()]);
             return this;
@@ -111,7 +120,9 @@ public class Update extends Query {
          * @param values The values that are being updated
          * @return Call Builder#query or Builder#rx to run the query
          */
-        public Builder<T> values(ContentValues values) {
+        public
+        @NonNull
+        Builder<T> values(ContentValues values) {
             mValues = values;
             return this;
         }
@@ -140,7 +151,9 @@ public class Update extends Query {
          * Executes an Update query
          * @return An RxJava Observable
          */
-        public Observable<Integer> rx() {
+        public
+        @NonNull
+        Observable<Integer> rx() {
             return wrapRx(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {

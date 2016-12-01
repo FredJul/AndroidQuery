@@ -121,10 +121,10 @@ these variables should be used whenever you reference a table column.
 The `insert()`, `select()`, `update()`, `save()`, `delete()`, `count()` and `raw()` methods are used to query the database tables. The `save()` method will either insert the data if not in database or will update it, since this can be slower you should use that method only if you don't know if the data has been already inserted.
 
 If you want synchronous query, you can directly call `query()`/`querySingle()` methods or the `rx()` method.
-For a `select()` query you will get back a Result object. This is basically a Cursor which needs to be closed after use. You can use a try-with-resources statement for that:
+For a `select()` query you will get back a `CursorResult` object. This is basically a Cursor which needs to be closed after use. You can use a try-with-resources statement for that:
 ```java
 // SELECT * FROM User;
-try(Result<User> users = Q.User.select().query()) {
+try(CursorResult<User> users = Q.User.select().query()) {
     int count = users.getCount();
     User secondUser = users.get(1);
     for (User user : users) {
@@ -135,78 +135,39 @@ try(Result<User> users = Q.User.select().query()) {
 }
 ```
 
-You can also directly retrieve an array or a list from the `Result` object.
+You can also directly retrieve an array or a list from the `CursorResult` object.
 ```java
 User[] usersArray = Q.User.select().query().toArray();
 List<User> usersList = Q.User.select().query().toList();
 ```
 
-However be careful: this is less efficient than directly using the `Result` object since it needs to read and copy everything in memory.
-Calling `toArray()` or `toList()` methods will automatically close the `Result` object.
+However be careful: this is less efficient than directly using the `CursorResult` object since it needs to read and copy everything in memory.
+Calling `toArray()` or `toList()` methods will automatically close the `CursorResult` object.
 
-For an asynchronous query (to not block the UI), you can notably use the `rx()` method which returns an RxJava2 Observable:
-
-```java
-Q.User.select()
-        .rx()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Consumer<Result<User>>() {
-            @Override
-            public void accept(Result<User> users) throws Exception {
-    		// do something with the users
-            }
-        });
-```
-
-Another solution would be to use Android loaders:
+For an asynchronous query (to not block the UI), you can notably use the `rx()` method which returns an RxJava2 Observable.
+It is recommended to put all the returned `Disposable` into a `CompositeDisposable` and clear it inside the activity `onDestroy()`:
 
 ```java
-public class UsersLoader extends BaseSelectLoader<User> {
+    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    public UsersLoader(Context context) {
-        super(context);
+    private void doQuery() {
+        mCompositeDisposable.add(Q.User.select()
+                .rx()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<CursorResult<User>>() {
+                    @Override
+                    public void accept(CursorResult<User> users) throws Exception {
+            		// do something with the users on UI thread
+                    }
+                }));
     }
 
     @Override
-    public Result<User> doSelect() {
-        return User.select().query();
+    protected void onDestroy() {
+        super.onDestroy();
+        mCompositeDisposable.clear();
     }
-}
-```
-```java
-public class ExampleActivity extends Activity {
-
-    private static final int USER_LOADER_ID = 0;
-    
-    private final LoaderManager.LoaderCallbacks<Result<User>> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<Result<User>>() {
-    
-        @Override
-        public Loader<Result<User>> onCreateLoader(int id, Bundle args) {
-            UsersLoader loader = new UsersLoader(ExampleActivity.this);
-            loader.setUpdateThrottle(100);
-            return loader;
-        }
-    
-        @Override
-        public void onLoadFinished(Loader<Result<User>> loader, Result<User> data) {
-            // ...
-        }
-    
-        @Override
-        public void onLoaderReset(Loader<Result<User>> loader) {
-            // ...
-        }
-    };
-    
-    
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
-        getLoaderManager().initLoader(USER_LOADER_ID, null, mLoaderCallbacks);
-    }
-}
 ```
 
 Other kind of queries are available:
@@ -405,7 +366,7 @@ Q.User.insertViaContentProvider(new User()).query();
 
 ####Listening changes####
 
-To listen the data changes, you can create a Android loader this way:
+To listen to the data changes, you can create a Android loader this way:
 ```java
 public class UsersLoader extends BaseSelectLoader<User> {
 
@@ -414,7 +375,7 @@ public class UsersLoader extends BaseSelectLoader<User> {
     }
 
     @Override
-    public Result<User> doSelect() {
+    public CursorResult<User> doSelect() {
         return User.selectViaContentProvider().query(); // It is important to not use select() here
     }
 }
@@ -424,22 +385,22 @@ public class ExampleActivity extends Activity {
 
     private static final int USER_LOADER_ID = 0;
     
-    private final LoaderManager.LoaderCallbacks<Result<User>> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<Result<User>>() {
+    private final LoaderManager.LoaderCallbacks<CursorResult<User>> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<CursorResult<User>>() {
     
         @Override
-        public Loader<Result<User>> onCreateLoader(int id, Bundle args) {
+        public Loader<CursorResult<User>> onCreateLoader(int id, Bundle args) {
             UsersLoader loader = new UsersLoader(ExampleActivity.this);
             loader.setUpdateThrottle(100);
             return loader;
         }
     
         @Override
-        public void onLoadFinished(Loader<Result<User>> loader, Result<User> data) {
+        public void onLoadFinished(Loader<CursorResult<User>> loader, CursorResult<User> data) {
             // ...
         }
     
         @Override
-        public void onLoaderReset(Loader<Result<User>> loader) {
+        public void onLoaderReset(Loader<CursorResult<User>> loader) {
             // ...
         }
     };

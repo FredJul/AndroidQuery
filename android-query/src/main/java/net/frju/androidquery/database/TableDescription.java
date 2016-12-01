@@ -17,12 +17,16 @@ package net.frju.androidquery.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public interface TableDescription {
+    @NonNull
     String getTableRealName();
+
+    @NonNull
     String getTableInsertQuery();
 
     String getPrimaryKeyRealName();
@@ -31,9 +35,11 @@ public interface TableDescription {
     String[] getColumnNames();
 
     String[] getColumnNamesWithTablePrefix();
-    ContentValues getContentValues(Object model);
 
-    Object getPrimaryKeyValue(Object model);
+    @NonNull
+    ContentValues getContentValues(@NonNull Object model);
+
+    Object getPrimaryKeyValue(@NonNull Object model);
 
     boolean isPrimaryKeyAutoIncrement();
 

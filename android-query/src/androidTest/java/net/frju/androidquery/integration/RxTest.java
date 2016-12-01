@@ -55,12 +55,12 @@ public class RxTest extends IntegrationTest {
 //    @Test
 //    public void testRxRead() {
 //        // exercise
-//        Observable<Result<User>> read = Q.User.select()
+//        Observable<CursorResult<User>> read = Q.User.select()
 //                .rx();
 //
-//        TestSubscriber<Result<User>> sub = new TestSubscriber<>();
+//        TestSubscriber<CursorResult<User>> sub = new TestSubscriber<>();
 //        read.subscribe(sub);
-//        List<Result<User>> users = sub.getOnNextEvents();
+//        List<CursorResult<User>> users = sub.getOnNextEvents();
 //
 //        // verify
 //        assertEquals(4, users.get(0).length);
@@ -102,10 +102,10 @@ public class RxTest extends IntegrationTest {
 //        List<Integer> updateCount = sub.getOnNextEvents();
 //
 //        // verify
-//        Observable<Result<User>> verify = Q.User.select().rx();
-//        TestSubscriber<Result<User>> subVerify = new TestSubscriber<>();
+//        Observable<CursorResult<User>> verify = Q.User.select().rx();
+//        TestSubscriber<CursorResult<User>> subVerify = new TestSubscriber<>();
 //        verify.subscribe(subVerify);
-//        List<Result<User>> verifiedUsers = subVerify.getOnNextEvents();
+//        List<CursorResult<User>> verifiedUsers = subVerify.getOnNextEvents();
 //
 //        for (User user : verifiedUsers.get(0)) {
 //            assertEquals(timestamp, user.getTimestamp());
@@ -125,10 +125,10 @@ public class RxTest extends IntegrationTest {
 //        List<Integer> deletedRows = sub.getOnNextEvents();
 //
 //        // verify
-//        Observable<Result<User>> verify = Q.User.select().rx();
-//        TestSubscriber<Result<User>> subVerify = new TestSubscriber<>();
+//        Observable<CursorResult<User>> verify = Q.User.select().rx();
+//        TestSubscriber<CursorResult<User>> subVerify = new TestSubscriber<>();
 //        verify.subscribe(subVerify);
-//        List<Result<User>> verifiedUsers = subVerify.getOnNextEvents();
+//        List<CursorResult<User>> verifiedUsers = subVerify.getOnNextEvents();
 //
 //        assertEquals(0, verifiedUsers.get(0).length);
 //        assertEquals(4, deletedRows.get(0).intValue());

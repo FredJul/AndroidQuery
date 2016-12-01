@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import net.frju.androidquery.gen.Q;
 import net.frju.androidquery.model.Contact;
-import net.frju.androidquery.operation.function.Result;
+import net.frju.androidquery.operation.function.CursorResult;
 import net.frju.androidquery.operation.keyword.OrderBy;
 import net.frju.androidquery.sample.R;
 import net.frju.androidquery.sample.adapter.CommentAdapter;
@@ -54,22 +54,22 @@ public class MainActivity extends AppCompatActivity {
 
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    private final LoaderManager.LoaderCallbacks<Result<Contact>> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<Result<Contact>>() {
+    private final LoaderManager.LoaderCallbacks<CursorResult<Contact>> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<CursorResult<Contact>>() {
 
         @Override
-        public Loader<Result<Contact>> onCreateLoader(int id, Bundle args) {
+        public Loader<CursorResult<Contact>> onCreateLoader(int id, Bundle args) {
             ContactsLoader loader = new ContactsLoader(MainActivity.this);
             loader.setUpdateThrottle(300);
             return loader;
         }
 
         @Override
-        public void onLoadFinished(Loader<Result<Contact>> loader, Result<Contact> data) {
+        public void onLoadFinished(Loader<CursorResult<Contact>> loader, CursorResult<Contact> data) {
             mContactsAdapter.setContacts(data);
         }
 
         @Override
-        public void onLoaderReset(Loader<Result<Contact>> loader) {
+        public void onLoaderReset(Loader<CursorResult<Contact>> loader) {
 //            BaseAdapter adapter = getListAdapter();
 //            if (adapter != null && adapter instanceof CursorAdapter) {
 //                ((CursorAdapter) adapter).swapCursor(null);
@@ -199,9 +199,9 @@ public class MainActivity extends AppCompatActivity {
                 .rx()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Result<Comment>>() {
+                .subscribe(new Consumer<CursorResult<Comment>>() {
                     @Override
-                    public void accept(Result<Comment> comments) throws Exception {
+                    public void accept(CursorResult<Comment> comments) throws Exception {
                         mCommentAdapter.setComments(comments.toArray());
                     }
                 }));

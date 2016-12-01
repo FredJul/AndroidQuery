@@ -1,6 +1,7 @@
 package net.frju.androidquery.operation.function;
 
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
@@ -14,7 +15,9 @@ public class Raw extends Query {
     private Raw() {
     }
 
-    public static Builder getBuilder(DatabaseProvider databaseProvider, String query) {
+    public static
+    @NonNull
+    Builder getBuilder(@NonNull DatabaseProvider databaseProvider, @NonNull String query) {
         return new Builder(databaseProvider, query);
     }
 
@@ -22,7 +25,7 @@ public class Raw extends Query {
         private final String mQuery;
         private final DatabaseProvider mDatabaseProvider;
 
-        private Builder(DatabaseProvider databaseProvider, String query) {
+        private Builder(@NonNull DatabaseProvider databaseProvider, @NonNull String query) {
             mQuery = query;
             mDatabaseProvider = databaseProvider;
         }
@@ -36,7 +39,9 @@ public class Raw extends Query {
          *
          * @return An RxJava Observable
          */
-        public Observable<Cursor> rx() {
+        public
+        @NonNull
+        Observable<Cursor> rx() {
             return wrapRx(new Callable<Cursor>() {
                 @Override
                 public Cursor call() throws Exception {

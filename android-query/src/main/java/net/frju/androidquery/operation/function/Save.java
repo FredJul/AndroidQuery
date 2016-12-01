@@ -1,5 +1,7 @@
 package net.frju.androidquery.operation.function;
 
+import android.support.annotation.NonNull;
+
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
 
@@ -24,11 +26,15 @@ public class Save extends Query {
     }
 
     @SafeVarargs
-    public static <T> Save.Builder getBuilder(DatabaseProvider databaseProvider, T... models) {
+    public static
+    @NonNull
+    <T> Save.Builder getBuilder(@NonNull DatabaseProvider databaseProvider, @NonNull T... models) {
         return new Save.Builder<>(databaseProvider, models);
     }
 
-    public static <T> Save.Builder getBuilder(DatabaseProvider databaseProvider, List<T> models) {
+    public static
+    @NonNull
+    <T> Save.Builder getBuilder(@NonNull DatabaseProvider databaseProvider, @NonNull List<T> models) {
         //noinspection unchecked,SuspiciousToArrayCall
         return new Save.Builder<>(databaseProvider, (T[]) models.toArray(new Object[models.size()]));
     }
@@ -38,7 +44,7 @@ public class Save extends Query {
         private final DatabaseProvider mDatabaseProvider;
 
         @SafeVarargs
-        private Builder(DatabaseProvider databaseProvider, T... models) {
+        private Builder(@NonNull DatabaseProvider databaseProvider, @NonNull T... models) {
             mModels = models;
             mDatabaseProvider = databaseProvider;
         }
@@ -59,7 +65,9 @@ public class Save extends Query {
          *
          * @return An RxJava Observable
          */
-        public Observable<Integer> rx() {
+        public
+        @NonNull
+        Observable<Integer> rx() {
             return wrapRx(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {

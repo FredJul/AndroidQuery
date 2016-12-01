@@ -4,20 +4,20 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Loader;
 
-import net.frju.androidquery.operation.function.Result;
+import net.frju.androidquery.operation.function.CursorResult;
 
-public abstract class BaseSelectLoader<T> extends AsyncTaskLoader<Result<T>> {
+public abstract class BaseSelectLoader<T> extends AsyncTaskLoader<CursorResult<T>> {
 
     private final Loader.ForceLoadContentObserver mObserver = new Loader.ForceLoadContentObserver();
-    private Result<T> mResult;
+    private CursorResult<T> mCursorResult;
 
     public BaseSelectLoader(Context context) {
         super(context);
     }
 
     @Override
-    public Result<T> loadInBackground() {
-        Result<T> cursor = doSelect();
+    public CursorResult<T> loadInBackground() {
+        CursorResult<T> cursor = doSelect();
 
         if (cursor != null) {
             // Ensure the cursor window is filled
@@ -29,24 +29,24 @@ public abstract class BaseSelectLoader<T> extends AsyncTaskLoader<Result<T>> {
     }
 
     @Override
-    public void deliverResult(Result<T> data) {
+    public void deliverResult(CursorResult<T> data) {
         if (isReset()) {
             // An async query came in while the loader is stopped
             return;
         }
 
-        this.mResult = data;
+        this.mCursorResult = data;
 
         super.deliverResult(data);
     }
 
     @Override
     protected void onStartLoading() {
-        if (mResult != null) {
-            deliverResult(mResult);
+        if (mCursorResult != null) {
+            deliverResult(mCursorResult);
         }
 
-        if (takeContentChanged() || mResult == null) {
+        if (takeContentChanged() || mCursorResult == null) {
             forceLoad();
         }
     }
@@ -64,8 +64,8 @@ public abstract class BaseSelectLoader<T> extends AsyncTaskLoader<Result<T>> {
         // Ensure the loader is stopped
         onStopLoading();
 
-        mResult = null;
+        mCursorResult = null;
     }
 
-    public abstract Result<T> doSelect();
+    public abstract CursorResult<T> doSelect();
 }

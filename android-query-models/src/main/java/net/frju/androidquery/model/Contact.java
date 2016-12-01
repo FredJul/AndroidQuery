@@ -9,9 +9,9 @@ import net.frju.androidquery.annotation.Column;
 import net.frju.androidquery.annotation.Table;
 import net.frju.androidquery.models.gen.Q;
 import net.frju.androidquery.operation.function.Count;
+import net.frju.androidquery.operation.function.CursorResult;
 import net.frju.androidquery.operation.function.Delete;
 import net.frju.androidquery.operation.function.Insert;
-import net.frju.androidquery.operation.function.Result;
 import net.frju.androidquery.operation.function.Save;
 import net.frju.androidquery.operation.function.Select;
 import net.frju.androidquery.operation.function.Update;
@@ -79,7 +79,7 @@ public class Contact {
         return Q.Contact.saveViaContentProvider(models);
     }
 
-    public static Result<Contact> fromCursor(Cursor cursor) {
+    public static CursorResult<Contact> fromCursor(Cursor cursor) {
         return Q.Contact.fromCursor(cursor);
     }
 }

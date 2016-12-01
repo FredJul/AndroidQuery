@@ -2,6 +2,7 @@ package net.frju.androidquery.operation.function;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.support.annotation.NonNull;
 
 import net.frju.androidquery.database.Resolver;
 import net.frju.androidquery.database.TableDescription;
@@ -11,7 +12,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class Result<T> extends CursorWrapper implements Iterable<T> {
+public class CursorResult<T> extends CursorWrapper implements Iterable<T> {
 
     public class ResultIterator implements Iterator<T> {
 
@@ -25,13 +26,13 @@ public class Result<T> extends CursorWrapper implements Iterable<T> {
         }
 
         public void remove() {
-            throw new UnsupportedOperationException("Cannot remove item from Result");
+            throw new UnsupportedOperationException("Cannot remove item from CursorResult");
         }
     }
 
     private final TableDescription mQuery;
 
-    public Result(Class<T> type, Resolver resolver, Cursor cursor) {
+    public CursorResult(@NonNull Class<T> type, @NonNull Resolver resolver, Cursor cursor) {
         super(cursor);
         mQuery = resolver.getTableDescription(type);
     }
@@ -50,11 +51,25 @@ public class Result<T> extends CursorWrapper implements Iterable<T> {
     }
 
     public List<T> toList() {
-        return new ArrayList<>(Arrays.asList(toArray())); // need to copy the array otherwise it's not modifiable
+        if (getWrappedCursor() != null) {
+            return new ArrayList<>(Arrays.asList(toArray())); // need to copy the array otherwise it's not modifiable
+        }
+
+        return null;
     }
 
     @Override
-    public Iterator<T> iterator() {
+    public int getCount() {
+        if (getWrappedCursor() != null) {
+            return super.getCount();
+        }
+        return 0;
+    }
+
+    @Override
+    public
+    @NonNull
+    Iterator<T> iterator() {
         return new ResultIterator();
     }
 }

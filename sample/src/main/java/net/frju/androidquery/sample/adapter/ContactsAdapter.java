@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.frju.androidquery.model.Contact;
-import net.frju.androidquery.operation.function.Result;
+import net.frju.androidquery.operation.function.CursorResult;
 import net.frju.androidquery.sample.R;
 
 import butterknife.BindView;
@@ -15,9 +15,9 @@ import butterknife.ButterKnife;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHolder> {
 
-    private Result<Contact> mContacts;
+    private CursorResult<Contact> mContacts;
 
-    public void setContacts(Result<Contact> contacts) {
+    public void setContacts(CursorResult<Contact> contacts) {
         this.mContacts = contacts;
         notifyDataSetChanged();
     }

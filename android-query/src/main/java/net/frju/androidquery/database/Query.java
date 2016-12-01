@@ -8,9 +8,9 @@ import net.frju.androidquery.operation.condition.Condition;
 import net.frju.androidquery.operation.condition.In;
 import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.function.Count;
+import net.frju.androidquery.operation.function.CursorResult;
 import net.frju.androidquery.operation.function.Delete;
 import net.frju.androidquery.operation.function.Insert;
-import net.frju.androidquery.operation.function.Result;
 import net.frju.androidquery.operation.function.Save;
 import net.frju.androidquery.operation.function.Select;
 import net.frju.androidquery.operation.function.Update;
@@ -85,9 +85,9 @@ public abstract class Query {
         );
     }
 
-    protected static <T> Result<T> select(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
+    protected static <T> CursorResult<T> select(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
         Cursor cursor = selectCursor(select, classDef, databaseProvider);
-        return new Result<>(classDef, databaseProvider.getResolver(), cursor);
+        return new CursorResult<>(classDef, databaseProvider.getResolver(), cursor);
     }
 
     protected static <T> T selectSingle(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {

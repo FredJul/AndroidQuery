@@ -15,6 +15,8 @@
  */
 package net.frju.androidquery.operation.function;
 
+import android.support.annotation.NonNull;
+
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
 import net.frju.androidquery.operation.condition.Condition;
@@ -60,7 +62,9 @@ public class Select extends Query {
         mLimit = limit;
     }
 
-    public static <T> Builder getBuilder(Class<T> classDef, DatabaseProvider databaseProvider) {
+    public static
+    @NonNull
+    <T> Builder getBuilder(@NonNull Class<T> classDef, @NonNull DatabaseProvider databaseProvider) {
         return new Builder<>(classDef, databaseProvider);
     }
 
@@ -72,7 +76,7 @@ public class Select extends Query {
         private final Class<T> mClassDef;
         private final DatabaseProvider mDatabaseProvider;
 
-        private Builder(Class<T> classDef, DatabaseProvider databaseProvider) {
+        private Builder(@NonNull Class<T> classDef, @NonNull DatabaseProvider databaseProvider) {
             mClassDef = classDef;
             mDatabaseProvider = databaseProvider;
         }
@@ -87,7 +91,9 @@ public class Select extends Query {
             return this;
         }
 
-        public Builder<T> join(Join... joins) {
+        public
+        @NonNull
+        Builder<T> join(Join... joins) {
             mJoin = joins;
             return this;
         }
@@ -98,7 +104,9 @@ public class Select extends Query {
          * @param order The direction of the Order By clause
          * @return Call Builder#executem Builder#rx or Builder#rxSingle to run the query
          */
-        public Builder<T> orderBy(String column, OrderBy.Order order) {
+        public
+        @NonNull
+        Builder<T> orderBy(@NonNull String column, @NonNull OrderBy.Order order) {
             if (mOrderBy == null) {
                 mOrderBy = new OrderBy[]{new OrderBy(column, order)};
             } else {
@@ -114,7 +122,9 @@ public class Select extends Query {
          * @param orderBy the list of order of
          * @return Call Builder#executem Builder#rx or Builder#rxSingle to run the query
          */
-        public Builder<T> orderBy(OrderBy... orderBy) {
+        public
+        @NonNull
+        Builder<T> orderBy(OrderBy... orderBy) {
             mOrderBy = orderBy;
             return this;
         }
@@ -124,7 +134,9 @@ public class Select extends Query {
          * @param n The number of wanted results
          * @return Call Builder#query, Builder#rx or Builder#rxSingle to run the query
          */
-        public Builder<T> limit(int n) {
+        public
+        @NonNull
+        Builder<T> limit(int n) {
             mLimit = new Limit(0, n);
             return this;
         }
@@ -135,7 +147,9 @@ public class Select extends Query {
          * @param end The ending index to select from
          * @return Call Builder#query, Builder#rx or Builder#rxSingle to run the query
          */
-        public Builder<T> limit(int start, int end) {
+        public
+        @NonNull
+        Builder<T> limit(int start, int end) {
             mLimit = new Limit(start, end);
             return this;
         }
@@ -144,7 +158,9 @@ public class Select extends Query {
          * Executes a Select query
          * @return The rows returned by the Select query
          */
-        public Result<T> query() {
+        public
+        @NonNull
+        CursorResult<T> query() {
             return select(
                     new Select(mCondition, mJoin, mOrderBy, mLimit),
                     mClassDef,
@@ -169,10 +185,12 @@ public class Select extends Query {
          * Executes a Select query
          * @return An RxJava Observable
          */
-        public Observable<Result<T>> rx() {
-            return wrapRx(new Callable<Result<T>>() {
+        public
+        @NonNull
+        Observable<CursorResult<T>> rx() {
+            return wrapRx(new Callable<CursorResult<T>>() {
                 @Override
-                public Result<T> call() throws Exception {
+                public CursorResult<T> call() throws Exception {
                     return query();
                 }
             });
@@ -182,7 +200,9 @@ public class Select extends Query {
          * Executes a Select query that expects a single result
          * @return An RxJava Observable
          */
-        public Observable<T> rxSingle() {
+        public
+        @NonNull
+        Observable<T> rxSingle() {
             return wrapRx(new Callable<T>() {
                 @Override
                 public T call() throws Exception {
