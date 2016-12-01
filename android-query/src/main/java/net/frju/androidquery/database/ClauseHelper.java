@@ -148,17 +148,15 @@ public class ClauseHelper {
     }
 
     private String buildOnCondition(On on) {
-        StringBuilder stringBuilder = new StringBuilder();
+        String stringBuilder = "ON" +
+                SPACE +
+                on.getColumn1() +
+                SPACE +
+                "=" +
+                SPACE +
+                on.getColumn2();
 
-        stringBuilder.append("ON");
-        stringBuilder.append(SPACE);
-        stringBuilder.append(on.getColumn1());
-        stringBuilder.append(SPACE);
-        stringBuilder.append("=");
-        stringBuilder.append(SPACE);
-        stringBuilder.append(on.getColumn2());
-
-        return stringBuilder.toString();
+        return stringBuilder;
     }
 
     public String[] getConditionArgs(Condition[] condition) {
@@ -234,7 +232,7 @@ public class ClauseHelper {
                 }
 
                 if (orderBy.getOrder() == OrderBy.Order.RANDOM) {
-                    stringBuilder.append(orderBy.getOrder().toString() + "()");
+                    stringBuilder.append(orderBy.getOrder().toString()).append("()");
                 } else {
                     stringBuilder.append(orderBy.getField());
                     stringBuilder.append(SPACE);

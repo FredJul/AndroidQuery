@@ -28,7 +28,7 @@ import io.reactivex.Observable;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Insert extends Query {
-    private Object[] mModels;
+    private final Object[] mModels;
 
     public Object[] getModels() {
         return mModels;
@@ -38,6 +38,7 @@ public class Insert extends Query {
         mModels = models;
     }
 
+    @SafeVarargs
     public static <T> Insert.Builder getBuilder(DatabaseProvider databaseProvider, T... models) {
         return new Insert.Builder<>(databaseProvider, models);
     }
@@ -48,9 +49,10 @@ public class Insert extends Query {
     }
 
     public static class Builder<T> {
-        private T[] mModels;
-        private DatabaseProvider mDatabaseProvider;
+        private final T[] mModels;
+        private final DatabaseProvider mDatabaseProvider;
 
+        @SafeVarargs
         private Builder(DatabaseProvider databaseProvider, T... models) {
             mModels = models;
             mDatabaseProvider = databaseProvider;

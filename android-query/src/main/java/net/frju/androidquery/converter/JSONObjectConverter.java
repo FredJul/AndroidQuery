@@ -19,8 +19,7 @@ public class JSONObjectConverter extends BaseTypeConverter<String, JSONObject> {
             jsonObject = new JSONObject(data);
         } catch (JSONException e) {
             // maybe log this?
-        } finally {
-            return jsonObject;
         }
+        return jsonObject;
     }
 }

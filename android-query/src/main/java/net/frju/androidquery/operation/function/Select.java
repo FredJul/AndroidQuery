@@ -32,10 +32,10 @@ import io.reactivex.Observable;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Select extends Query {
-    private Condition[] mCondition;
-    private Join[] mJoin;
-    private OrderBy[] mOrderBy;
-    private Limit mLimit;
+    private final Condition[] mCondition;
+    private final Join[] mJoin;
+    private final OrderBy[] mOrderBy;
+    private final Limit mLimit;
 
     public Condition[] getClause() {
         return mCondition;
@@ -69,8 +69,8 @@ public class Select extends Query {
         private Join[] mJoin;
         private OrderBy[] mOrderBy;
         private Limit mLimit;
-        private Class<T> mClassDef;
-        private DatabaseProvider mDatabaseProvider;
+        private final Class<T> mClassDef;
+        private final DatabaseProvider mDatabaseProvider;
 
         private Builder(Class<T> classDef, DatabaseProvider databaseProvider) {
             mClassDef = classDef;

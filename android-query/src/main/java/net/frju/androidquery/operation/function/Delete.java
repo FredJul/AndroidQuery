@@ -55,8 +55,8 @@ public class Delete extends Query {
     public static class Builder<T> {
         private T[] mModels;
         private Condition[] mCondition;
-        private Class<T> mClassDef;
-        private DatabaseProvider mDatabaseProvider;
+        private final Class<T> mClassDef;
+        private final DatabaseProvider mDatabaseProvider;
 
         private Builder(Class<T> classDef, DatabaseProvider databaseProvider) {
             mClassDef = classDef;
@@ -78,7 +78,8 @@ public class Delete extends Query {
          * @param models The models that are being deleted
          * @return Call Builder#query or Builder#rx to run the query
          */
-        public Builder<T> model(T... models) {
+        @SafeVarargs
+        public final Builder<T> model(T... models) {
             mModels = models;
             return this;
         }

@@ -19,8 +19,8 @@ package net.frju.androidquery.operation.keyword;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Limit {
-    private int mStart;
-    private int mEnd;
+    private final int mStart;
+    private final int mEnd;
 
     public int getStart() {
         return mStart;

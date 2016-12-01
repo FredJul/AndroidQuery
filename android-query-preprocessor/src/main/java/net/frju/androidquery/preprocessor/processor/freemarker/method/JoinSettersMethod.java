@@ -17,7 +17,7 @@ public class JoinSettersMethod implements TemplateMethodModelEx {
 
     private static final String JOIN = "join";
 
-    private Data mData;
+    private final Data mData;
 
     public static Map<String, Object> getMethodMap(Data data) {
         Map<String, Object> map = new HashMap<>();

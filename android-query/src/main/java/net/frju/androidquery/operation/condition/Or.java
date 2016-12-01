@@ -19,7 +19,7 @@ package net.frju.androidquery.operation.condition;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Or extends Condition {
-    private Condition[] mCondition;
+    private final Condition[] mCondition;
 
     public Condition[] getCondition() {
         return mCondition;

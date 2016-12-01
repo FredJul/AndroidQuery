@@ -7,10 +7,10 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 public class Context {
-    private Types mTypes;
-    private Elements mElements;
-    private Filer mFiler;
-    private Messager mMessager;
+    private final Types mTypes;
+    private final Elements mElements;
+    private final Filer mFiler;
+    private final Messager mMessager;
 
     private static Context sInstance;
 

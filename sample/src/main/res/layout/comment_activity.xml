@@ -27,8 +27,7 @@
             android:layout_marginRight="@dimen/margin"
             android:layout_weight="1"
             android:lines="1"
-            android:maxLines="1"
-            android:singleLine="true" />
+            android:maxLines="1" />
 
         <Button
             android:id="@+id/insert_comment"

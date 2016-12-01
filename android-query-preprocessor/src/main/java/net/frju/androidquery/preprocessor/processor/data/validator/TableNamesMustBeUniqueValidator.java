@@ -8,7 +8,7 @@ import net.frju.androidquery.preprocessor.processor.data.Table;
 import java.util.List;
 
 public class TableNamesMustBeUniqueValidator implements Validator {
-    private Data mData;
+    private final Data mData;
 
     public TableNamesMustBeUniqueValidator(Data data) {
         mData = data;

@@ -18,7 +18,7 @@ public class GetPrimaryKeyValueMethod implements TemplateMethodModelEx {
 
     private static final String GET_PRIMARY_KEY_VALUE = "getPrimaryKeyValue";
 
-    private Data mData;
+    private final Data mData;
 
     public static Map<String, Object> getMethodMap(Data data) {
         Map<String, Object> map = new HashMap<>();

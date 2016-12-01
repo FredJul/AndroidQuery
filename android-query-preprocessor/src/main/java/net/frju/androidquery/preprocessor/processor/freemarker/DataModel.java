@@ -26,7 +26,7 @@ public class DataModel {
         map.putAll(GetCursorGetterMethod.getMethodMap(data));
         map.putAll(GetContentValueMethod.getMethodMap(data));
         map.putAll(GetPrimaryKeyValueMethod.getMethodMap(data));
-        map.putAll(IsPrimaryKeyAutoIncrementMethod.getMethodMap(data));
+        map.putAll(IsPrimaryKeyAutoIncrementMethod.getMethodMap());
         map.putAll(AssembleCreateTableMethod.getMethodMap(data));
         map.putAll(FormatConstantMethod.getMethodMap());
         map.putAll(JoinSettersMethod.getMethodMap(data));

@@ -19,9 +19,9 @@ package net.frju.androidquery.operation.condition;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Where extends Condition {
-    private String mColumn;
-    private Op mOperator;
-    private Object mValue;
+    private final String mColumn;
+    private final Op mOperator;
+    private final Object mValue;
 
     public enum Op {
         IS("IS"),

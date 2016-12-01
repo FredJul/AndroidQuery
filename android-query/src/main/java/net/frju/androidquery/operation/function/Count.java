@@ -28,7 +28,7 @@ import io.reactivex.Observable;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Count extends Query {
-    private Condition[] mCondition;
+    private final Condition[] mCondition;
 
     public Condition[] getClause() {
         return mCondition;
@@ -44,8 +44,8 @@ public class Count extends Query {
 
     public static class Builder<T> {
         private Condition[] mCondition;
-        private Class<T> mClassDef;
-        private DatabaseProvider mDatabaseProvider;
+        private final Class<T> mClassDef;
+        private final DatabaseProvider mDatabaseProvider;
 
         private Builder(Class<T> classDef, DatabaseProvider databaseProvider) {
             mClassDef = classDef;

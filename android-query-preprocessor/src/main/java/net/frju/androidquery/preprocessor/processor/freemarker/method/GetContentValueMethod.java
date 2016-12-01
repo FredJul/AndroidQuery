@@ -17,7 +17,7 @@ public class GetContentValueMethod implements TemplateMethodModelEx {
 
     private static final String GET_CONTENT_VALUE = "getContentValue";
 
-    private Data mData;
+    private final Data mData;
 
     public static Map<String, Object> getMethodMap(Data data) {
         Map<String, Object> map = new HashMap<>();

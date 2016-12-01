@@ -24,7 +24,7 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
     private static final String SQL_REAL = "real";
     private static final String SQL_BLOB = "blob";
 
-    private Data mData;
+    private final Data mData;
 
     public static Map<String, Object> getMethodMap(Data data) {
         Map<String, Object> map = new HashMap<>();

@@ -27,7 +27,7 @@ import net.frju.androidquery.operation.keyword.OrderBy;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public abstract class DatabaseProvider {
-    protected ClauseHelper mClauseHelper;
+    protected final ClauseHelper mClauseHelper;
 
     protected abstract Resolver getResolver();
 

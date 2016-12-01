@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private CommentAdapter mCommentAdapter;
     private ContactsAdapter mContactsAdapter;
 
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     private final LoaderManager.LoaderCallbacks<Result<Contact>> mLoaderCallbacks = new LoaderManager.LoaderCallbacks<Result<Contact>>() {
 

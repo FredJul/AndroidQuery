@@ -45,6 +45,7 @@ android {
 
 dependencies {
     compile project(':android-query-common')
+    compile 'com.android.support:support-annotations:25.0.1'
 
     provided 'io.reactivex.rxjava2:rxjava:2.0.1'
 

@@ -13,7 +13,7 @@ import io.reactivex.Observable;
  * This is quite convenient but also much less efficient than directly doing an update or insert.
  */
 public class Save extends Query {
-    private Object[] mModels;
+    private final Object[] mModels;
 
     public Object[] getModels() {
         return mModels;
@@ -23,6 +23,7 @@ public class Save extends Query {
         mModels = models;
     }
 
+    @SafeVarargs
     public static <T> Save.Builder getBuilder(DatabaseProvider databaseProvider, T... models) {
         return new Save.Builder<>(databaseProvider, models);
     }
@@ -33,9 +34,10 @@ public class Save extends Query {
     }
 
     public static class Builder<T> {
-        private T[] mModels;
-        private DatabaseProvider mDatabaseProvider;
+        private final T[] mModels;
+        private final DatabaseProvider mDatabaseProvider;
 
+        @SafeVarargs
         private Builder(DatabaseProvider databaseProvider, T... models) {
             mModels = models;
             mDatabaseProvider = databaseProvider;

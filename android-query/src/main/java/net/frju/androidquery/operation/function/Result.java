@@ -29,7 +29,7 @@ public class Result<T> extends CursorWrapper implements Iterable<T> {
         }
     }
 
-    private TableDescription mQuery;
+    private final TableDescription mQuery;
 
     public Result(Class<T> type, Resolver resolver, Cursor cursor) {
         super(cursor);

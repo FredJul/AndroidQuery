@@ -29,6 +29,7 @@ import net.frju.androidquery.operation.keyword.Limit;
 import net.frju.androidquery.operation.keyword.OrderBy;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,11 +37,11 @@ import java.util.List;
  */
 public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
-    private SQLiteDatabase mDatabase;
-    private String[] mSchemaArray;
-    private String[] mTableRealNameArray;
-    private String[] mCreateIndexQuery;
-    private List<String> mIndexNames;
+    private final SQLiteDatabase mDatabase;
+    private final String[] mSchemaArray;
+    private final String[] mTableRealNameArray;
+    private final String[] mCreateIndexQuery;
+    private final List<String> mIndexNames;
 
     public BaseLocalDatabaseProvider(Context context) {
 
@@ -58,9 +59,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
             mTableRealNameArray[i] = tableDescription.getTableRealName();
             mCreateIndexQuery[i] = tableDescription.getCreateIndexQuery();
 
-            for (String indexName : tableDescription.getIndexNames()) {
-                mIndexNames.add(indexName);
-            }
+            Collections.addAll(mIndexNames, tableDescription.getIndexNames());
         }
 
         SQLiteOpenHelper openHelper = new SQLiteOpenHelper(context, getDbName(), null, getDbVersion()) {

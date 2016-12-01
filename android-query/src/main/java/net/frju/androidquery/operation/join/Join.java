@@ -21,9 +21,9 @@ import net.frju.androidquery.operation.condition.Condition;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public abstract class Join<J> {
-    private Class<J> mTable;
-    private Join mJoin;
-    private Condition[] mConditions;
+    private final Class<J> mTable;
+    private final Join mJoin;
+    private final Condition[] mConditions;
 
     public Class<J> getTable() {
         return mTable;

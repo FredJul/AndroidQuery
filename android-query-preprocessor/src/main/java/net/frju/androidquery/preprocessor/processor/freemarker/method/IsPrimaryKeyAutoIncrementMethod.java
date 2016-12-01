@@ -1,7 +1,6 @@
 package net.frju.androidquery.preprocessor.processor.freemarker.method;
 
 import net.frju.androidquery.preprocessor.processor.data.Column;
-import net.frju.androidquery.preprocessor.processor.data.Data;
 import net.frju.androidquery.preprocessor.processor.data.Table;
 
 import java.util.HashMap;
@@ -16,16 +15,13 @@ public class IsPrimaryKeyAutoIncrementMethod implements TemplateMethodModelEx {
 
     private static final String IS_PRIMARY_KEY_AUTOINCREMENT = "isPrimaryKeyAutoIncrement";
 
-    private Data mData;
-
-    public static Map<String, Object> getMethodMap(Data data) {
+    public static Map<String, Object> getMethodMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put(IS_PRIMARY_KEY_AUTOINCREMENT, new IsPrimaryKeyAutoIncrementMethod(data));
+        map.put(IS_PRIMARY_KEY_AUTOINCREMENT, new IsPrimaryKeyAutoIncrementMethod());
         return map;
     }
 
-    private IsPrimaryKeyAutoIncrementMethod(Data data) {
-        mData = data;
+    private IsPrimaryKeyAutoIncrementMethod() {
     }
 
     private String assembleIsPrimaryKeyAutoIncrement(Table table) {

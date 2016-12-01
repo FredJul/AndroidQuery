@@ -19,8 +19,8 @@ package net.frju.androidquery.operation.keyword;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class OrderBy {
-    private String mField;
-    private Order mOrder;
+    private final String mField;
+    private final Order mOrder;
 
     public enum Order {
         ASC ("ASC"),

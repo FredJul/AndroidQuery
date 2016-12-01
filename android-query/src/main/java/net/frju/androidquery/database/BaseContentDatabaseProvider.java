@@ -32,7 +32,7 @@ import net.frju.androidquery.operation.keyword.OrderBy;
  */
 public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
 
-    protected ContentResolver mContentResolver;
+    protected final ContentResolver mContentResolver;
 
     public BaseContentDatabaseProvider(ContentResolver contentResolver) {
         super();

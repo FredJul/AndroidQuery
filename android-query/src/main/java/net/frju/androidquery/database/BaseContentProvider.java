@@ -8,6 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.List;
@@ -17,8 +18,9 @@ public abstract class BaseContentProvider extends ContentProvider {
     private SQLiteDatabase mDatabase;
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
         try {
+            //noinspection ResultOfMethodCallIgnored
             Long.valueOf(uri.getLastPathSegment());
             return "vnd.android.cursor.item/model";
         } catch (NumberFormatException e) { // if last segment not an id, it should be the table name
@@ -56,7 +58,7 @@ public abstract class BaseContentProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         String[] nameAndSelection = getTableRealNameAndSelection(uri, selection);
 
         Cursor cursor = mDatabase.query(nameAndSelection[0], projection, nameAndSelection[1], selectionArgs, null, null,
@@ -69,7 +71,7 @@ public abstract class BaseContentProvider extends ContentProvider {
     }
 
     @Override
-    public int bulkInsert(Uri uri, ContentValues[] valuesArray) {
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] valuesArray) {
         int nbInsert = 0;
 
         mDatabase.beginTransaction();
@@ -89,7 +91,7 @@ public abstract class BaseContentProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         long newId = mDatabase.insert(uri.getLastPathSegment(), null, values);
 
         if (newId > -1) {
@@ -101,7 +103,7 @@ public abstract class BaseContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         String[] nameAndSelection = getTableRealNameAndSelection(uri, selection);
 
         int count = mDatabase.update(nameAndSelection[0], values, nameAndSelection[1], selectionArgs);
@@ -113,7 +115,7 @@ public abstract class BaseContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         String[] nameAndSelection = getTableRealNameAndSelection(uri, selection);
 
         int count = mDatabase.delete(nameAndSelection[0], nameAndSelection[1], selectionArgs);

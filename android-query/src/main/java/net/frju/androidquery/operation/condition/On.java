@@ -19,8 +19,8 @@ package net.frju.androidquery.operation.condition;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class On extends Condition {
-    private String mColumn1;
-    private String mColumn2;
+    private final String mColumn1;
+    private final String mColumn2;
 
     public String getColumn1() {
         return mColumn1;

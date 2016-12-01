@@ -10,10 +10,10 @@ import java.util.List;
 
 public class PrimaryKeyMustBeUnique implements Validator {
 
-    private Data data;
+    private final Data mData;
 
     public PrimaryKeyMustBeUnique(Data data) {
-        this.data = data;
+        this.mData = data;
     }
 
     private boolean primaryKeyIsUniqueInColumns(List<Column> columns) {
@@ -32,7 +32,7 @@ public class PrimaryKeyMustBeUnique implements Validator {
 
     @Override
     public void validate() throws ValidatorException {
-        for (Table table : data.getTables()) {
+        for (Table table : mData.getTables()) {
             if (primaryKeyIsUniqueInColumns(table.getColumns())) {
                 throw new ValidatorException(
                         table.getElement(),

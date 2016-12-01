@@ -19,8 +19,8 @@ public class Raw extends Query {
     }
 
     public static class Builder {
-        private String mQuery;
-        private DatabaseProvider mDatabaseProvider;
+        private final String mQuery;
+        private final DatabaseProvider mDatabaseProvider;
 
         private Builder(DatabaseProvider databaseProvider, String query) {
             mQuery = query;
