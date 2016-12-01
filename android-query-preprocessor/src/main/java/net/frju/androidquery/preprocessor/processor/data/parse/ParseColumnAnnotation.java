@@ -10,22 +10,17 @@ class ParseColumnAnnotation {
 
     static Column parseColumn(Element element) {
 
-        String name = assembleName(element);
-        String realName = assembleRealName(element);
-        boolean isIndex = assembleIsIndex(element);
-        boolean hasPrimaryKey = assemblePrimaryKey(element);
-        boolean hasAutoIncrement = assembleAutoIncrement(element);
         String type = assembleType(element);
-        String className = assembleClassName(type);
 
         Column column = new Column();
-        column.setName(name);
-        column.setRealName(realName);
-        column.setIsIndex(isIndex);
-        column.setHasPrimaryKey(hasPrimaryKey);
-        column.setHasAutoIncrement(hasAutoIncrement);
+        column.setName(assembleName(element));
+        column.setRealName(assembleRealName(element));
+        column.setIsIndex(assembleIsIndex(element));
+        column.setIsUnique(assembleIsUnique(element));
+        column.setHasPrimaryKey(assemblePrimaryKey(element));
+        column.setHasAutoIncrement(assembleAutoIncrement(element));
         column.setType(type);
-        column.setClassName(className);
+        column.setClassName(assembleClassName(type));
 
         return column;
     }
@@ -53,6 +48,11 @@ class ParseColumnAnnotation {
     private static boolean assembleIsIndex(Element element) {
         net.frju.androidquery.annotation.Column column = element.getAnnotation(net.frju.androidquery.annotation.Column.class);
         return column != null && column.index();
+    }
+
+    private static boolean assembleIsUnique(Element element) {
+        net.frju.androidquery.annotation.Column column = element.getAnnotation(net.frju.androidquery.annotation.Column.class);
+        return column != null && column.unique();
     }
 
     private static boolean assemblePrimaryKey(Element element) {

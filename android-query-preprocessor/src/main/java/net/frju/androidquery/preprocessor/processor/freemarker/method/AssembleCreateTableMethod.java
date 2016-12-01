@@ -68,6 +68,8 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
                     if (column.hasAutoIncrement()) {
                         statementBuilder.append(" AUTOINCREMENT");
                     }
+                } else if (column.isUnique()) {
+                    statementBuilder.append(" UNIQUE");
                 }
 
                 statementBuilder.append(",");

@@ -29,7 +29,10 @@ public @interface Column {
     boolean primaryKey() default false;
 
     boolean autoIncrement() default false;
+
     boolean index() default false;
+
+    boolean unique() default false;
 
     String realName() default "";
 }

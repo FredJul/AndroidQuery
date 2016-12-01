@@ -8,6 +8,7 @@ public class Column {
     private String mClassName;
     private String mType;
     private boolean mIsIndex;
+    private boolean mIsUnique;
     private boolean mPrimaryKey;
     private boolean mHasAutoIncrement;
 
@@ -52,6 +53,14 @@ public class Column {
 
     public void setIsIndex(boolean newVal) {
         mIsIndex = newVal;
+    }
+
+    public boolean isUnique() {
+        return mIsUnique;
+    }
+
+    public void setIsUnique(boolean newVal) {
+        mIsUnique = newVal;
     }
 
     public boolean hasPrimaryKey() {
