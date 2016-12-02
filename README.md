@@ -305,7 +305,42 @@ Comment[] comments = Q.Comment.select()
 User user = comments[0].getUser(); // The nested User object is populated by the join
 ```
 
+####Database operation hooks####
+
+If you need to maintain the data coherence or generate some default value you can inherits your model from `ModelListener`.
+
+```java
+@Table(localDatabaseProvider = LocalDatabaseProvider.class)
+public class User implements ModelListener {
+
+    @Column(primaryKey = true)
+    public String id;
+    @Column
+    public long creationDate;
+
+    @Override
+    public void onPreInsert() {
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
+
+        if (creationDate == 0) {
+            creationDate = System.currentTimeMillis();
+        }
+    }
+
+    @Override
+    public void onPreUpdate() {
+    }
+
+    @Override
+    public void onPreDelete() {
+    }
+}
+```
+
 ###ContentProvider###
+
 Your data can also be accessed through a ContentProvider if you need to share your data across several apps or if you want to use CursorLoader or ContentObserver inside your app.
 
 ####Setup####
@@ -366,7 +401,7 @@ Once done, you'll be able to call the `selectViaContentProvider()`, `insertViaCo
 Q.User.insertViaContentProvider(new User()).query();
 ```
 
-####Listening changes####
+####Listening data changes####
 
 To listen to the data changes, you can create a Android loader this way:
 ```java
@@ -456,6 +491,7 @@ Contact[] contacts = Contact.select().query().toArray();
 
 ###TODO###
 - Support for more constraints
+- Support for Trigger
 - Better default database updater (which also adds new constraints)
 - Improve javadoc and add annotations like @NotNull
 - Support for more types by default (ArrayList<String>, Bitmap, byte, Byte, Byte[], Set/Map, ...)
