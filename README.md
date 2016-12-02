@@ -8,8 +8,8 @@ AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotati
 ####Gradle dependencies####
 ```groovy
 dependencies {
-    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.4'
-    compile 'net.frju.androidquery:android-query:1.2.4'
+    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.5'
+    compile 'net.frju.androidquery:android-query:1.2.5'
 }
 ```
 
@@ -121,7 +121,8 @@ these variables should be used whenever you reference a table column.
 The `insert()`, `select()`, `update()`, `save()`, `delete()`, `count()` and `raw()` methods are used to query the database tables. The `save()` method will either insert the data if not in database or will update it, since this can be slower you should use that method only if you don't know if the data has been already inserted.
 
 If you want synchronous query, you can directly call `query()`/`querySingle()` methods or the `rx()` method.
-For a `select()` query you will get back a `CursorResult` object. This is basically a Cursor which needs to be closed after use. You can use a try-with-resources statement for that:
+For a `select()` query you will get back a `CursorResult` object, which needs to be closed after use. You can use a try-with-resources statement for that:
+
 ```java
 // SELECT * FROM User;
 try(CursorResult<User> users = Q.User.select().query()) {
@@ -136,13 +137,14 @@ try(CursorResult<User> users = Q.User.select().query()) {
 ```
 
 You can also directly retrieve an array or a list from the `CursorResult` object.
+
 ```java
 User[] usersArray = Q.User.select().query().toArray();
 List<User> usersList = Q.User.select().query().toList();
 ```
 
 However be careful: this is less efficient than directly using the `CursorResult` object since it needs to read and copy everything in memory.
-Calling `toArray()` or `toList()` methods will automatically close the `CursorResult` object.
+Calling `toArray()` or `toList()` methods will automatically close the `CursorResult` object for you.
 
 For an asynchronous query (to not block the UI), you can notably use the `rx()` method which returns an RxJava2 Observable.
 It is recommended to put all the returned `Disposable` into a `CompositeDisposable` and clear it inside the activity `onDestroy()`:
@@ -440,9 +442,8 @@ However, please note that raw queries and joins are not possible with a ContentP
 AndroidQuery also provide a library which allows you to easily access to Android data. You need to add `android-query-models` into your dependencies.
 ```groovy
 dependencies {
-    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.4'
-    compile 'net.frju.androidquery:android-query:1.2.4'
-    compile 'net.frju.androidquery:android-query-models:1.2.4'
+    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.5'
+    compile 'net.frju.androidquery:android-query-models:1.2.5'
 }
 ```
 
@@ -454,8 +455,8 @@ Contact[] contacts = Contact.select().query().toArray();
 ```
 
 ###TODO###
-- Support for more constraints (notably UNIQUE)
-- Better default database updater (which does not erase everything)
+- Support for more constraints
+- Better default database updater (which also adds new constraints)
 - Improve javadoc and add annotations like @NotNull
 - Support for more types by default (ArrayList<String>, Bitmap, byte, Byte, Byte[], Set/Map, ...)
 - Add more android models
