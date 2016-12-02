@@ -287,15 +287,18 @@ The target table for the join must be defined as an @Column, the object will be 
 ```java
 @Table(localDatabaseProvider = LocalDatabaseProvider.class)
 public class Comment {
-    @Column(index = true) public int id;
-    @Column public int userId;
-    @Column public User user; // The target table for a potential join
+    @Column(index = true)
+    public int id;
+    @Column
+    public int userId;
+    @Column
+    public User user; // The target table for a potential join
 }
 
-@Table
 @Table(localDatabaseProvider = LocalDatabaseProvider.class)
 public class User {
-    @Column(index = true) public int id;
+    @Column(index = true)
+    public int id;
 }
 
 Comment[] comments = Q.Comment.select()
@@ -357,13 +360,13 @@ public class UserContentProvider extends BaseContentProvider {
 }
 ```
 ```xml
-    <application
-        android:name=".App">
-        <provider
-            android:name="net.frju.androidquery.sample.provider.UserContentProvider"
-            android:authorities="net.frju.androidquery.sample.provider.UserContentProvider"
-            android:exported="false" /> <!-- or true if you want to expose it to others apps -->
-    </application>
+<application
+    android:name=".App">
+    <provider
+        android:name="net.frju.androidquery.sample.provider.UserContentProvider"
+        android:authorities="net.frju.androidquery.sample.provider.UserContentProvider"
+        android:exported="false" /> <!-- or true if you want to expose it to others apps -->
+</application>
 ```
 
 This is enough to expose your data internally or to another application via a ContentProvider. But AndroidQuery also provides a simple way to query the data from a ContentProvider:
