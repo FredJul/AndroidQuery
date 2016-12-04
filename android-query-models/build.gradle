@@ -56,6 +56,7 @@ dependencies {
     androidTestAnnotationProcessor project(':android-query-preprocessor')
 
     androidTestCompile(
+            'io.reactivex.rxjava2:rxjava:2.0.1',
             'com.android.support.test:runner:0.4',
             'com.android.support.test:rules:0.4'
     )
