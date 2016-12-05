@@ -1,22 +1,10 @@
 package net.frju.androidquery.model;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
 import net.frju.androidquery.annotation.Column;
 import net.frju.androidquery.annotation.Table;
-import net.frju.androidquery.models.gen.Q;
-import net.frju.androidquery.operation.function.Count;
-import net.frju.androidquery.operation.function.CursorResult;
-import net.frju.androidquery.operation.function.Delete;
-import net.frju.androidquery.operation.function.Insert;
-import net.frju.androidquery.operation.function.Save;
-import net.frju.androidquery.operation.function.Select;
-import net.frju.androidquery.operation.function.Update;
-
-import java.util.List;
 
 @SuppressWarnings("unused")
 @Table(realName = "raw_contacts", contentDatabaseProvider = ContactContentDatabaseProvider.class)
@@ -25,7 +13,7 @@ public class RawContact {
     /**
      * The unique ID for a row.
      */
-    @Column(realName = ContactsContract.RawContacts._ID)
+    @Column(primaryKey = true, autoIncrement = true, realName = ContactsContract.RawContacts._ID)
     public int id;
 
     /**
@@ -33,7 +21,7 @@ public class RawContact {
      * e.g. "Acme Corp"
      * <p>TYPE: text</p>
      */
-    @Column(realName = ContactsContract.RawContacts.CONTACT_ID)
+    @Column(realName = ContactsContract.RawContacts.CONTACT_ID, autoIncrement = true)
     public int contactId;
 
     /**
@@ -125,44 +113,4 @@ public class RawContact {
      */
     @Column(realName = ContactsContract.RawContacts.CUSTOM_RINGTONE)
     public Uri customRingtone;
-
-    public static void init(Context context) {
-        Q.init(context);
-    }
-
-    public static Count.Builder<RawContact> count() {
-        return Q.RawContact.count();
-    }
-
-    public static Select.Builder<RawContact> select() {
-        return Q.RawContact.selectViaContentProvider();
-    }
-
-    public static Delete.Builder<RawContact> delete() {
-        return Q.RawContact.deleteViaContentProvider();
-    }
-
-    public static Insert.Builder<RawContact> insert(RawContact... models) {
-        return Q.RawContact.insertViaContentProvider(models);
-    }
-
-    public static Insert.Builder<RawContact> insert(List<RawContact> models) {
-        return Q.RawContact.insertViaContentProvider(models);
-    }
-
-    public static Update.Builder<RawContact> update() {
-        return Q.RawContact.updateViaContentProvider();
-    }
-
-    public static Save.Builder<RawContact> save(RawContact... models) {
-        return Q.RawContact.saveViaContentProvider(models);
-    }
-
-    public static Save.Builder<RawContact> save(List<RawContact> models) {
-        return Q.RawContact.saveViaContentProvider(models);
-    }
-
-    public static CursorResult<RawContact> fromCursor(Cursor cursor) {
-        return Q.RawContact.fromCursor(cursor);
-    }
 }

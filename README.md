@@ -489,7 +489,7 @@ Currently the supported models are `Contact` and `BlockedNumber`.
 
 You can queries them this way:
 ```java
-Contact[] contacts = Contact.select().query().toArray();
+Contact[] contacts = Q.Contact.selectViaContentProvider().query().toArray();
 ```
 
 ###TODO###

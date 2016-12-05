@@ -4,6 +4,7 @@ import android.content.Context;
 
 import net.frju.androidquery.database.BaseSelectLoader;
 import net.frju.androidquery.model.Contact;
+import net.frju.androidquery.models.gen.Q;
 import net.frju.androidquery.operation.function.CursorResult;
 
 public class ContactsLoader extends BaseSelectLoader<Contact> {
@@ -14,6 +15,6 @@ public class ContactsLoader extends BaseSelectLoader<Contact> {
 
     @Override
     public CursorResult<Contact> doSelect() {
-        return Contact.select().query();
+        return Q.Contact.selectViaContentProvider().query();
     }
 }

@@ -1,22 +1,10 @@
 package net.frju.androidquery.model;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
 import net.frju.androidquery.annotation.Column;
 import net.frju.androidquery.annotation.Table;
-import net.frju.androidquery.models.gen.Q;
-import net.frju.androidquery.operation.function.Count;
-import net.frju.androidquery.operation.function.CursorResult;
-import net.frju.androidquery.operation.function.Delete;
-import net.frju.androidquery.operation.function.Insert;
-import net.frju.androidquery.operation.function.Save;
-import net.frju.androidquery.operation.function.Select;
-import net.frju.androidquery.operation.function.Update;
-
-import java.util.List;
 
 @SuppressWarnings("unused")
 @Table(realName = "contacts", contentDatabaseProvider = ContactContentDatabaseProvider.class)
@@ -25,7 +13,7 @@ public class Contact {
     /**
      * The unique ID for a row.
      */
-    @Column(realName = ContactsContract.Contacts._ID)
+    @Column(primaryKey = true, autoIncrement = true, realName = ContactsContract.Contacts._ID)
     public int id;
 
     /**
@@ -101,44 +89,4 @@ public class Contact {
      */
     @Column(realName = ContactsContract.Contacts.HAS_PHONE_NUMBER)
     public boolean hasPhoneNumber;
-
-    public static void init(Context context) {
-        Q.init(context);
-    }
-
-    public static Count.Builder<Contact> count() {
-        return Q.Contact.count();
-    }
-
-    public static Select.Builder<Contact> select() {
-        return Q.Contact.selectViaContentProvider();
-    }
-
-    public static Delete.Builder<Contact> delete() {
-        return Q.Contact.deleteViaContentProvider();
-    }
-
-    public static Insert.Builder<Contact> insert(Contact... models) {
-        return Q.Contact.insertViaContentProvider(models);
-    }
-
-    public static Insert.Builder<Contact> insert(List<Contact> models) {
-        return Q.Contact.insertViaContentProvider(models);
-    }
-
-    public static Update.Builder<Contact> update() {
-        return Q.Contact.updateViaContentProvider();
-    }
-
-    public static Save.Builder<Contact> save(Contact... models) {
-        return Q.Contact.saveViaContentProvider(models);
-    }
-
-    public static Save.Builder<Contact> save(List<Contact> models) {
-        return Q.Contact.saveViaContentProvider(models);
-    }
-
-    public static CursorResult<Contact> fromCursor(Cursor cursor) {
-        return Q.Contact.fromCursor(cursor);
-    }
 }

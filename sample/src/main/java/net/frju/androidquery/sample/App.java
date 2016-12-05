@@ -3,7 +3,6 @@ package net.frju.androidquery.sample;
 import android.app.Application;
 
 import net.frju.androidquery.gen.Q;
-import net.frju.androidquery.model.Contact;
 
 public class App extends Application {
 
@@ -11,7 +10,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Contact.init(this);
+        net.frju.androidquery.models.gen.Q.init(this);
         Q.init(this);
     }
 }
