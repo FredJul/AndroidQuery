@@ -11,6 +11,7 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 
@@ -78,11 +79,9 @@ class ParseTableAnnotation {
     private static List<Column> assembleColumns(Element element) {
         List<Column> columns = new ArrayList<>();
 
-        if (element.getEnclosedElements() != null && element.getEnclosedElements().size() > 0) {
-            for (Element childElement : element.getEnclosedElements()) {
-                if (childElement.getKind().isField() && childElement.getAnnotation(net.frju.androidquery.annotation.Column.class) != null) {
-                    columns.add(parseColumn(childElement));
-                }
+        for (Element childElement : Context.getInstance().getElementUtils().getAllMembers((TypeElement) element)) {
+            if (childElement.getKind().isField() && childElement.getAnnotation(net.frju.androidquery.annotation.Column.class) != null) {
+                columns.add(parseColumn(childElement));
             }
         }
 
