@@ -11,7 +11,6 @@ public class StringUtils {
 
     private static final String SQL_TEXT = "text";
     private static final String SQL_INTEGER = "integer";
-    private static final String SQL_LONG = "long";
     private static final String SQL_REAL = "real";
     private static final String SQL_BLOB = "blob";
 
@@ -117,7 +116,6 @@ public class StringUtils {
                 return SQL_TEXT;
             case "java.lang.Long":
             case "long":
-                return SQL_LONG;
             case "java.lang.Integer":
             case "java.lang.Short":
             case "int":
