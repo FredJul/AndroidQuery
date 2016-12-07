@@ -63,7 +63,18 @@ public abstract class Query {
                 }
                 valuesArray[i] = tableDescription.getContentValues(models[i]);
             }
-            return databaseProvider.bulkInsert(tableDescription.getTableRealName(), valuesArray);
+
+            if (models.length == 1) {
+                long newId = databaseProvider.insert(tableDescription.getTableRealName(), valuesArray[0]);
+                if (newId != -1) {
+                    tableDescription.setIdToModel(models[0], newId);
+                    return 1;
+                } else {
+                    return 0;
+                }
+            } else {
+                return databaseProvider.bulkInsert(tableDescription.getTableRealName(), valuesArray);
+            }
         }
 
         return 0;

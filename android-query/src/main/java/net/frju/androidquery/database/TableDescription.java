@@ -39,6 +39,8 @@ public interface TableDescription {
 
     String[] getColumnNamesWithTablePrefix();
 
+    void setIdToModel(@NonNull Object model, long id);
+
     @NonNull
     ContentValues getContentValues(@NonNull Object model);
 

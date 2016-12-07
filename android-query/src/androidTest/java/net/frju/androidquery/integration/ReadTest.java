@@ -57,7 +57,7 @@ public class ReadTest extends IntegrationTest {
                 .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME))
                 .querySingle();
 
-        assertEquals(SetupUser.CLYDE_USER_NAME, user.getUsername());
+        assertEquals(SetupUser.CLYDE_USER_NAME, user.username);
     }
 
     @Test
@@ -95,9 +95,9 @@ public class ReadTest extends IntegrationTest {
                 .where(where(Q.User.TIMESTAMP, Where.Op.IS, SetupUser.CLYDE_TIMESTAMP))
                 .querySingle();
 
-        assertEquals(SetupUser.CLYDE_USER_NAME, user.getUsername());
-        assertEquals(SetupUser.CLYDE_TIMESTAMP, user.getTimestamp());
-        assertEquals(SetupUser.CLYDE_IS_REGISTERED, user.getIsRegistered());
+        assertEquals(SetupUser.CLYDE_USER_NAME, user.username);
+        assertEquals(SetupUser.CLYDE_TIMESTAMP, user.timestamp);
+        assertEquals(SetupUser.CLYDE_IS_REGISTERED, user.isRegistered);
     }
 
     @Test
@@ -274,10 +274,10 @@ public class ReadTest extends IntegrationTest {
         // by #setupFourTestUsers, therefore, we assert that the rows will be
         // selected in this order
         assertEquals(4, users.length);
-        assertEquals(SetupUser.CLYDE_USER_NAME, users[0].getUsername());
-        assertEquals(SetupUser.GILL_USER_NAME, users[1].getUsername());
-        assertEquals(SetupUser.JOSH_USER_NAME, users[2].getUsername());
-        assertEquals(SetupUser.ANGIE_USER_NAME, users[3].getUsername());
+        assertEquals(SetupUser.CLYDE_USER_NAME, users[0].username);
+        assertEquals(SetupUser.GILL_USER_NAME, users[1].username);
+        assertEquals(SetupUser.JOSH_USER_NAME, users[2].username);
+        assertEquals(SetupUser.ANGIE_USER_NAME, users[3].username);
     }
 
     @Test
@@ -291,10 +291,10 @@ public class ReadTest extends IntegrationTest {
         // by #setupFourTestUsers, therefore, we assert that the rows will be
         // selected in this order
         assertEquals(4, users.length);
-        assertEquals(SetupUser.GILL_USER_NAME, users[0].getUsername());
-        assertEquals(SetupUser.CLYDE_USER_NAME, users[1].getUsername());
-        assertEquals(SetupUser.JOSH_USER_NAME, users[2].getUsername());
-        assertEquals(SetupUser.ANGIE_USER_NAME, users[3].getUsername());
+        assertEquals(SetupUser.GILL_USER_NAME, users[0].username);
+        assertEquals(SetupUser.CLYDE_USER_NAME, users[1].username);
+        assertEquals(SetupUser.JOSH_USER_NAME, users[2].username);
+        assertEquals(SetupUser.ANGIE_USER_NAME, users[3].username);
     }
 
     @Test
@@ -307,10 +307,10 @@ public class ReadTest extends IntegrationTest {
         // by #setupFourTestUsers, therefore, we assert that the rows will be
         // selected in this order
         assertEquals(4, users.length);
-        assertEquals(SetupUser.ANGIE_USER_NAME, users[0].getUsername());
-        assertEquals(SetupUser.JOSH_USER_NAME, users[1].getUsername());
-        assertEquals(SetupUser.GILL_USER_NAME, users[2].getUsername());
-        assertEquals(SetupUser.CLYDE_USER_NAME, users[3].getUsername());
+        assertEquals(SetupUser.ANGIE_USER_NAME, users[0].username);
+        assertEquals(SetupUser.JOSH_USER_NAME, users[1].username);
+        assertEquals(SetupUser.GILL_USER_NAME, users[2].username);
+        assertEquals(SetupUser.CLYDE_USER_NAME, users[3].username);
     }
 
     @Test
@@ -323,10 +323,10 @@ public class ReadTest extends IntegrationTest {
         // by #setupFourTestUsers, therefore, we assert that the rows will be
         // selected in this order
         assertEquals(4, users.length);
-        assertEquals(SetupUser.ANGIE_USER_NAME, users[0].getUsername());
-        assertEquals(SetupUser.CLYDE_USER_NAME, users[1].getUsername());
-        assertEquals(SetupUser.GILL_USER_NAME, users[2].getUsername());
-        assertEquals(SetupUser.JOSH_USER_NAME, users[3].getUsername());
+        assertEquals(SetupUser.ANGIE_USER_NAME, users[0].username);
+        assertEquals(SetupUser.CLYDE_USER_NAME, users[1].username);
+        assertEquals(SetupUser.GILL_USER_NAME, users[2].username);
+        assertEquals(SetupUser.JOSH_USER_NAME, users[3].username);
     }
 
     @Test
@@ -339,10 +339,10 @@ public class ReadTest extends IntegrationTest {
         // by #setupFourTestUsers, therefore, we assert that the rows will be
         // selected in this order
         assertEquals(4, users.length);
-        assertEquals(SetupUser.JOSH_USER_NAME, users[0].getUsername());
-        assertEquals(SetupUser.GILL_USER_NAME, users[1].getUsername());
-        assertEquals(SetupUser.CLYDE_USER_NAME, users[2].getUsername());
-        assertEquals(SetupUser.ANGIE_USER_NAME, users[3].getUsername());
+        assertEquals(SetupUser.JOSH_USER_NAME, users[0].username);
+        assertEquals(SetupUser.GILL_USER_NAME, users[1].username);
+        assertEquals(SetupUser.CLYDE_USER_NAME, users[2].username);
+        assertEquals(SetupUser.ANGIE_USER_NAME, users[3].username);
     }
 
     @Test
@@ -364,8 +364,8 @@ public class ReadTest extends IntegrationTest {
                 .query().toArray();
 
         assertEquals(2, users.length);
-        assertEquals(SetupUser.JOSH_USER_NAME, users[0].getUsername());
-        assertEquals(SetupUser.GILL_USER_NAME, users[1].getUsername());
+        assertEquals(SetupUser.JOSH_USER_NAME, users[0].username);
+        assertEquals(SetupUser.GILL_USER_NAME, users[1].username);
     }
 
     @Test
@@ -376,7 +376,7 @@ public class ReadTest extends IntegrationTest {
                 .query().toArray();
 
         assertEquals(2, users.length);
-        assertEquals(SetupUser.CLYDE_USER_NAME, users[0].getUsername());
-        assertEquals(SetupUser.ANGIE_USER_NAME, users[1].getUsername());
+        assertEquals(SetupUser.CLYDE_USER_NAME, users[0].username);
+        assertEquals(SetupUser.ANGIE_USER_NAME, users[1].username);
     }
 }

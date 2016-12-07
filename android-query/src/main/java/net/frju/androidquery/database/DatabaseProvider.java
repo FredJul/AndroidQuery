@@ -35,6 +35,8 @@ public abstract class DatabaseProvider {
         mClauseHelper = new ClauseHelper();
     }
 
+    abstract protected long insert(String tableName, ContentValues valuesArray);
+
     abstract protected int bulkInsert(String tableName, ContentValues[] valuesArray);
 
     abstract protected int bulkUpdate(String tableName, ContentValues[] valuesArray, Condition[][] conditionsArray);

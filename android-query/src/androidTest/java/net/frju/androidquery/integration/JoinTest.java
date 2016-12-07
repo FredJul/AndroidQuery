@@ -60,8 +60,8 @@ public class JoinTest extends IntegrationTest {
 
 
         assertEquals(1, users.length);
-        assertEquals(SetupLog.LOG_1_ID, users[0].getLog().getId());
-        assertEquals(SetupLog.LOG_1_TIMESTAMP, users[0].getLog().getTimestamp());
+        assertEquals(SetupLog.LOG_1_ID, users[0].log.id);
+        assertEquals(SetupLog.LOG_1_TIMESTAMP, users[0].log.timestamp);
     }
 
     @Test
@@ -81,8 +81,8 @@ public class JoinTest extends IntegrationTest {
 
 
         assertEquals(2, posts.length);
-        assertEquals(SetupUser.ANGIE_USER_NAME, posts[0].getUser().getUsername());
-        assertEquals(SetupUser.ANGIE_LOG_ID, posts[0].getUser().getLog().getId());
+        assertEquals(SetupUser.ANGIE_USER_NAME, posts[0].user.username);
+        assertEquals(SetupUser.ANGIE_LOG_ID, posts[0].user.log.id);
     }
 
     @Test
@@ -98,9 +98,9 @@ public class JoinTest extends IntegrationTest {
                 .query().toArray();
 
         assertEquals(3, posts.length);
-        assertEquals(SetupPost.POST_3_ID, posts[0].getId());
-        assertEquals(SetupPost.POST_2_ID, posts[1].getId());
-        assertEquals(SetupPost.POST_1_ID, posts[2].getId());
+        assertEquals(SetupPost.POST_3_ID, posts[0].id);
+        assertEquals(SetupPost.POST_2_ID, posts[1].id);
+        assertEquals(SetupPost.POST_1_ID, posts[2].id);
     }
 
     @Test
@@ -116,8 +116,8 @@ public class JoinTest extends IntegrationTest {
                 .query().toArray();
 
         assertEquals(2, posts.length);
-        assertEquals(SetupPost.POST_1_ID, posts[0].getId());
-        assertEquals(SetupPost.POST_2_ID, posts[1].getId());
+        assertEquals(SetupPost.POST_1_ID, posts[0].id);
+        assertEquals(SetupPost.POST_2_ID, posts[1].id);
     }
 
     @Test
@@ -149,7 +149,7 @@ public class JoinTest extends IntegrationTest {
 
 
         assertEquals(1, users.length);
-        assertEquals(SetupLog.LOG_1_ID, users[0].getLog().getId());
-        assertEquals(SetupLog.LOG_1_TIMESTAMP, users[0].getLog().getTimestamp());
+        assertEquals(SetupLog.LOG_1_ID, users[0].log.id);
+        assertEquals(SetupLog.LOG_1_TIMESTAMP, users[0].log.timestamp);
     }
 }

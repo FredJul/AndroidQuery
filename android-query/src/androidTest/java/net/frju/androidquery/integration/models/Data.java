@@ -6,23 +6,7 @@ import net.frju.androidquery.annotation.Table;
 @Table(localDatabaseProvider = LocalDatabaseProvider.class)
 public class Data {
     @Column(primaryKey = true, autoIncrement = true)
-    public int id;
+    public long id;
     @Column
     public String name;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

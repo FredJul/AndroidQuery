@@ -116,6 +116,10 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         }
     }
 
+    protected long insert(String tableName, ContentValues values) {
+        return mDatabase.insert(tableName, null, values);
+    }
+
     protected int bulkInsert(String tableName, ContentValues[] valuesArray) {
         int nbInsert = 0;
         mDatabase.beginTransaction();

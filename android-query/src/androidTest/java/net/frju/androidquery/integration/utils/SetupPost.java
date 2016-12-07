@@ -59,11 +59,11 @@ public class SetupPost {
                                   String body, long timestamp, int userId) {
 
         Post post = new Post();
-        post.setId(id);
-        post.setTitle(title);
-        post.setBody(body);
-        post.setTimestamp(timestamp);
-        post.setUserId(userId);
+        post.id = id;
+        post.title = title;
+        post.body = body;
+        post.timestamp = timestamp;
+        post.userId = userId;
         return post;
     }
 }

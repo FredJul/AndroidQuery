@@ -72,9 +72,9 @@ public class IndexTest extends IntegrationTest {
         Data[] data = Q.Data.select().query().toArray();
 
         assertEquals(3, data.length);
-        assertNotEquals(0, data[0].getId());
-        assertNotEquals(0, data[1].getId());
-        assertNotEquals(0, data[2].getId());
+        assertNotEquals(0, data[0].id);
+        assertNotEquals(0, data[1].id);
+        assertNotEquals(0, data[2].id);
     }
 
     @Test

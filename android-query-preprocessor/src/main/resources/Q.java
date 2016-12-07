@@ -229,6 +229,15 @@ public class Q {
             }
 
             @Override
+            public void setIdToModel(@NonNull Object model, long id) {
+                <#if table.getPrimaryKeyName() != "" && isPrimaryKeyAutoIncrement(table) == "true" && (table.getPrimaryKeyType() == "java.lang.Long" || table.getPrimaryKeyType() == "long")>
+                ${packagedTableName} ${table.getName()?lower_case} = (${packagedTableName})model;
+
+                ${table.getName()?lower_case}.${table.getPrimaryKeyName()} = id;
+                </#if>
+            }
+
+            @Override
             public boolean isPrimaryKeyAutoIncrement() {
                 return ${isPrimaryKeyAutoIncrement(table)};
             }

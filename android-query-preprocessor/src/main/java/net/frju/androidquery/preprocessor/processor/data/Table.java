@@ -86,6 +86,15 @@ public class Table {
         return "";
     }
 
+    public String getPrimaryKeyType() {
+        for (Column column : mColumns) {
+            if (column.hasPrimaryKey()) {
+                return column.getType();
+            }
+        }
+        return "";
+    }
+
     public List<ForeignKey> getForeignKeys() {
         return mForeignKeys;
     }

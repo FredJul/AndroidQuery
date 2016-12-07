@@ -8,7 +8,7 @@ import net.frju.androidquery.sample.provider.LocalDatabaseProvider;
 @Table(localDatabaseProvider = LocalDatabaseProvider.class, contentDatabaseProvider = ContentDatabaseProvider.class)
 public class User {
     @Column(primaryKey = true, realName = "_id", autoIncrement = true)
-    public int id;
+    public long id;
     @Column
     public String username;
 }

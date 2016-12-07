@@ -14,15 +14,14 @@ public class RawContact {
      * The unique ID for a row.
      */
     @Column(primaryKey = true, autoIncrement = true, realName = ContactsContract.RawContacts._ID)
-    public int id;
+    public long id;
 
     /**
-     * An optional name that can be used in the UI to represent this directory,
-     * e.g. "Acme Corp"
-     * <p>TYPE: text</p>
+     * A reference to the {@link ContactsContract.Contacts#_ID} that this
+     * data belongs to.
      */
     @Column(realName = ContactsContract.RawContacts.CONTACT_ID, autoIncrement = true)
-    public int contactId;
+    public long contactId;
 
     /**
      * <p>

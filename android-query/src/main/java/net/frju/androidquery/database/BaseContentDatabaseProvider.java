@@ -50,6 +50,16 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableName)).build();
     }
 
+    protected long insert(String tableName, ContentValues values) {
+        Uri resultUri = mContentResolver.insert(getUri(tableName), values);
+
+        try {
+            return Long.valueOf(resultUri.getLastPathSegment());
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
     protected int bulkInsert(String tableName, ContentValues[] valuesArray) {
         return mContentResolver.bulkInsert(getUri(tableName), valuesArray);
     }

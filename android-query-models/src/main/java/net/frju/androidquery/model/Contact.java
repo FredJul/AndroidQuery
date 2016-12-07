@@ -14,7 +14,7 @@ public class Contact {
      * The unique ID for a row.
      */
     @Column(primaryKey = true, autoIncrement = true, realName = ContactsContract.Contacts._ID)
-    public int id;
+    public long id;
 
     /**
      * The display name for the contact.

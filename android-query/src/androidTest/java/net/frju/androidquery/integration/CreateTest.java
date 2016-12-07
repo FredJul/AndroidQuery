@@ -46,9 +46,9 @@ public class CreateTest extends IntegrationTest {
         boolean USER_IS_REGISTERED = true;
 
         User user = new User();
-        user.setUsername(USER_ID);
-        user.setIsRegistered(USER_IS_REGISTERED);
-        user.setTimestamp(USER_TIMESTAMP);
+        user.username = USER_ID;
+        user.isRegistered = USER_IS_REGISTERED;
+        user.timestamp = USER_TIMESTAMP;
 
         // exercise
         Q.User.insert(user).query();
@@ -56,9 +56,9 @@ public class CreateTest extends IntegrationTest {
         // verify
         User responseUser = Q.User.select().querySingle();
 
-        assertTrue(user.getUsername().equals(responseUser.getUsername()));
-        assertTrue(user.getTimestamp() == responseUser.getTimestamp());
-        assertTrue(user.getIsRegistered() == responseUser.getIsRegistered());
+        assertTrue(user.username.equals(responseUser.username));
+        assertTrue(user.timestamp == responseUser.timestamp);
+        assertTrue(user.isRegistered == responseUser.isRegistered);
     }
 
     @Test
@@ -112,17 +112,17 @@ public class CreateTest extends IntegrationTest {
                 .where(where(Q.User.USERNAME, Where.Op.IS, SAM_USERNAME))
                 .querySingle();
 
-        assertEquals(ANGIE_USERNAME, angieUser.getUsername());
-        assertEquals(ANGIE_TIMESTAMP, angieUser.getTimestamp());
-        assertEquals(ANGIE_IS_REGISTERED, angieUser.getIsRegistered());
-        assertEquals(ANGIE_RATING, angieUser.getRating(), 0.1f);
-        assertEquals(ANGIE_COUNT, angieUser.getCount());
+        assertEquals(ANGIE_USERNAME, angieUser.username);
+        assertEquals(ANGIE_TIMESTAMP, angieUser.timestamp);
+        assertEquals(ANGIE_IS_REGISTERED, angieUser.isRegistered);
+        assertEquals(ANGIE_RATING, angieUser.rating, 0.1f);
+        assertEquals(ANGIE_COUNT, angieUser.count);
 
-        assertEquals(SAM_USERNAME, samUser.getUsername());
-        assertEquals(SAM_TIMESTAMP, samUser.getTimestamp());
-        assertEquals(SAM_IS_REGISTERED, samUser.getIsRegistered());
-        assertEquals(SAM_RATING, samUser.getRating(), 0.1f);
-        assertEquals(SAM_COUNT, samUser.getCount());
+        assertEquals(SAM_USERNAME, samUser.username);
+        assertEquals(SAM_TIMESTAMP, samUser.timestamp);
+        assertEquals(SAM_IS_REGISTERED, samUser.isRegistered);
+        assertEquals(SAM_RATING, samUser.rating, 0.1f);
+        assertEquals(SAM_COUNT, samUser.count);
     }
 
     @Test
@@ -153,7 +153,7 @@ public class CreateTest extends IntegrationTest {
         User[] usersInserted = Q.User.select().query().toArray();
 
         for (int i = 0; i < usersInserted.length; i++) {
-            assertEquals(ANGIE_TIMESTAMP + i, usersInserted[i].getTimestamp());
+            assertEquals(ANGIE_TIMESTAMP + i, usersInserted[i].timestamp);
         }
 
         assertEquals(COLUMN_COUNT, usersInserted.length);

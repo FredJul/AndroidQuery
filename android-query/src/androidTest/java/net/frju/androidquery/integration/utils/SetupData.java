@@ -27,7 +27,7 @@ public class SetupData {
 
     public static Data createData(String name) {
         Data data = new Data();
-        data.setName(name);
+        data.name = name;
         return data;
     }
 }

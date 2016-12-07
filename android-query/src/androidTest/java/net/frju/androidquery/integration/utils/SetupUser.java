@@ -111,13 +111,13 @@ public class SetupUser {
                                   int logId) {
 
         User user = new User();
-        user.setId(id);
-        user.setUsername(username);
-        user.setTimestamp(timestamp);
-        user.setIsRegistered(isRegistered);
-        user.setRating(rating);
-        user.setCount(count);
-        user.setLogId(logId);
+        user.id = id;
+        user.username = username;
+        user.timestamp = timestamp;
+        user.isRegistered = isRegistered;
+        user.rating = rating;
+        user.count = count;
+        user.logId = logId;
 
         return user;
     }

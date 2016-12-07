@@ -28,8 +28,8 @@ public class SetupLog {
 
     public static Log createLog(int id, long timestamp) {
         Log log = new Log();
-        log.setId(id);
-        log.setTimestamp(timestamp);
+        log.id = id;
+        log.timestamp = timestamp;
         return log;
     }
 }

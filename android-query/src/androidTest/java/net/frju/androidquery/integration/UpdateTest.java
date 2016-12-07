@@ -62,8 +62,8 @@ public class UpdateTest extends IntegrationTest {
                 .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME))
                 .querySingle();
 
-        assertEquals(true, user.getIsRegistered());
-        assertEquals(timestamp, user.getTimestamp());
+        assertEquals(true, user.isRegistered);
+        assertEquals(timestamp, user.timestamp);
 
         assertEquals(updated, 1);
     }
@@ -88,7 +88,7 @@ public class UpdateTest extends IntegrationTest {
         assertEquals(4, users.size());
 
         for (User user : users) {
-            assertEquals(timestamp, user.getTimestamp());
+            assertEquals(timestamp, user.timestamp);
         }
 
         assertEquals(updated, 4);
@@ -115,9 +115,9 @@ public class UpdateTest extends IntegrationTest {
                 .query().toArray();
 
         for (User user : users) {
-            assertEquals(timestamp, user.getTimestamp());
-            assertEquals(true, user.getIsRegistered());
-            assertEquals(newUsername, user.getUsername());
+            assertEquals(timestamp, user.timestamp);
+            assertEquals(true, user.isRegistered);
+            assertEquals(newUsername, user.username);
         }
 
         assertEquals(updated, users.length);
