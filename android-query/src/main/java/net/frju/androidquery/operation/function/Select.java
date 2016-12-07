@@ -84,7 +84,7 @@ public class Select extends Query {
         /**
          * Specify a Where condition for the Select query
          * @param condition Where condition
-         * @return Call Builder#query, Builder#rx, or Builder#rxSingle to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         public Builder<T> where(Condition... condition) {
             mCondition = condition;
@@ -102,7 +102,7 @@ public class Select extends Query {
          * Specify an Order By clause for the Select query
          * @param column The column to use with the Order By clause
          * @param order The direction of the Order By clause
-         * @return Call Builder#executem Builder#rx or Builder#rxSingle to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
@@ -120,7 +120,7 @@ public class Select extends Query {
          * Specify an Order By clause for the Select query
          *
          * @param orderBy the list of order of
-         * @return Call Builder#executem Builder#rx or Builder#rxSingle to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
@@ -132,7 +132,7 @@ public class Select extends Query {
         /**
          * Specify a Limit clause for the Select query
          * @param n The number of wanted results
-         * @return Call Builder#query, Builder#rx or Builder#rxSingle to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
@@ -145,7 +145,7 @@ public class Select extends Query {
          * Specify a Limit clause for the Select query
          * @param start The starting index to select from
          * @param end The ending index to select from
-         * @return Call Builder#query, Builder#rx or Builder#rxSingle to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
@@ -187,7 +187,7 @@ public class Select extends Query {
          */
         public
         @NonNull
-        Observable<CursorResult<T>> rx() {
+        rx.Observable<CursorResult<T>> rx() {
             return wrapRx(new Callable<CursorResult<T>>() {
                 @Override
                 public CursorResult<T> call() throws Exception {
@@ -202,8 +202,40 @@ public class Select extends Query {
          */
         public
         @NonNull
-        Observable<T> rxSingle() {
+        rx.Observable<T> rxSingle() {
             return wrapRx(new Callable<T>() {
+                @Override
+                public T call() throws Exception {
+                    return querySingle();
+                }
+            });
+        }
+
+        /**
+         * Executes a Select query
+         *
+         * @return An RxJava2 Observable
+         */
+        public
+        @NonNull
+        Observable<CursorResult<T>> rx2() {
+            return wrapRx2(new Callable<CursorResult<T>>() {
+                @Override
+                public CursorResult<T> call() throws Exception {
+                    return query();
+                }
+            });
+        }
+
+        /**
+         * Executes a Select query that expects a single result
+         *
+         * @return An RxJava2 Observable
+         */
+        public
+        @NonNull
+        Observable<T> rx2Single() {
+            return wrapRx2(new Callable<T>() {
                 @Override
                 public T call() throws Exception {
                     return querySingle();

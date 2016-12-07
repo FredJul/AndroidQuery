@@ -196,7 +196,22 @@ public abstract class Query {
         return databaseProvider.rawQuery(query);
     }
 
-    protected static <T> Observable<T> wrapRx(final Callable<T> func) {
+    protected static <T> rx.Observable<T> wrapRx(final Callable<T> func) {
+        return rx.Observable.create(
+                new rx.Observable.OnSubscribe<T>() {
+                    @Override
+                    public void call(rx.Subscriber<? super T> subscriber) {
+                        try {
+                            subscriber.onNext(func.call());
+                        } catch (Exception e) {
+                            subscriber.onError(e);
+                        }
+                    }
+                }
+        );
+    }
+
+    protected static <T> Observable<T> wrapRx2(final Callable<T> func) {
         return Observable.create(
                 new ObservableOnSubscribe<T>() {
                     @Override

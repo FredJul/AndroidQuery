@@ -41,8 +41,24 @@ public class Raw extends Query {
          */
         public
         @NonNull
-        Observable<Cursor> rx() {
+        rx.Observable<Cursor> rx() {
             return wrapRx(new Callable<Cursor>() {
+                @Override
+                public Cursor call() throws Exception {
+                    return query();
+                }
+            });
+        }
+
+        /**
+         * Executes a Row query
+         *
+         * @return An RxJava2 Observable
+         */
+        public
+        @NonNull
+        Observable<Cursor> rx2() {
+            return wrapRx2(new Callable<Cursor>() {
                 @Override
                 public Cursor call() throws Exception {
                     return query();

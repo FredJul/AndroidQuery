@@ -32,7 +32,7 @@ public class RxTest extends IntegrationTest {
 //        user.setTimestamp(USER_TIMESTAMP);
 //
 //        // exercise
-//        Observable<Integer> create = Q.User.insert(user).rx();
+//        Observable<Integer> create = Q.User.insert(user).rx2();
 //        TestSubscriber<Integer> sub = new TestSubscriber<>();
 //        create.subscribe(sub);
 //
@@ -56,7 +56,7 @@ public class RxTest extends IntegrationTest {
 //    public void testRxRead() {
 //        // exercise
 //        Observable<CursorResult<User>> read = Q.User.select()
-//                .rx();
+//                .rx2();
 //
 //        TestSubscriber<CursorResult<User>> sub = new TestSubscriber<>();
 //        read.subscribe(sub);
@@ -95,14 +95,14 @@ public class RxTest extends IntegrationTest {
 //        // exercise
 //        Observable<Integer> update = Q.User.update()
 //                .values(contentValues)
-//                .rx();
+//                .rx2();
 //
 //        TestSubscriber<Integer> sub = new TestSubscriber<>();
 //        update.subscribe(sub);
 //        List<Integer> updateCount = sub.getOnNextEvents();
 //
 //        // verify
-//        Observable<CursorResult<User>> verify = Q.User.select().rx();
+//        Observable<CursorResult<User>> verify = Q.User.select().rx2();
 //        TestSubscriber<CursorResult<User>> subVerify = new TestSubscriber<>();
 //        verify.subscribe(subVerify);
 //        List<CursorResult<User>> verifiedUsers = subVerify.getOnNextEvents();
@@ -119,13 +119,13 @@ public class RxTest extends IntegrationTest {
 //    @Test
 //    public void testRxDelete() {
 //        // exercise
-//        Observable<Integer> delete = Q.User.delete().rx();
+//        Observable<Integer> delete = Q.User.delete().rx2();
 //        TestSubscriber<Integer> sub = new TestSubscriber<>();
 //        delete.subscribe(sub);
 //        List<Integer> deletedRows = sub.getOnNextEvents();
 //
 //        // verify
-//        Observable<CursorResult<User>> verify = Q.User.select().rx();
+//        Observable<CursorResult<User>> verify = Q.User.select().rx2();
 //        TestSubscriber<CursorResult<User>> subVerify = new TestSubscriber<>();
 //        verify.subscribe(subVerify);
 //        List<CursorResult<User>> verifiedUsers = subVerify.getOnNextEvents();
@@ -137,7 +137,7 @@ public class RxTest extends IntegrationTest {
 //    @Test
 //    public void testRxCount() {
 //        // exercise
-//        Observable<Long> count = Q.User.count().rx();
+//        Observable<Long> count = Q.User.count().rx2();
 //        TestSubscriber<Long> sub = new TestSubscriber<>();
 //        count.subscribe(sub);
 //        List<Long> countedRows = sub.getOnNextEvents();

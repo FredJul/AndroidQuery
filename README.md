@@ -8,15 +8,18 @@ AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotati
 ####Gradle dependencies####
 ```groovy
 dependencies {
-    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.5'
-    compile 'net.frju.androidquery:android-query:1.2.5'
+    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.6'
+    compile 'net.frju.androidquery:android-query:1.2.6'
 }
 ```
 
-If you want to use RxJava you also need to add the following lines:
+If you want to use RxJava1 or RxJava2 you also need to add some of the following lines:
 ```groovy
-    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex:rxjava:1.2.3' // For RxJava1 and rx() method
+    compile 'io.reactivex:rxandroid:1.2.1' // For RxJava1 and rx() method
+
+    compile 'io.reactivex.rxjava2:rxjava:2.0.2' // For RxJava2 and rx2() method
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1' // For RxJava2 and rx2() method
 ```
 
 ####Initialize the ORM###
@@ -480,8 +483,8 @@ However, please note that raw queries and joins are not possible with a ContentP
 AndroidQuery also provide a library which allows you to easily access to Android data. You need to add `android-query-models` into your dependencies.
 ```groovy
 dependencies {
-    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.5'
-    compile 'net.frju.androidquery:android-query-models:1.2.5'
+    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.6'
+    compile 'net.frju.androidquery:android-query-models:1.2.6'
 }
 ```
 

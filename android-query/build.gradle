@@ -47,12 +47,12 @@ dependencies {
     compile project(':android-query-common')
     compile 'com.android.support:support-annotations:25.0.1'
 
-    provided 'io.reactivex.rxjava2:rxjava:2.0.1'
+    provided 'io.reactivex:rxjava:1.2.3'
+    provided 'io.reactivex.rxjava2:rxjava:2.0.2'
 
     androidTestAnnotationProcessor project(':android-query-preprocessor')
 
     androidTestCompile(
-            'io.reactivex.rxjava2:rxjava:2.0.1',
             'com.android.support.test:runner:0.4',
             'com.android.support.test:rules:0.4'
     )

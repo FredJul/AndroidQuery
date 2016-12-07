@@ -70,7 +70,7 @@ public class Delete extends Query {
         /**
          * Specify a Where condition for the Delete query
          * @param condition Where condition
-         * @return Call Builder#query or Builder#rx to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
@@ -82,7 +82,7 @@ public class Delete extends Query {
         /**
          * Specify the values for the Delete query
          * @param models The models that are being deleted
-         * @return Call Builder#query or Builder#rx to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         @SafeVarargs
         public final
@@ -96,7 +96,7 @@ public class Delete extends Query {
          * Specify the values for the Delete query
          *
          * @param models The models that are being deleted
-         * @return Call Builder#query or Builder#rx to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
@@ -125,14 +125,31 @@ public class Delete extends Query {
                 );
             }
         }
+
         /**
          * Executes a Delete query
          * @return An RxJava Observable
          */
         public
         @NonNull
-        Observable<Integer> rx() {
+        rx.Observable<Integer> rx() {
             return wrapRx(new Callable<Integer>() {
+                @Override
+                public Integer call() throws Exception {
+                    return query();
+                }
+            });
+        }
+
+        /**
+         * Executes a Delete query
+         *
+         * @return An RxJava2 Observable
+         */
+        public
+        @NonNull
+        Observable<Integer> rx2() {
+            return wrapRx2(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
                     return query();

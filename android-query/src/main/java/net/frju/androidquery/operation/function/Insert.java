@@ -81,8 +81,24 @@ public class Insert extends Query {
          */
         public
         @NonNull
-        Observable<Integer> rx() {
+        rx.Observable<Integer> rx() {
             return wrapRx(new Callable<Integer>() {
+                @Override
+                public Integer call() throws Exception {
+                    return query();
+                }
+            });
+        }
+
+        /**
+         * Executes an Insert query
+         *
+         * @return An RxJava2 Observable
+         */
+        public
+        @NonNull
+        Observable<Integer> rx2() {
+            return wrapRx2(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
                     return query();

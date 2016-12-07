@@ -79,7 +79,7 @@ public class Update extends Query {
         /**
          * Specify a Where clause for the Update query
          * @param clause Where clause
-         * @return Call Builder#query or Builder#rx to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
@@ -91,7 +91,7 @@ public class Update extends Query {
         /**
          * Specify the values for the Update query
          * @param models The models that are being updated
-         * @return Call Builder#query or Builder#rx to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         @SafeVarargs
         public final
@@ -105,7 +105,7 @@ public class Update extends Query {
          * Specify the values for the Update query
          *
          * @param models The models that are being updated
-         * @return Call Builder#query or Builder#rx to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
@@ -118,7 +118,7 @@ public class Update extends Query {
         /**
          * Specify the values for the Update query
          * @param values The values that are being updated
-         * @return Call Builder#query or Builder#rx to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
@@ -153,8 +153,24 @@ public class Update extends Query {
          */
         public
         @NonNull
-        Observable<Integer> rx() {
+        rx.Observable<Integer> rx() {
             return wrapRx(new Callable<Integer>() {
+                @Override
+                public Integer call() throws Exception {
+                    return query();
+                }
+            });
+        }
+
+        /**
+         * Executes an Update query
+         *
+         * @return An RxJava2 Observable
+         */
+        public
+        @NonNull
+        Observable<Integer> rx2() {
+            return wrapRx2(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
                     return query();

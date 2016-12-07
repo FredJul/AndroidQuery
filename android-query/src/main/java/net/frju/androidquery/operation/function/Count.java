@@ -59,7 +59,7 @@ public class Count extends Query {
         /**
          * Specify a Where condition for the Count query
          * @param condition Where condition
-         * @return Call Builder#query or Builder#rx to run the query
+         * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
@@ -86,8 +86,24 @@ public class Count extends Query {
          */
         public
         @NonNull
-        Observable<Long> rx() {
+        rx.Observable<Long> rx() {
             return wrapRx(new Callable<Long>() {
+                @Override
+                public Long call() throws Exception {
+                    return query();
+                }
+            });
+        }
+
+        /**
+         * Execute a Count query
+         *
+         * @return An RxJava2 Observable
+         */
+        public
+        @NonNull
+        Observable<Long> rx2() {
+            return wrapRx2(new Callable<Long>() {
                 @Override
                 public Long call() throws Exception {
                     return query();

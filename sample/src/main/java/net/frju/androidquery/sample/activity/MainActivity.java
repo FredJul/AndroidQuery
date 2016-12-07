@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkUserExists() {
         Q.User.count()
-                .rx()
+                .rx2()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         user.username = "Sam";
 
         mCompositeDisposable.add(Q.User.insert(user)
-                .rx()
+                .rx2()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Integer>() {
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void countComments() {
         mCompositeDisposable.add(Q.Comment.count()
-                .rx()
+                .rx2()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         comment.userId = 1;
 
         mCompositeDisposable.add(Q.Comment.insertViaContentProvider(comment)
-                .rx()
+                .rx2()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Integer>() {
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         mCompositeDisposable.add(Q.Comment.select()
                 .join(innerJoin(User.class, on(Comment.class.getSimpleName() + '.' + Q.Comment.USER_ID, User.class.getSimpleName() + '.' + Q.User.ID)))
                 .orderBy(Comment.class.getSimpleName() + '.' + Q.Comment.TIMESTAMP, OrderBy.Order.DESC)
-                .rx()
+                .rx2()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<CursorResult<Comment>>() {
