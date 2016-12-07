@@ -123,7 +123,7 @@ these variables should be used whenever you reference a table column.
 ####Functions####
 The `insert()`, `select()`, `update()`, `save()`, `delete()`, `count()` and `raw()` methods are used to query the database tables. The `save()` method will either insert the data if not in database or will update it, since this can be slower you should use that method only if you don't know if the data has been already inserted.
 
-If you want synchronous query, you can directly call `query()`/`querySingle()` methods or the `rx()` method.
+If you want synchronous query, you can directly call `query()`/`querySingle()` methods or the RxJava methods (`rx()`/`rxSingle()`, `rx2()`/`rx2Single()`).
 For a `select()` query you will get back a `CursorResult` object, which needs to be closed after use. You can use a try-with-resources statement for that:
 
 ```java
@@ -149,7 +149,7 @@ List<User> usersList = Q.User.select().query().toList();
 However be careful: this is less efficient than directly using the `CursorResult` object since it needs to read and copy everything in memory.
 Calling `toArray()` or `toList()` methods will automatically close the `CursorResult` object for you.
 
-For an asynchronous query (to not block the UI), you can notably use the `rx()` method which returns an RxJava2 Observable.
+For an asynchronous query (to not block the UI), you can notably use the `rx2()` method which returns an RxJava2 Observable.
 It is recommended to put all the returned `Disposable` into a `CompositeDisposable` and clear it inside the activity `onDestroy()`:
 
 ```java
@@ -157,7 +157,7 @@ It is recommended to put all the returned `Disposable` into a `CompositeDisposab
 
     private void doQuery() {
         mCompositeDisposable.add(Q.User.select()
-                .rx()
+                .rx2()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<CursorResult<User>>() {
@@ -488,7 +488,7 @@ dependencies {
 }
 ```
 
-Currently the supported models are `Contact` and `BlockedNumber`.
+Currently the supported models are `Contact`, `RawContact` and `BlockedNumber`.
 
 You can queries them this way:
 ```java
