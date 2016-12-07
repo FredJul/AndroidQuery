@@ -41,7 +41,7 @@ public class RawContact {
      * version of the full name.
      * <p>
      *
-     * @see ContactsContract.ContactNameColumns#DISPLAY_NAME_ALTERNATIVE
+     * @see #displayNameAlternative
      */
     @Column(realName = ContactsContract.RawContacts.DISPLAY_NAME_PRIMARY)
     public String displayNamePrimary;
