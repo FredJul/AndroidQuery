@@ -45,9 +45,6 @@ public class Column {
         mType = newVal;
     }
 
-    /**
-     * (Used in Q.java freemarker template)
-     */
     public boolean isIndex() {
         return mIsIndex;
     }

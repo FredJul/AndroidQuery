@@ -8,8 +8,8 @@ AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotati
 ####Gradle dependencies####
 ```groovy
 dependencies {
-    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.6'
-    compile 'net.frju.androidquery:android-query:1.2.6'
+    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.7'
+    compile 'net.frju.androidquery:android-query:1.2.7'
 }
 ```
 
@@ -483,8 +483,8 @@ However, please note that raw queries and joins are not possible with a ContentP
 AndroidQuery also provide a library which allows you to easily access to Android data. You need to add `android-query-models` into your dependencies.
 ```groovy
 dependencies {
-    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.6'
-    compile 'net.frju.androidquery:android-query-models:1.2.6'
+    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:1.2.7'
+    compile 'net.frju.androidquery:android-query-models:1.2.7'
 }
 ```
 

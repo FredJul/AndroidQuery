@@ -49,9 +49,6 @@ public class Table {
         mPackage = newVal;
     }
 
-    /**
-     * (Used in Q.java freemarker template)
-     */
     public String getType() {
         return mType;
     }
@@ -121,6 +118,7 @@ public class Table {
 
     /**
      * (Used in Q.java freemarker template)
+     * @param tables all tables
      * @return  all columns ignoring any object mappings
      */
     public List<Column> getMutableColumns(List<Table> tables) {

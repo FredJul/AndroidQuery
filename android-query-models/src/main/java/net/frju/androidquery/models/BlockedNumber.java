@@ -1,4 +1,4 @@
-package net.frju.androidquery.model;
+package net.frju.androidquery.models;
 
 import android.annotation.TargetApi;
 import android.provider.BlockedNumberContract;

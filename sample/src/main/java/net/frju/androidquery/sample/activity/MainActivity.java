@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import net.frju.androidquery.gen.Q;
-import net.frju.androidquery.model.Contact;
+import net.frju.androidquery.models.Contact;
 import net.frju.androidquery.operation.function.CursorResult;
 import net.frju.androidquery.operation.keyword.OrderBy;
 import net.frju.androidquery.sample.R;

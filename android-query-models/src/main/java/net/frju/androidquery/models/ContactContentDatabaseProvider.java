@@ -1,23 +1,22 @@
-package net.frju.androidquery.model;
+package net.frju.androidquery.models;
 
-import android.annotation.TargetApi;
 import android.content.ContentResolver;
-import android.provider.BlockedNumberContract;
+import android.provider.ContactsContract;
 
 import net.frju.androidquery.database.BaseContentDatabaseProvider;
 import net.frju.androidquery.database.Resolver;
 import net.frju.androidquery.models.gen.Q;
 
-@TargetApi(24)
-public class BlockedNumberContentDatabaseProvider extends BaseContentDatabaseProvider {
 
-    public BlockedNumberContentDatabaseProvider(ContentResolver contentResolver) {
+public class ContactContentDatabaseProvider extends BaseContentDatabaseProvider {
+
+    public ContactContentDatabaseProvider(ContentResolver contentResolver) {
         super(contentResolver);
     }
 
     @Override
     protected String getAuthority() {
-        return BlockedNumberContract.AUTHORITY;
+        return ContactsContract.AUTHORITY;
     }
 
     @Override

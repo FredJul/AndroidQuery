@@ -1,4 +1,4 @@
-package net.frju.androidquery.model;
+package net.frju.androidquery.models;
 
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -39,7 +39,7 @@ public class RawContact {
      * based on the structured name and the structured name follows
      * the Western full-name style, then this field contains the "given name first"
      * version of the full name.
-     * <p>
+     * </p>
      *
      * @see #displayNameAlternative
      */

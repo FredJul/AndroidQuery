@@ -1,4 +1,4 @@
-package net.frju.androidquery.model;
+package net.frju.androidquery.models;
 
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -28,8 +28,6 @@ public class Contact {
      * If PHOTO_FILE_ID is not null, this will be populated with a URI based off
      * {@link ContactsContract.DisplayPhoto#CONTENT_URI}.  Otherwise, this will
      * be populated with the same value as {@link #photoThumbnailUri}.
-     * <p>
-     * <P>Type: TEXT</P>
      */
     @Column(realName = ContactsContract.Contacts.PHOTO_URI)
     public Uri photoUri;
@@ -39,8 +37,6 @@ public class Contact {
      * If the content provider does not differentiate between full-size photos
      * and thumbnail photos, {@link #photoThumbnailUri} and {@link #photoUri} can contain
      * the same value, but either both shall be null or both not null.
-     *
-     * <P>Type: TEXT</P>
      */
     @Column(realName = ContactsContract.Contacts.PHOTO_THUMBNAIL_URI)
     public Uri photoThumbnailUri;

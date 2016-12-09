@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import net.frju.androidquery.model.Contact;
+import net.frju.androidquery.models.Contact;
 import net.frju.androidquery.operation.function.CursorResult;
 import net.frju.androidquery.sample.R;
 
