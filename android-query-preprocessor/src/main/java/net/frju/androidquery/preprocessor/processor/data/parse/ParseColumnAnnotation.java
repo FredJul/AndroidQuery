@@ -3,6 +3,7 @@ package net.frju.androidquery.preprocessor.processor.data.parse;
 import net.frju.androidquery.preprocessor.processor.data.Column;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeMirror;
 
@@ -21,6 +22,7 @@ class ParseColumnAnnotation {
         column.setHasAutoIncrement(assembleAutoIncrement(element));
         column.setType(type);
         column.setClassName(assembleClassName(type));
+        column.setIsPublicField(assembleIsPublic(element));
 
         return column;
     }
@@ -63,5 +65,9 @@ class ParseColumnAnnotation {
     private static boolean assembleAutoIncrement(Element element) {
         net.frju.androidquery.annotation.Column column = element.getAnnotation(net.frju.androidquery.annotation.Column.class);
         return column.autoIncrement();
+    }
+
+    private static boolean assembleIsPublic(Element element) {
+        return element.getModifiers().contains(Modifier.PUBLIC);
     }
 }

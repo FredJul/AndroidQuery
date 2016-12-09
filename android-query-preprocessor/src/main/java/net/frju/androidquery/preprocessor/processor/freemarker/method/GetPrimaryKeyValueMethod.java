@@ -4,6 +4,7 @@ import net.frju.androidquery.preprocessor.processor.data.Column;
 import net.frju.androidquery.preprocessor.processor.data.Data;
 import net.frju.androidquery.preprocessor.processor.data.Table;
 import net.frju.androidquery.preprocessor.processor.data.TypeConverter;
+import net.frju.androidquery.preprocessor.processor.utils.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,10 +36,10 @@ public class GetPrimaryKeyValueMethod implements TemplateMethodModelEx {
             if (column.hasPrimaryKey()) {
                 TypeConverter converter = mData.getConverterFromClass(column.getType());
                 if (converter != null) {
-                    return "new " + converter.getName() + "().convertToDb(" + varName + "." + column.getName() + ")";
+                    return "new " + converter.getName() + "().convertToDb(" + StringUtils.getGetter(varName, column) + ")";
                 }
 
-                String result = varName + "." + column.getName();
+                String result = StringUtils.getGetter(varName, column);
                 switch (column.getType()) {
                     case "long":
                         result = "java.lang.Long.valueOf(" + result + ")";

@@ -28,8 +28,8 @@ version = libraryVersion
 group = publishedGroupId
 
 bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
+    user = properties.getProperty("BINTRAY_USER")
+    key = properties.getProperty("BINTRAY_API_KEY")
 
     configurations = ['archives']
     pkg {

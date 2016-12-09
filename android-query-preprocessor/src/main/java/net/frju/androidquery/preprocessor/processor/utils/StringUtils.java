@@ -53,6 +53,22 @@ public class StringUtils {
         return null;
     }
 
+    public static String getGetter(String varName, Column column) {
+        String getter = varName + "." + column.getName();
+        if (!column.isIsPublicField()) {
+            getter = varName + ".get" + StringUtils.firstToUpperCase(column.getName()) + "()";
+        }
+        return getter;
+    }
+
+    public static String getSetter(String varName, String valueVarName, Column column) {
+        String setter = varName + "." + column.getName() + " = " + valueVarName;
+        if (!column.isIsPublicField()) {
+            setter = varName + ".set" + StringUtils.firstToUpperCase(column.getName()) + "(" + valueVarName + ")";
+        }
+        return setter;
+    }
+
     public static String assembleTypeGetter(Data data, String type) {
         String sqlType = type;
         TypeConverter converter = data.getConverterFromClass(type);

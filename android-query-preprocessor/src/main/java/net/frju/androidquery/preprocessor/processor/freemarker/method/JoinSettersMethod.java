@@ -45,11 +45,7 @@ public class JoinSettersMethod implements TemplateMethodModelEx {
                                 .append(column.getName())
                                 .append("\")) {")
                                 .append(System.getProperty("line.separator"))
-                                .append(table.getName().toLowerCase())
-                                .append(".")
-                                .append(column.getName())
-                                .append(" = ")
-                                .append(StringUtils.assembleTypeGetter(mData, column.getType()))
+                                .append(StringUtils.getSetter(table.getName().toLowerCase(), StringUtils.assembleTypeGetter(mData, column.getType()), column))
                                 .append(";");
                     }
 

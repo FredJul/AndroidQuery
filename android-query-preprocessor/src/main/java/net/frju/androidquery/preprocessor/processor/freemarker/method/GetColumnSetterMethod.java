@@ -1,8 +1,6 @@
 package net.frju.androidquery.preprocessor.processor.freemarker.method;
 
 import net.frju.androidquery.preprocessor.processor.data.Column;
-import net.frju.androidquery.preprocessor.processor.data.Data;
-import net.frju.androidquery.preprocessor.processor.data.TypeConverter;
 import net.frju.androidquery.preprocessor.processor.utils.StringUtils;
 
 import java.util.HashMap;
@@ -14,31 +12,17 @@ import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
 
-public class GetContentValueMethod implements TemplateMethodModelEx {
+public class GetColumnSetterMethod implements TemplateMethodModelEx {
 
-    private static final String GET_CONTENT_VALUE = "getContentValue";
+    private static final String GET_COLUMN_SETTER = "getColumnSetter";
 
-    private final Data mData;
-
-    public static Map<String, Object> getMethodMap(Data data) {
+    public static Map<String, Object> getMethodMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put(GET_CONTENT_VALUE, new GetContentValueMethod(data));
+        map.put(GET_COLUMN_SETTER, new GetColumnSetterMethod());
         return map;
     }
 
-    private GetContentValueMethod(Data data) {
-        mData = data;
-    }
-
-    private String assembleContentValue(String varName, Column column) {
-        String getter = StringUtils.getGetter(varName, column);
-
-        TypeConverter converter = mData.getConverterFromClass(column.getType());
-        if (converter != null) {
-            return "new " + converter.getName() + "().convertToDb(" + getter + ")";
-        }
-
-        return getter;
+    private GetColumnSetterMethod() {
     }
 
     @Override
@@ -48,17 +32,22 @@ public class GetContentValueMethod implements TemplateMethodModelEx {
                 var.toString() :
                 String.valueOf(var);
 
-        Object columnValue = arguments.get(1);
+        var = arguments.get(1);
+        String valueVarName = var instanceof SimpleScalar ?
+                var.toString() :
+                String.valueOf(var);
+
+        Object columnValue = arguments.get(2);
 
         Column column;
         if (columnValue instanceof StringModel) {
             StringModel stringModel = (StringModel) columnValue;
             column = (Column) stringModel.getAdaptedObject(Column.class);
         } else {
-            throw new IllegalStateException("The assembleContentValue argument must be type of " +
+            throw new IllegalStateException("The assembleColumnSetter argument must be type of " +
                     "net.frju.androidquery.preprocessor.processor.data.Column");
         }
 
-        return assembleContentValue(varName, column);
+        return StringUtils.getSetter(varName, valueVarName, column);
     }
 }

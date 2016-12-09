@@ -177,7 +177,7 @@ public class Q {
                                     ${join(column.getClassName(),tables)}
                                 <#else>
                                     } else if (cursor.getColumnName(x).equals(${formatConstant(column.getName())})) {
-                                        ${table.getName()?lower_case}.${column.getName()} = ${getCursorGetter(column.getType())};
+                                        ${getColumnSetter(table.getName()?lower_case, getCursorGetter(column.getType()), column)};
                                 </#if>
                             </#list>
                             }
@@ -232,8 +232,7 @@ public class Q {
             public void setIdToModel(@NonNull Object model, long id) {
                 <#if table.getPrimaryKeyName() != "" && isPrimaryKeyAutoIncrement(table) == "true" && (table.getPrimaryKeyType() == "java.lang.Long" || table.getPrimaryKeyType() == "long")>
                 ${packagedTableName} ${table.getName()?lower_case} = (${packagedTableName})model;
-
-                ${table.getName()?lower_case}.${table.getPrimaryKeyName()} = id;
+                ${getPrimaryKeySetter(table.getName()?lower_case, "id", table)};
                 </#if>
             }
 

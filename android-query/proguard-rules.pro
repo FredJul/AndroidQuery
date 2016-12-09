@@ -15,3 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# Don't warn for non-presence of RxJava or RxJava2
+-dontwarn rx.**
+-dontwarn io.reactivex.**

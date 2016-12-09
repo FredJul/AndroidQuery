@@ -36,7 +36,7 @@ public class JoinReferencesMethod implements TemplateMethodModelEx {
             for (Column column : columns) {
                 if (column.isJoinable(tables)) {
                     Table columnTable = column.getRootTable(tables);
-                    sb.append(buildJoinTable(joinTableName, columnTable));
+                    sb.append(buildJoinTable(joinTable, column, columnTable));
                     sb.append(build(column.getClassName(), tables));
                 }
             }
@@ -55,7 +55,7 @@ public class JoinReferencesMethod implements TemplateMethodModelEx {
         return null;
     }
 
-    private String buildJoinTable(String joinTableName, Table table) {
+    private String buildJoinTable(Table joinTable, Column column, Table table) {
         return table.getPackage() +
                 "." +
                 table.getName() +
@@ -67,11 +67,7 @@ public class JoinReferencesMethod implements TemplateMethodModelEx {
                 table.getName() +
                 "();" +
                 System.getProperty("line.separator") +
-                joinTableName.toLowerCase() +
-                "." +
-                StringUtils.firstToLowerCase(table.getName()) +
-                " = " +
-                table.getName().toLowerCase() +
+                StringUtils.getSetter(joinTable.getName().toLowerCase(), table.getName().toLowerCase(), column) +
                 ";" +
                 System.getProperty("line.separator") +
                 System.getProperty("line.separator");

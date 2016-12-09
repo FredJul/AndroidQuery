@@ -11,6 +11,7 @@ public class Column {
     private boolean mIsUnique;
     private boolean mPrimaryKey;
     private boolean mHasAutoIncrement;
+    private boolean mIsPublicField;
 
     public String getName() {
         return mName;
@@ -77,6 +78,14 @@ public class Column {
 
     public void setHasAutoIncrement(boolean newVal) {
         mHasAutoIncrement = newVal;
+    }
+
+    public boolean isIsPublicField() {
+        return mIsPublicField;
+    }
+
+    public void setIsPublicField(boolean newVal) {
+        mIsPublicField = newVal;
     }
 
     public Table getRootTable(List<Table> tables) {

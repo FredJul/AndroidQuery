@@ -10,7 +10,7 @@ ext {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "23.0.3"
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         minSdkVersion 11
@@ -26,23 +26,6 @@ android {
             }
         }
     }
-
-//    signingConfigs {
-//        config{
-//            storeFile file(properties.getProperty("keystore.storeFile"))
-//            storePassword properties.getProperty("keystore.storePassword")
-//            keyAlias properties.getProperty("keystore.keyAlias")
-//            keyPassword properties.getProperty("keystore.keyPassword")
-//        }
-//    }
-
-//    buildTypes {
-//        release {
-//            signingConfig  signingConfigs.config
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//        }
-//    }
 
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
@@ -70,8 +53,8 @@ version = libraryVersion
 group = publishedGroupId
 
 bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
+    user = properties.getProperty("BINTRAY_USER")
+    key = properties.getProperty("BINTRAY_API_KEY")
 
     configurations = ['archives']
     pkg {
