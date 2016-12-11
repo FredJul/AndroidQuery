@@ -28,9 +28,8 @@ import net.frju.androidquery.operation.keyword.OrderBy;
 import org.junit.Before;
 import org.junit.Test;
 
-import static net.frju.androidquery.operation.condition.On.on;
 import static net.frju.androidquery.operation.condition.Where.where;
-import static net.frju.androidquery.operation.join.InnerJoin.innerJoin;
+import static net.frju.androidquery.operation.join.Join.innerJoin;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -55,7 +54,7 @@ public class JoinTest extends IntegrationTest {
     @Test
     public void testInnerJoin() {
         User[] users = Q.User.select()
-                .join(innerJoin(Log.class, on("User.logId", "Log.id")))
+                .join(innerJoin(User.class, Q.User.LOG_ID, Log.class, Q.Log.ID))
                 .query().toArray();
 
 
@@ -69,12 +68,16 @@ public class JoinTest extends IntegrationTest {
         Post[] posts = Q.Post.select()
                 .join(
                         innerJoin(
+                                Post.class,
+                                Q.Post.USER_ID,
                                 User.class,
-                                innerJoin(
-                                        Log.class,
-                                        on("User.logId", "Log.id")
-                                ),
-                                on("Post.userId", "User.id")
+                                Q.User.ID
+                        ),
+                        innerJoin(
+                                User.class,
+                                Q.User.LOG_ID,
+                                Log.class,
+                                Q.Log.ID
                         )
                 )
                 .query().toArray();
@@ -90,8 +93,10 @@ public class JoinTest extends IntegrationTest {
         Post[] posts = Q.Post.select()
                 .join(
                         innerJoin(
+                                Post.class,
+                                Q.Post.USER_ID,
                                 User.class,
-                                on("Post.userId", "User.id")
+                                Q.User.ID
                         )
                 )
                 .orderBy("Post.id", OrderBy.Order.DESC)
@@ -108,8 +113,10 @@ public class JoinTest extends IntegrationTest {
         Post[] posts = Q.Post.select()
                 .join(
                         innerJoin(
+                                Post.class,
+                                Q.Post.USER_ID,
                                 User.class,
-                                on("Post.userId", "User.id")
+                                Q.User.ID
                         )
                 )
                 .limit(0, 2)
@@ -143,7 +150,12 @@ public class JoinTest extends IntegrationTest {
     @Test
     public void testJoinWithCondition() {
         User[] users = Q.User.select()
-                .join(innerJoin(Log.class, on("User.logId", "Log.id")))
+                .join(innerJoin(
+                        User.class,
+                        Q.User.LOG_ID,
+                        Log.class,
+                        Q.Log.ID
+                ))
                 .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.ANGIE_USER_NAME))
                 .query().toArray();
 

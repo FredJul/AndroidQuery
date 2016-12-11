@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-present memtrip LTD.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,15 +18,9 @@ package net.frju.androidquery.database;
 import net.frju.androidquery.operation.condition.And;
 import net.frju.androidquery.operation.condition.Condition;
 import net.frju.androidquery.operation.condition.In;
-import net.frju.androidquery.operation.condition.On;
 import net.frju.androidquery.operation.condition.Or;
 import net.frju.androidquery.operation.condition.Where;
-import net.frju.androidquery.operation.join.CrossInnerJoin;
-import net.frju.androidquery.operation.join.InnerJoin;
 import net.frju.androidquery.operation.join.Join;
-import net.frju.androidquery.operation.join.LeftOuterJoin;
-import net.frju.androidquery.operation.join.NaturalInnerJoin;
-import net.frju.androidquery.operation.join.NaturalLeftOuterJoin;
 import net.frju.androidquery.operation.keyword.Limit;
 import net.frju.androidquery.operation.keyword.OrderBy;
 
@@ -35,8 +29,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
-* @author Samuel Kirton [sam@memtrip.com]
-*/
+ * @author Samuel Kirton [sam@memtrip.com]
+ */
 public class ClauseHelper {
     private static final String SPACE = " ";
     private static final String VALUE = "?";
@@ -48,7 +42,8 @@ public class ClauseHelper {
     private static final String AND = "AND";
     private static final String OR = "OR";
 
-    protected ClauseHelper() { }
+    protected ClauseHelper() {
+    }
 
     public String getCondition(Condition[] condition) {
         StringBuilder clauseBuilder = new StringBuilder();
@@ -71,8 +66,6 @@ public class ClauseHelper {
             clauseBuilder.append(buildInCondition((In) condition));
         } else if (condition instanceof Where) {
             clauseBuilder.append(buildWhereCondition((Where) condition));
-        } else if (condition instanceof On) {
-            clauseBuilder.append(buildOnCondition((On) condition));
         } else if (condition instanceof And) {
             clauseBuilder.append(BRACKET_START);
             And and = (And) condition;
@@ -145,18 +138,6 @@ public class ClauseHelper {
         stringBuilder.append(BRACKET_END);
 
         return stringBuilder.toString();
-    }
-
-    private String buildOnCondition(On on) {
-        String stringBuilder = "ON" +
-                SPACE +
-                on.getColumn1() +
-                SPACE +
-                "=" +
-                SPACE +
-                on.getColumn2();
-
-        return stringBuilder;
     }
 
     public String[] getConditionArgs(Condition[] condition) {
@@ -256,25 +237,39 @@ public class ClauseHelper {
         return stringBuilder.toString();
     }
 
+    private String buildOnCondition(Join join, Resolver resolver) {
+        TableDescription initialTableDesc = resolver.getTableDescription(join.getInitialTable());
+        TableDescription addedTableDesc = resolver.getTableDescription(join.getAddedTable());
+
+        String stringBuilder = "ON" +
+                SPACE +
+                initialTableDesc.getTableRealName() +
+                "." +
+                join.getInitialTableColumn() +
+                SPACE +
+                "=" +
+                SPACE +
+                addedTableDesc.getTableRealName() +
+                "." +
+                join.getAddedTableColumn();
+
+        return stringBuilder;
+    }
+
     public String getJoinStatement(Join[] joins, Resolver resolver) {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (Join join : joins) {
-            TableDescription tableDescription = resolver.getTableDescription(join.getTable());
-            String tableRealName = tableDescription.getTableRealName();
+            TableDescription tableDescription = resolver.getTableDescription(join.getAddedTable());
+            String table2RealName = tableDescription.getTableRealName();
 
             stringBuilder
-            		.append(" ")
-            		.append(getJoinType(join))
                     .append(" ")
-                    .append(tableRealName)
+                    .append(getJoinType(join))
                     .append(" ")
-                    .append(getCondition(join.getClauses()));
-
-            if (join.getJoin() != null) {
-                stringBuilder.append(" ")
-                        .append(getJoinStatement(new Join[] { join.getJoin() }, resolver));
-            }
+                    .append(table2RealName)
+                    .append(" ")
+                    .append(buildOnCondition(join, resolver));
         }
 
         return stringBuilder.toString();
@@ -294,7 +289,7 @@ public class ClauseHelper {
         }
 
         for (String column : joinColumns) {
-            String columnAlias = column.replace(".","_");
+            String columnAlias = column.replace(".", "_");
             stringBuilder.append(column)
                     .append(" as ")
                     .append(columnAlias)
@@ -302,7 +297,7 @@ public class ClauseHelper {
         }
 
         // remove the trailing comma
-        stringBuilder.delete(stringBuilder.length()-2, stringBuilder.length());
+        stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
 
         String clauseString = getCondition(condition);
         if (clauseString != null && clauseString.length() > 0) {
@@ -337,15 +332,10 @@ public class ClauseHelper {
         List<String> joinColumns = new ArrayList<>();
 
         for (Join join : joins) {
-            TableDescription tableDescription = resolver.getTableDescription(join.getTable());
+            TableDescription tableDescription = resolver.getTableDescription(join.getAddedTable());
             String[] columnNames = tableDescription.getColumnNamesWithTablePrefix();
 
             Collections.addAll(joinColumns, columnNames);
-
-            if (join.getJoin() != null) {
-                String[] innerJoinColumns = getJoinColumns(new Join[] { join.getJoin() }, resolver);
-                Collections.addAll(joinColumns, innerJoinColumns);
-            }
         }
 
         String[] columns = new String[joinColumns.size()];
@@ -353,18 +343,17 @@ public class ClauseHelper {
     }
 
     private String getJoinType(Join join) {
-        if (join instanceof InnerJoin) {
-            return "INNER JOIN";
-        } else if (join instanceof CrossInnerJoin) {
-            return "CROSS INNER JOIN";
-        } else if (join instanceof LeftOuterJoin) {
-            return "LEFT OUTER JOIN";
-        } else if (join instanceof NaturalInnerJoin) {
-            return "NATURAL INNER JOIN";
-        } else if (join instanceof NaturalLeftOuterJoin) {
-            return "NATURAL LEFT OUTER JOIN";
+        switch (join.getType()) {
+            case CROSS_INNER:
+                return "CROSS INNER JOIN";
+            case LEFT_OUTER:
+                return "LEFT OUTER JOIN";
+            case NATURAL_INNER:
+                return "NATURAL INNER JOIN";
+            case NATURAL_LEFT_OUTER:
+                return "NATURAL LEFT OUTER JOIN";
+            default:
+                return "INNER JOIN";
         }
-
-        return "INNER JOIN";
     }
 }

@@ -32,8 +32,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-import static net.frju.androidquery.operation.condition.On.on;
-import static net.frju.androidquery.operation.join.InnerJoin.innerJoin;
+import static net.frju.androidquery.operation.join.Join.innerJoin;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -194,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void refreshComments() {
         mCompositeDisposable.add(Q.Comment.select()
-                .join(innerJoin(User.class, on(Comment.class.getSimpleName() + '.' + Q.Comment.USER_ID, User.class.getSimpleName() + '.' + Q.User.ID)))
+                .join(innerJoin(Comment.class, Q.Comment.USER_ID, User.class, Q.User.ID))
                 .orderBy(Comment.class.getSimpleName() + '.' + Q.Comment.TIMESTAMP, OrderBy.Order.DESC)
                 .rx2()
                 .subscribeOn(Schedulers.io())

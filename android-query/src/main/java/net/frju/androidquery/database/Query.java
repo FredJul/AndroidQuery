@@ -86,9 +86,9 @@ public abstract class Query {
 
         return databaseProvider.query(
                 tableDescription.getTableRealName(),
-                select.getJoin() != null ? tableDescription.getColumnNamesWithTablePrefix() : tableDescription.getColumnNames(),
+                select.getJoins() != null ? tableDescription.getColumnNamesWithTablePrefix() : tableDescription.getColumnNames(),
                 select.getClause(),
-                select.getJoin(),
+                select.getJoins(),
                 null,
                 null,
                 select.getOrderBy(),

@@ -35,7 +35,7 @@ import io.reactivex.Observable;
  */
 public class Select extends Query {
     private final Condition[] mCondition;
-    private final Join[] mJoin;
+    private final Join[] mJoins;
     private final OrderBy[] mOrderBy;
     private final Limit mLimit;
 
@@ -43,8 +43,8 @@ public class Select extends Query {
         return mCondition;
     }
 
-    public Join[] getJoin() {
-        return mJoin;
+    public Join[] getJoins() {
+        return mJoins;
     }
 
     public OrderBy[] getOrderBy() {
@@ -57,7 +57,7 @@ public class Select extends Query {
 
     private Select(Condition[] condition, Join[] join, OrderBy[] orderBy, Limit limit) {
         mCondition = condition;
-        mJoin = join;
+        mJoins = join;
         mOrderBy = orderBy;
         mLimit = limit;
     }
@@ -70,7 +70,7 @@ public class Select extends Query {
 
     public static class Builder<T> {
         private Condition[] mCondition;
-        private Join[] mJoin;
+        private Join[] mJoins;
         private OrderBy[] mOrderBy;
         private Limit mLimit;
         private final Class<T> mClassDef;
@@ -94,7 +94,7 @@ public class Select extends Query {
         public
         @NonNull
         Builder<T> join(Join... joins) {
-            mJoin = joins;
+            mJoins = joins;
             return this;
         }
 
@@ -162,7 +162,7 @@ public class Select extends Query {
         @NonNull
         CursorResult<T> query() {
             return select(
-                    new Select(mCondition, mJoin, mOrderBy, mLimit),
+                    new Select(mCondition, mJoins, mOrderBy, mLimit),
                     mClassDef,
                     mDatabaseProvider
             );
@@ -175,7 +175,7 @@ public class Select extends Query {
         public T querySingle() {
             // For a single query, always put a limit for performance reasons
             return selectSingle(
-                    new Select(mCondition, mJoin, mOrderBy, new Limit(0, 1)),
+                    new Select(mCondition, mJoins, mOrderBy, new Limit(0, 1)),
                     mClassDef,
                     mDatabaseProvider
             );
