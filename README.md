@@ -284,7 +284,7 @@ User[] users = Q.User.select()
 ```
 
 ####Joins####
-Joins can be performed using the `InnerJoin`, `LeftOutJoin`, `CrossInnerJoin`, `NaturalInnerJoin`, `NaturalLeftOuterJoin` classes.
+Joins can be performed using the `innerJoin()`, `leftOutJoin()`, `crossInnerJoin()`, `naturalInnerJoin()`, `naturalLeftOuterJoin()` methods.
 The target table for the join must be defined as an @Column, the object will be populated with any join results.
 
 ```java
@@ -305,7 +305,7 @@ public class User {
 }
 
 Comment[] comments = Q.Comment.select()
-                .join(innerJoin(User.class, Condition.on(Comment.class.getSimpleName() + '.' + Q.Comment.USER_ID, User.class.getSimpleName() + '.' + Q.User.ID)))
+                .join(innerJoin(Comment.class, Q.Comment.USER_ID, User.class, Q.User.ID))
         .query().toArray();
         
 User user = comments[0].getUser(); // The nested User object is populated by the join

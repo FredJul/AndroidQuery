@@ -128,7 +128,7 @@ public class CreateTest extends IntegrationTest {
     @Test
     public void testMoreThan500RowInsert() {
         int COLUMN_COUNT = 1350;
-        int ANGIE_ID = 1;
+        int ANGIE_ID = 1000;
         String ANGIE_USERNAME = "angie";
         long ANGIE_TIMESTAMP = System.currentTimeMillis();
         boolean ANGIE_IS_REGISTERED = true;
@@ -138,7 +138,7 @@ public class CreateTest extends IntegrationTest {
         User[] users = new User[COLUMN_COUNT];
         for (int i = 0; i < COLUMN_COUNT; i++) {
             users[i] = SetupUser.createUser(
-                    ANGIE_ID,
+                    ANGIE_ID++,
                     ANGIE_USERNAME,
                     ANGIE_TIMESTAMP + i,
                     ANGIE_IS_REGISTERED,

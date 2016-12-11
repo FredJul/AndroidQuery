@@ -40,7 +40,7 @@ public class JoinSettersMethod implements TemplateMethodModelEx {
                         sb.append(build(column.getClassName(), tables));
                     } else {
                         sb.append("} else if (cursor.getColumnName(x).equals(\"")
-                                .append(table.getName())
+                                .append(table.getRealName())
                                 .append("_")
                                 .append(column.getName())
                                 .append("\")) {")
