@@ -21,6 +21,7 @@ package net.frju.androidquery.operation.keyword;
 public class OrderBy {
     private final String mField;
     private final Order mOrder;
+    private final Collate mCollate;
 
     public enum Order {
         ASC ("ASC"),
@@ -39,6 +40,24 @@ public class OrderBy {
         }
     }
 
+    public enum Collate {
+        BINARY("BINARY"),
+        NO_CASE("NOCASE"),
+        RTRIM("RTRIM"),
+        LOCALIZED("LOCALIZED");
+
+        private final String mValue;
+
+        Collate(String value) {
+            mValue = value;
+        }
+
+        @Override
+        public String toString() {
+            return mValue;
+        }
+    }
+
     public String getField() {
         return mField;
     }
@@ -47,8 +66,17 @@ public class OrderBy {
         return mOrder;
     }
 
+    public Collate getCollate() {
+        return mCollate;
+    }
+
     public OrderBy(String field, Order order) {
+        this(field, order, null);
+    }
+
+    public OrderBy(String field, Order order, Collate collate) {
         mField = field;
         mOrder = order;
+        mCollate = collate;
     }
 }

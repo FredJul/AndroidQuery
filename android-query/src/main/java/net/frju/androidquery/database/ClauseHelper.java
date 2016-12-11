@@ -41,6 +41,8 @@ public class ClauseHelper {
     private static final String IN = "IN";
     private static final String AND = "AND";
     private static final String OR = "OR";
+    private static final String ON = "ON";
+    private static final String COLLATE = "COLLATE";
 
     protected ClauseHelper() {
     }
@@ -217,6 +219,12 @@ public class ClauseHelper {
                 } else {
                     stringBuilder.append(orderBy.getField());
                     stringBuilder.append(SPACE);
+                    if (orderBy.getCollate() != null) {
+                        stringBuilder.append(COLLATE);
+                        stringBuilder.append(SPACE);
+                        stringBuilder.append(orderBy.getCollate().toString());
+                        stringBuilder.append(SPACE);
+                    }
                     stringBuilder.append(orderBy.getOrder().toString());
                 }
             }
@@ -241,7 +249,7 @@ public class ClauseHelper {
         TableDescription initialTableDesc = resolver.getTableDescription(join.getInitialTable());
         TableDescription addedTableDesc = resolver.getTableDescription(join.getAddedTable());
 
-        String stringBuilder = "ON" +
+        String stringBuilder = ON +
                 SPACE +
                 initialTableDesc.getTableRealName() +
                 "." +

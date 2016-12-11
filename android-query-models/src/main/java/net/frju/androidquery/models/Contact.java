@@ -78,7 +78,7 @@ public class Contact {
      * {@link ContactsContract.CommonDataKinds.GroupMembership} for this contact.
      */
     @Column(realName = ContactsContract.Contacts.IN_VISIBLE_GROUP)
-    public String inVisibleGroup;
+    public boolean inVisibleGroup;
 
     /**
      * An indicator of whether this contact has at least one phone number.
