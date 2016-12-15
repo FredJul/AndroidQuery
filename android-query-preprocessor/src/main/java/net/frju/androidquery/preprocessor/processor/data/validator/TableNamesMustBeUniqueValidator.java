@@ -3,7 +3,7 @@ package net.frju.androidquery.preprocessor.processor.data.validator;
 import net.frju.androidquery.preprocessor.processor.Validator;
 import net.frju.androidquery.preprocessor.processor.ValidatorException;
 import net.frju.androidquery.preprocessor.processor.data.Data;
-import net.frju.androidquery.preprocessor.processor.data.Table;
+import net.frju.androidquery.preprocessor.processor.data.DbModel;
 
 import java.util.List;
 
@@ -14,23 +14,23 @@ public class TableNamesMustBeUniqueValidator implements Validator {
         mData = data;
     }
 
-    private Table findDuplicateTable(List<Table> tables) {
-        for (Table table : tables) {
-            Table duplicateTable = getDuplicateTable(table, tables);
-            if (duplicateTable != null) {
-                return duplicateTable;
+    private DbModel findDuplicateTable(List<DbModel> dbModels) {
+        for (DbModel dbModel : dbModels) {
+            DbModel duplicateDbModel = getDuplicateTable(dbModel, dbModels);
+            if (duplicateDbModel != null) {
+                return duplicateDbModel;
             }
         }
 
         return null;
     }
 
-    private Table getDuplicateTable(Table check, List<Table> tables) {
+    private DbModel getDuplicateTable(DbModel check, List<DbModel> dbModels) {
         int occurrences = 0;
 
-        for (Table table : tables) {
-            if (check.getName().equals(table.getName())) occurrences++;
-            if (occurrences > 1) return table;
+        for (DbModel dbModel : dbModels) {
+            if (check.getName().equals(dbModel.getName())) occurrences++;
+            if (occurrences > 1) return dbModel;
         }
 
         return null;
@@ -38,9 +38,9 @@ public class TableNamesMustBeUniqueValidator implements Validator {
 
     @Override
     public void validate() throws ValidatorException {
-        Table table = findDuplicateTable(mData.getTables());
-        if (table != null) {
-            throw new ValidatorException(table.getElement(), "[The @Table: `" + table.getName() + "` is duplicated, table names must be unique]");
+        DbModel dbModel = findDuplicateTable(mData.getTables());
+        if (dbModel != null) {
+            throw new ValidatorException(dbModel.getElement(), "[The @DbModel: `" + dbModel.getName() + "` is duplicated, dbModel names must be unique]");
         }
     }
 }

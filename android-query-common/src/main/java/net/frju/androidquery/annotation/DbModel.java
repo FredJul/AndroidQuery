@@ -24,15 +24,13 @@ import java.lang.annotation.Target;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 @Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.FIELD)
-public @interface Column {
-    boolean primaryKey() default false;
-
-    boolean autoIncrement() default false;
-
-    boolean index() default false;
-
-    boolean unique() default false;
+@Target(ElementType.TYPE)
+public @interface DbModel {
+    ForeignKey[] foreignKeys() default {};
 
     String realName() default "";
+
+    Class<?> localDatabaseProvider() default Void.class;
+
+    Class<?> contentDatabaseProvider() default Void.class;
 }

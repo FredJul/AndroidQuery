@@ -1,7 +1,7 @@
 package net.frju.androidquery.preprocessor.processor.freemarker.method;
 
-import net.frju.androidquery.preprocessor.processor.data.Column;
-import net.frju.androidquery.preprocessor.processor.data.Table;
+import net.frju.androidquery.preprocessor.processor.data.DbField;
+import net.frju.androidquery.preprocessor.processor.data.DbModel;
 import net.frju.androidquery.preprocessor.processor.utils.StringUtils;
 
 import java.util.HashMap;
@@ -26,18 +26,18 @@ public class JoinReferencesMethod implements TemplateMethodModelEx {
 
     }
 
-    private String build(String joinTableName, List<Table> tables) {
+    private String build(String joinTableName, List<DbModel> dbModels) {
         StringBuilder sb = new StringBuilder();
 
-        Table joinTable = getTableFromName(joinTableName, tables);
+        DbModel joinDbModel = getTableFromName(joinTableName, dbModels);
 
-        if (joinTable != null) {
-            List<Column> columns = joinTable.getColumns();
-            for (Column column : columns) {
-                if (column.isJoinable(tables)) {
-                    Table columnTable = column.getRootTable(tables);
-                    sb.append(buildJoinTable(joinTable, column, columnTable));
-                    sb.append(build(column.getClassName(), tables));
+        if (joinDbModel != null) {
+            List<DbField> dbFields = joinDbModel.getFields();
+            for (DbField dbField : dbFields) {
+                if (dbField.isJoinable(dbModels)) {
+                    DbModel columnDbModel = dbField.getRootTable(dbModels);
+                    sb.append(buildJoinTable(joinDbModel, dbField, columnDbModel));
+                    sb.append(build(dbField.getClassName(), dbModels));
                 }
             }
         }
@@ -45,29 +45,29 @@ public class JoinReferencesMethod implements TemplateMethodModelEx {
         return sb.toString();
     }
 
-    private Table getTableFromName(String tableName, List<Table> tables) {
-        for (Table table : tables) {
-            if (table.getName().toLowerCase().equals(tableName.toLowerCase())) {
-                return table;
+    private DbModel getTableFromName(String tableName, List<DbModel> dbModels) {
+        for (DbModel dbModel : dbModels) {
+            if (dbModel.getName().toLowerCase().equals(tableName.toLowerCase())) {
+                return dbModel;
             }
         }
 
         return null;
     }
 
-    private String buildJoinTable(Table joinTable, Column column, Table table) {
-        return table.getPackage() +
+    private String buildJoinTable(DbModel joinDbModel, DbField dbField, DbModel dbModel) {
+        return dbModel.getPackage() +
                 "." +
-                table.getName() +
+                dbModel.getName() +
                 " " +
-                table.getName().toLowerCase() +
+                dbModel.getName().toLowerCase() +
                 " = new " +
-                table.getPackage() +
+                dbModel.getPackage() +
                 "." +
-                table.getName() +
+                dbModel.getName() +
                 "();" +
                 System.getProperty("line.separator") +
-                StringUtils.getSetter(joinTable.getName().toLowerCase(), table.getName().toLowerCase(), column) +
+                StringUtils.getSetter(joinDbModel.getName().toLowerCase(), dbModel.getName().toLowerCase(), dbField) +
                 ";" +
                 System.getProperty("line.separator") +
                 System.getProperty("line.separator");
@@ -82,8 +82,8 @@ public class JoinReferencesMethod implements TemplateMethodModelEx {
                 joinTableNameValue.toString() :
                 String.valueOf(joinTableNameValue);
 
-        List<Table> tables = Util.getTables(tablesValue);
-        
-        return build(joinTableName, tables);
+        List<DbModel> dbModels = Util.getTables(tablesValue);
+
+        return build(joinTableName, dbModels);
     }
 }

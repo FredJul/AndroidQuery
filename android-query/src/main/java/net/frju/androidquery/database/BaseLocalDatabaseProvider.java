@@ -56,13 +56,13 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         mIndexNames = new ArrayList<>();
 
         for (int i = 0; i < modelClassDef.length; i++) {
-            TableDescription tableDescription = getResolver().getTableDescription(modelClassDef[i]);
-            mSchemaArray[i] = tableDescription.getTableCreateQuery();
-            mColumnsSqlArray[i] = tableDescription.getColumnsSqlArray();
-            mTableRealNameArray[i] = tableDescription.getTableRealName();
-            mCreateIndexQuery[i] = tableDescription.getCreateIndexQuery();
+            DbModelDescriptor dbModelDescriptor = getResolver().getDbModelDescriptor(modelClassDef[i]);
+            mSchemaArray[i] = dbModelDescriptor.getTableCreateQuery();
+            mColumnsSqlArray[i] = dbModelDescriptor.getColumnsSqlArray();
+            mTableRealNameArray[i] = dbModelDescriptor.getTableRealName();
+            mCreateIndexQuery[i] = dbModelDescriptor.getCreateIndexQuery();
 
-            Collections.addAll(mIndexNames, tableDescription.getIndexNames());
+            Collections.addAll(mIndexNames, dbModelDescriptor.getIndexNames());
         }
 
         SQLiteOpenHelper openHelper = new SQLiteOpenHelper(context, getDbName(), null, getDbVersion()) {

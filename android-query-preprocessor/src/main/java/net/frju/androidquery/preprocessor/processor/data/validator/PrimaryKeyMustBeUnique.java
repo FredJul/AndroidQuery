@@ -2,9 +2,9 @@ package net.frju.androidquery.preprocessor.processor.data.validator;
 
 import net.frju.androidquery.preprocessor.processor.Validator;
 import net.frju.androidquery.preprocessor.processor.ValidatorException;
-import net.frju.androidquery.preprocessor.processor.data.Column;
 import net.frju.androidquery.preprocessor.processor.data.Data;
-import net.frju.androidquery.preprocessor.processor.data.Table;
+import net.frju.androidquery.preprocessor.processor.data.DbField;
+import net.frju.androidquery.preprocessor.processor.data.DbModel;
 
 import java.util.List;
 
@@ -16,12 +16,12 @@ public class PrimaryKeyMustBeUnique implements Validator {
         this.mData = data;
     }
 
-    private boolean primaryKeyIsUniqueInColumns(List<Column> columns) {
+    private boolean primaryKeyIsUniqueInColumns(List<DbField> dbFields) {
         int occurrences = 0;
 
-        if (columns != null) {
-            for (Column column : columns) {
-                if (column.hasPrimaryKey()) {
+        if (dbFields != null) {
+            for (DbField dbField : dbFields) {
+                if (dbField.hasPrimaryKey()) {
                     occurrences++;
                 }
             }
@@ -32,12 +32,12 @@ public class PrimaryKeyMustBeUnique implements Validator {
 
     @Override
     public void validate() throws ValidatorException {
-        for (Table table : mData.getTables()) {
-            if (primaryKeyIsUniqueInColumns(table.getColumns())) {
+        for (DbModel dbModel : mData.getTables()) {
+            if (primaryKeyIsUniqueInColumns(dbModel.getFields())) {
                 throw new ValidatorException(
-                        table.getElement(),
-                        "[Duplicate primaryKey's found in @Table: `" + table.getName()
-                                + ", only specify one primaryKey Column per table]"
+                        dbModel.getElement(),
+                        "[Duplicate primaryKey's found in @DbModel: `" + dbModel.getName()
+                                + ", only specify one primaryKey DbField per dbModel]"
                 );
             }
         }

@@ -246,8 +246,8 @@ public class ClauseHelper {
     }
 
     private String buildOnCondition(Join join, Resolver resolver) {
-        TableDescription initialTableDesc = resolver.getTableDescription(join.getInitialTable());
-        TableDescription addedTableDesc = resolver.getTableDescription(join.getAddedTable());
+        DbModelDescriptor initialTableDesc = resolver.getDbModelDescriptor(join.getInitialTable());
+        DbModelDescriptor addedTableDesc = resolver.getDbModelDescriptor(join.getAddedTable());
 
         String stringBuilder = ON +
                 SPACE +
@@ -268,8 +268,8 @@ public class ClauseHelper {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (Join join : joins) {
-            TableDescription tableDescription = resolver.getTableDescription(join.getAddedTable());
-            String table2RealName = tableDescription.getTableRealName();
+            DbModelDescriptor dbModelDescriptor = resolver.getDbModelDescriptor(join.getAddedTable());
+            String table2RealName = dbModelDescriptor.getTableRealName();
 
             stringBuilder
                     .append(" ")
@@ -340,8 +340,8 @@ public class ClauseHelper {
         List<String> joinColumns = new ArrayList<>();
 
         for (Join join : joins) {
-            TableDescription tableDescription = resolver.getTableDescription(join.getAddedTable());
-            String[] columnNames = tableDescription.getColumnNamesWithTablePrefix();
+            DbModelDescriptor dbModelDescriptor = resolver.getDbModelDescriptor(join.getAddedTable());
+            String[] columnNames = dbModelDescriptor.getColumnNamesWithTablePrefix();
 
             Collections.addAll(joinColumns, columnNames);
         }

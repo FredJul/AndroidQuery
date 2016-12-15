@@ -42,7 +42,7 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
     protected abstract String getAuthority();
 
     public Uri getUri(Class model) {
-        String tableRealName = getResolver().getTableDescription(model).getTableRealName();
+        String tableRealName = getResolver().getDbModelDescriptor(model).getTableRealName();
         return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableRealName)).build();
     }
 

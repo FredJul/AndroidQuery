@@ -27,7 +27,7 @@ public abstract class Query {
     protected static int save(Save save, Class<?> classDef, DatabaseProvider databaseProvider) {
         int nb = 0;
 
-        TableDescription table = databaseProvider.getResolver().getTableDescription(classDef);
+        DbModelDescriptor table = databaseProvider.getResolver().getDbModelDescriptor(classDef);
         boolean isPrimaryKeyAutoIncrement = table.isPrimaryKeyAutoIncrement();
 
         ArrayList<Object> modelsToInsert = new ArrayList<>();
@@ -56,24 +56,24 @@ public abstract class Query {
         if (insert.getModels() != null && insert.getModels().length > 0) {
             Object[] models = insert.getModels();
             ContentValues[] valuesArray = new ContentValues[models.length];
-            TableDescription tableDescription = getTableDescription(classDef, databaseProvider);
+            DbModelDescriptor dbModelDescriptor = getTableDescription(classDef, databaseProvider);
             for (int i = 0; i < models.length; i++) {
                 if (models[i] instanceof ModelListener) {
                     ((ModelListener) models[i]).onPreInsert();
                 }
-                valuesArray[i] = tableDescription.getContentValues(models[i]);
+                valuesArray[i] = dbModelDescriptor.getContentValues(models[i]);
             }
 
             if (models.length == 1) {
-                long newId = databaseProvider.insert(tableDescription.getTableRealName(), valuesArray[0]);
+                long newId = databaseProvider.insert(dbModelDescriptor.getTableRealName(), valuesArray[0]);
                 if (newId != -1) {
-                    tableDescription.setIdToModel(models[0], newId);
+                    dbModelDescriptor.setIdToModel(models[0], newId);
                     return 1;
                 } else {
                     return 0;
                 }
             } else {
-                return databaseProvider.bulkInsert(tableDescription.getTableRealName(), valuesArray);
+                return databaseProvider.bulkInsert(dbModelDescriptor.getTableRealName(), valuesArray);
             }
         }
 
@@ -82,11 +82,11 @@ public abstract class Query {
 
     protected static Cursor selectCursor(Select select, Class<?> classDef, DatabaseProvider databaseProvider) {
 
-        TableDescription tableDescription = getTableDescription(classDef, databaseProvider);
+        DbModelDescriptor dbModelDescriptor = getTableDescription(classDef, databaseProvider);
 
         return databaseProvider.query(
-                tableDescription.getTableRealName(),
-                select.getJoins() != null ? tableDescription.getColumnNamesWithTablePrefix() : tableDescription.getColumnNames(),
+                dbModelDescriptor.getTableRealName(),
+                select.getJoins() != null ? dbModelDescriptor.getColumnNamesWithTablePrefix() : dbModelDescriptor.getColumnNames(),
                 select.getClause(),
                 select.getJoins(),
                 null,
@@ -116,7 +116,7 @@ public abstract class Query {
     protected static int update(Update update, Class<?> classDef, DatabaseProvider databaseProvider) {
         Object[] models = update.getModels();
         if (models != null) {
-            TableDescription tableDesc = getTableDescription(classDef, databaseProvider);
+            DbModelDescriptor tableDesc = getTableDescription(classDef, databaseProvider);
             String primaryKeyName = tableDesc.getPrimaryKeyRealName();
             ContentValues[] valuesArray = new ContentValues[models.length];
             Condition[][] conditionsArray = new Condition[models.length][];
@@ -163,7 +163,7 @@ public abstract class Query {
         Object[] models = delete.getModels();
 
         if (models != null) {
-            TableDescription tableDesc = getTableDescription(classDef, databaseProvider);
+            DbModelDescriptor tableDesc = getTableDescription(classDef, databaseProvider);
             String primaryKeyName = tableDesc.getPrimaryKeyRealName();
             if (TextUtils.isEmpty(primaryKeyName)) {
                 throw new IllegalStateException("delete with model() method require a primary key");
@@ -226,7 +226,7 @@ public abstract class Query {
         );
     }
 
-    private static TableDescription getTableDescription(Class<?> classDef, DatabaseProvider databaseProvider) {
-        return databaseProvider.getResolver().getTableDescription(classDef);
+    private static DbModelDescriptor getTableDescription(Class<?> classDef, DatabaseProvider databaseProvider) {
+        return databaseProvider.getResolver().getDbModelDescriptor(classDef);
     }
 }

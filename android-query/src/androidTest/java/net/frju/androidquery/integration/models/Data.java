@@ -1,12 +1,12 @@
 package net.frju.androidquery.integration.models;
 
-import net.frju.androidquery.annotation.Column;
-import net.frju.androidquery.annotation.Table;
+import net.frju.androidquery.annotation.DbField;
+import net.frju.androidquery.annotation.DbModel;
 
-@Table(localDatabaseProvider = LocalDatabaseProvider.class)
+@DbModel(localDatabaseProvider = LocalDatabaseProvider.class)
 public class Data {
-    @Column(primaryKey = true, autoIncrement = true)
+    @DbField(primaryKey = true, autoIncrement = true)
     public long id;
-    @Column
+    @DbField
     public String name;
 }

@@ -1,7 +1,7 @@
 package net.frju.androidquery.preprocessor.processor.freemarker.method;
 
-import net.frju.androidquery.preprocessor.processor.data.Column;
-import net.frju.androidquery.preprocessor.processor.data.Table;
+import net.frju.androidquery.preprocessor.processor.data.DbField;
+import net.frju.androidquery.preprocessor.processor.data.DbModel;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +24,9 @@ public class IsPrimaryKeyAutoIncrementMethod implements TemplateMethodModelEx {
     private IsPrimaryKeyAutoIncrementMethod() {
     }
 
-    private String assembleIsPrimaryKeyAutoIncrement(Table table) {
-        for (Column column : table.getColumns()) {
-            if (column.hasPrimaryKey() && column.hasAutoIncrement()) {
+    private String assembleIsPrimaryKeyAutoIncrement(DbModel dbModel) {
+        for (DbField dbField : dbModel.getFields()) {
+            if (dbField.hasPrimaryKey() && dbField.hasAutoIncrement()) {
                 return "true";
             }
         }
@@ -38,15 +38,15 @@ public class IsPrimaryKeyAutoIncrementMethod implements TemplateMethodModelEx {
     public Object exec(List arguments) throws TemplateModelException {
         Object tableNameValue = arguments.get(0);
 
-        Table table;
+        DbModel dbModel;
         if (tableNameValue instanceof StringModel) {
             StringModel stringModel = (StringModel) tableNameValue;
-            table = (Table) stringModel.getAdaptedObject(Table.class);
+            dbModel = (DbModel) stringModel.getAdaptedObject(DbModel.class);
         } else {
             throw new IllegalStateException("The isPrimaryKeyAutoIncrement argument must be type of " +
-                    "net.frju.androidquery.preprocessor.processor.data.Table");
+                    "net.frju.androidquery.preprocessor.processor.data.DbModel");
         }
 
-        return assembleIsPrimaryKeyAutoIncrement(table);
+        return assembleIsPrimaryKeyAutoIncrement(dbModel);
     }
 }

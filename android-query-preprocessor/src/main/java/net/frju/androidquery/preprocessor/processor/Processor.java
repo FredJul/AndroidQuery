@@ -4,8 +4,8 @@ import com.google.auto.service.AutoService;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 
-import net.frju.androidquery.annotation.Column;
-import net.frju.androidquery.annotation.Table;
+import net.frju.androidquery.annotation.DbField;
+import net.frju.androidquery.annotation.DbModel;
 import net.frju.androidquery.annotation.TypeConverter;
 import net.frju.androidquery.preprocessor.processor.data.Data;
 import net.frju.androidquery.preprocessor.processor.data.parse.ParseAnnotations;
@@ -46,7 +46,7 @@ public class Processor extends AbstractProcessor {
 
 	@Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
-        Set<? extends Element> tableElements = env.getElementsAnnotatedWith(Table.class);
+        Set<? extends Element> tableElements = env.getElementsAnnotatedWith(DbModel.class);
 
         if (tableElements != null && tableElements.size() > 0) {
 
@@ -87,9 +87,9 @@ public class Processor extends AbstractProcessor {
 	@Override
 	public Set<String> getSupportedAnnotationTypes() {
 		Set<String> set = new HashSet<>();
-		set.add(Table.class.getCanonicalName());
-		set.add(Column.class.getCanonicalName());
-		return set;
+        set.add(DbModel.class.getCanonicalName());
+        set.add(DbField.class.getCanonicalName());
+        return set;
 	}
 
     private void validate(Data data) throws ValidatorException {

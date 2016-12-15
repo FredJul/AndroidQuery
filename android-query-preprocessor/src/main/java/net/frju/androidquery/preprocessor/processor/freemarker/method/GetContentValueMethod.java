@@ -1,7 +1,7 @@
 package net.frju.androidquery.preprocessor.processor.freemarker.method;
 
-import net.frju.androidquery.preprocessor.processor.data.Column;
 import net.frju.androidquery.preprocessor.processor.data.Data;
+import net.frju.androidquery.preprocessor.processor.data.DbField;
 import net.frju.androidquery.preprocessor.processor.data.TypeConverter;
 import net.frju.androidquery.preprocessor.processor.utils.StringUtils;
 
@@ -30,10 +30,10 @@ public class GetContentValueMethod implements TemplateMethodModelEx {
         mData = data;
     }
 
-    private String assembleContentValue(String varName, Column column) {
-        String getter = StringUtils.getGetter(varName, column);
+    private String assembleContentValue(String varName, DbField dbField) {
+        String getter = StringUtils.getGetter(varName, dbField);
 
-        TypeConverter converter = mData.getConverterFromClass(column.getType());
+        TypeConverter converter = mData.getConverterFromClass(dbField.getType());
         if (converter != null) {
             return "new " + converter.getName() + "().convertToDb(" + getter + ")";
         }
@@ -50,15 +50,15 @@ public class GetContentValueMethod implements TemplateMethodModelEx {
 
         Object columnValue = arguments.get(1);
 
-        Column column;
+        DbField dbField;
         if (columnValue instanceof StringModel) {
             StringModel stringModel = (StringModel) columnValue;
-            column = (Column) stringModel.getAdaptedObject(Column.class);
+            dbField = (DbField) stringModel.getAdaptedObject(DbField.class);
         } else {
             throw new IllegalStateException("The assembleContentValue argument must be type of " +
-                    "net.frju.androidquery.preprocessor.processor.data.Column");
+                    "net.frju.androidquery.preprocessor.processor.data.DbField");
         }
 
-        return assembleContentValue(varName, column);
+        return assembleContentValue(varName, dbField);
     }
 }

@@ -3,24 +3,24 @@ package net.frju.androidquery.models;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
-import net.frju.androidquery.annotation.Column;
-import net.frju.androidquery.annotation.Table;
+import net.frju.androidquery.annotation.DbField;
+import net.frju.androidquery.annotation.DbModel;
 
 @SuppressWarnings("unused")
-@Table(realName = "raw_contacts", contentDatabaseProvider = ContactContentDatabaseProvider.class)
+@DbModel(realName = "raw_contacts", contentDatabaseProvider = ContactContentDatabaseProvider.class)
 public class RawContact {
 
     /**
      * The unique ID for a row.
      */
-    @Column(primaryKey = true, autoIncrement = true, realName = ContactsContract.RawContacts._ID)
+    @DbField(primaryKey = true, autoIncrement = true, realName = ContactsContract.RawContacts._ID)
     public long id;
 
     /**
      * A reference to the {@link ContactsContract.Contacts#_ID} that this
      * data belongs to.
      */
-    @Column(realName = ContactsContract.RawContacts.CONTACT_ID, autoIncrement = true)
+    @DbField(realName = ContactsContract.RawContacts.CONTACT_ID, autoIncrement = true)
     public long contactId;
 
     /**
@@ -43,7 +43,7 @@ public class RawContact {
      *
      * @see #displayNameAlternative
      */
-    @Column(realName = ContactsContract.RawContacts.DISPLAY_NAME_PRIMARY)
+    @DbField(realName = ContactsContract.RawContacts.DISPLAY_NAME_PRIMARY)
     public String displayNamePrimary;
 
     /**
@@ -64,52 +64,52 @@ public class RawContact {
      * Other cases may be added later.
      * </p>
      */
-    @Column(realName = ContactsContract.RawContacts.DISPLAY_NAME_ALTERNATIVE)
+    @DbField(realName = ContactsContract.RawContacts.DISPLAY_NAME_ALTERNATIVE)
     public String displayNameAlternative;
 
     /**
      * The kind of data that is used as the display name for the contact, such as
      * structured name or email address.  See {@link ContactsContract.DisplayNameSources}.
      */
-    @Column(realName = ContactsContract.RawContacts.DISPLAY_NAME_SOURCE)
+    @DbField(realName = ContactsContract.RawContacts.DISPLAY_NAME_SOURCE)
     public String displayNameSource;
 
     /**
      * The name of the account instance to which this row belongs, which when paired with
      * {@link #accountType} identifies a specific account.
      */
-    @Column(realName = ContactsContract.RawContacts.ACCOUNT_NAME)
+    @DbField(realName = ContactsContract.RawContacts.ACCOUNT_NAME)
     public String accountName;
 
     /**
      * The type of account to which this row belongs, which when paired with
      * {@link #accountName} identifies a specific account.
      */
-    @Column(realName = ContactsContract.RawContacts.ACCOUNT_TYPE)
+    @DbField(realName = ContactsContract.RawContacts.ACCOUNT_TYPE)
     public String accountType;
 
     /**
      * The number of times a contact has been contacted
      */
-    @Column(realName = ContactsContract.RawContacts.TIMES_CONTACTED)
+    @DbField(realName = ContactsContract.RawContacts.TIMES_CONTACTED)
     public int timesContacted;
 
     /**
      * The last time a contact was contacted.
      */
-    @Column(realName = ContactsContract.RawContacts.LAST_TIME_CONTACTED)
+    @DbField(realName = ContactsContract.RawContacts.LAST_TIME_CONTACTED)
     public int lastTimeContacted;
 
     /**
      * Is the contact starred?
      */
-    @Column(realName = ContactsContract.RawContacts.STARRED)
+    @DbField(realName = ContactsContract.RawContacts.STARRED)
     public boolean starred;
 
     /**
      * URI for a custom ringtone associated with the contact. If null or missing,
      * the default ringtone is used.
      */
-    @Column(realName = ContactsContract.RawContacts.CUSTOM_RINGTONE)
+    @DbField(realName = ContactsContract.RawContacts.CUSTOM_RINGTONE)
     public Uri customRingtone;
 }

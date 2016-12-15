@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public interface TableDescription {
+public interface DbModelDescriptor {
     @NonNull
     String getTableRealName();
 

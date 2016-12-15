@@ -4,17 +4,17 @@ package net.frju.androidquery.preprocessor.processor.data;
 import java.util.List;
 
 public class Data {
-    private List<Table> mTables;
+    private List<DbModel> mDbModels;
 
     private List<TypeConverter> mConverters;
 
 
-    public List<Table> getTables() {
-        return mTables;
+    public List<DbModel> getTables() {
+        return mDbModels;
     }
 
-    public void setTables(List<Table> newVal) {
-        mTables = newVal;
+    public void setTables(List<DbModel> newVal) {
+        mDbModels = newVal;
     }
 
     public List<TypeConverter> getConverters() {

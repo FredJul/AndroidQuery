@@ -19,7 +19,7 @@ package net.frju.androidquery.database;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public interface Resolver {
-    TableDescription getTableDescription(Class<?> classDef);
+    DbModelDescriptor getDbModelDescriptor(Class<?> classDef);
 
     Class<?>[] getModelsForProvider(Class<? extends DatabaseProvider> providerClass);
 

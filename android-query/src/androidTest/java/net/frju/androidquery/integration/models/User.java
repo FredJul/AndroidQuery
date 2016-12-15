@@ -1,10 +1,10 @@
 package net.frju.androidquery.integration.models;
 
-import net.frju.androidquery.annotation.Column;
+import net.frju.androidquery.annotation.DbField;
+import net.frju.androidquery.annotation.DbModel;
 import net.frju.androidquery.annotation.ForeignKey;
-import net.frju.androidquery.annotation.Table;
 
-@Table(
+@DbModel(
         foreignKeys = {
                 @ForeignKey(
                         targetTable = "Log",
@@ -16,24 +16,24 @@ import net.frju.androidquery.annotation.Table;
         realName = "users"
 )
 public class User {
-    @Column(primaryKey = true, realName = "_id")
+    @DbField(primaryKey = true, realName = "_id")
     public long id; // no index supplied for the @Test testNoUserIndexesAreCreated()
-    @Column
+    @DbField
     public String username;
-    @Column
+    @DbField
     public long timestamp;
-    @Column
+    @DbField
     public boolean isRegistered;
-    @Column
+    @DbField
     public byte[] profilePicture;
-    @Column
+    @DbField
     public double rating;
-    @Column
+    @DbField
     public int count;
-    @Column
+    @DbField
     public long logId;
-    @Column
+    @DbField
     public Log log;
-    @Column
+    @DbField
     public String nullField;
 }

@@ -1,6 +1,6 @@
 package net.frju.androidquery.preprocessor.processor.freemarker.method;
 
-import net.frju.androidquery.preprocessor.processor.data.Column;
+import net.frju.androidquery.preprocessor.processor.data.DbField;
 import net.frju.androidquery.preprocessor.processor.utils.StringUtils;
 
 import java.util.HashMap;
@@ -39,15 +39,15 @@ public class GetColumnSetterMethod implements TemplateMethodModelEx {
 
         Object columnValue = arguments.get(2);
 
-        Column column;
+        DbField dbField;
         if (columnValue instanceof StringModel) {
             StringModel stringModel = (StringModel) columnValue;
-            column = (Column) stringModel.getAdaptedObject(Column.class);
+            dbField = (DbField) stringModel.getAdaptedObject(DbField.class);
         } else {
             throw new IllegalStateException("The assembleColumnSetter argument must be type of " +
-                    "net.frju.androidquery.preprocessor.processor.data.Column");
+                    "net.frju.androidquery.preprocessor.processor.data.DbField");
         }
 
-        return StringUtils.getSetter(varName, valueVarName, column);
+        return StringUtils.getSetter(varName, valueVarName, dbField);
     }
 }

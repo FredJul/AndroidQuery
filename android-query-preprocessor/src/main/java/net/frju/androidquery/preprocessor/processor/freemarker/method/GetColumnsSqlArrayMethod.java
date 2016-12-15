@@ -1,8 +1,8 @@
 package net.frju.androidquery.preprocessor.processor.freemarker.method;
 
-import net.frju.androidquery.preprocessor.processor.data.Column;
 import net.frju.androidquery.preprocessor.processor.data.Data;
-import net.frju.androidquery.preprocessor.processor.data.Table;
+import net.frju.androidquery.preprocessor.processor.data.DbField;
+import net.frju.androidquery.preprocessor.processor.data.DbModel;
 import net.frju.androidquery.preprocessor.processor.utils.StringUtils;
 
 import java.util.HashMap;
@@ -30,20 +30,20 @@ public class GetColumnsSqlArrayMethod implements TemplateMethodModelEx {
     }
 
     /**
-     * Build a create table statement based on the provided tableName and members
+     * Build a create dbModel statement based on the provided tableName and members
      *
-     * @param    table    The table that the statement will create
-     * @return A SQL statement that will create a table
+     * @param    dbModel    The dbModel that the statement will create
+     * @return A SQL statement that will create a dbModel
      */
-    private String buildColumnSqlStringArray(Table table, List<Table> tables) {
+    private String buildColumnSqlStringArray(DbModel dbModel, List<DbModel> dbModels) {
         StringBuilder statementBuilder = new StringBuilder();
 
         statementBuilder.append("new String[] {");
 
-        for (int i = 0; i < table.getColumns().size(); i++) {
-            Column column = table.getColumns().get(i);
+        for (int i = 0; i < dbModel.getFields().size(); i++) {
+            DbField dbField = dbModel.getFields().get(i);
 
-            String columnSql = StringUtils.columnToSql(mData, tables, column);
+            String columnSql = StringUtils.columnToSql(mData, dbModels, dbField);
             if (columnSql != null) {
                 statementBuilder.append("\"");
                 statementBuilder.append(columnSql);
@@ -65,17 +65,17 @@ public class GetColumnsSqlArrayMethod implements TemplateMethodModelEx {
         Object tableNameValue = arguments.get(0);
         Object tablesValue = arguments.get(1);
 
-        Table table;
+        DbModel dbModel;
         if (tableNameValue instanceof StringModel) {
             StringModel stringModel = (StringModel) tableNameValue;
-            table = (Table) stringModel.getAdaptedObject(Table.class);
+            dbModel = (DbModel) stringModel.getAdaptedObject(DbModel.class);
         } else {
             throw new IllegalStateException("The assembleCreateTable argument must be type of " +
-                    "net.frju.androidquery.preprocessor.processor.data.Table");
+                    "net.frju.androidquery.preprocessor.processor.data.DbModel");
         }
 
-        List<Table> tables = Util.getTables(tablesValue);
+        List<DbModel> dbModels = Util.getTables(tablesValue);
 
-        return buildColumnSqlStringArray(table, tables);
+        return buildColumnSqlStringArray(dbModel, dbModels);
     }
 }

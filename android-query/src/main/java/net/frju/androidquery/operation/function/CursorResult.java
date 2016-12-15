@@ -4,8 +4,8 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.support.annotation.NonNull;
 
+import net.frju.androidquery.database.DbModelDescriptor;
 import net.frju.androidquery.database.Resolver;
-import net.frju.androidquery.database.TableDescription;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,11 +30,11 @@ public class CursorResult<T> extends CursorWrapper implements Iterable<T> {
         }
     }
 
-    private final TableDescription mQuery;
+    private final DbModelDescriptor mQuery;
 
     public CursorResult(@NonNull Class<T> type, @NonNull Resolver resolver, Cursor cursor) {
         super(cursor);
-        mQuery = resolver.getTableDescription(type);
+        mQuery = resolver.getDbModelDescriptor(type);
     }
 
     public T get() {

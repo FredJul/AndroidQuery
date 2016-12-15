@@ -1,8 +1,8 @@
 package net.frju.androidquery.preprocessor.processor.utils;
 
-import net.frju.androidquery.preprocessor.processor.data.Column;
 import net.frju.androidquery.preprocessor.processor.data.Data;
-import net.frju.androidquery.preprocessor.processor.data.Table;
+import net.frju.androidquery.preprocessor.processor.data.DbField;
+import net.frju.androidquery.preprocessor.processor.data.DbModel;
 import net.frju.androidquery.preprocessor.processor.data.TypeConverter;
 
 import java.util.List;
@@ -22,28 +22,28 @@ public class StringUtils {
         return Character.toLowerCase(value.charAt(0)) + value.substring(1);
     }
 
-    public static String columnToSql(Data data, List<Table> tables, Column column) {
-        if (!column.isJoinable(tables)) {
+    public static String columnToSql(Data data, List<DbModel> dbModels, DbField dbField) {
+        if (!dbField.isJoinable(dbModels)) {
             StringBuilder statementBuilder = new StringBuilder();
 
-            statementBuilder.append(column.getRealName());
+            statementBuilder.append(dbField.getRealName());
             statementBuilder.append(" ");
 
-            String sqlType = StringUtils.getSQLDataTypeFromClassRef(column.getType());
+            String sqlType = StringUtils.getSQLDataTypeFromClassRef(dbField.getType());
             if (sqlType.length() == 0) {
-                TypeConverter converter = data.getConverterFromClass(column.getType());
+                TypeConverter converter = data.getConverterFromClass(dbField.getType());
                 if (converter != null) {
                     sqlType = StringUtils.getSQLDataTypeFromClassRef(converter.getDbClassName());
                 }
             }
             statementBuilder.append(sqlType);
 
-            if (column.hasPrimaryKey()) {
+            if (dbField.hasPrimaryKey()) {
                 statementBuilder.append(" PRIMARY KEY");
-                if (column.hasAutoIncrement()) {
+                if (dbField.hasAutoIncrement()) {
                     statementBuilder.append(" AUTOINCREMENT");
                 }
-            } else if (column.isUnique()) {
+            } else if (dbField.isUnique()) {
                 statementBuilder.append(" UNIQUE");
             }
 
@@ -53,18 +53,18 @@ public class StringUtils {
         return null;
     }
 
-    public static String getGetter(String varName, Column column) {
-        String getter = varName + "." + column.getName();
-        if (!column.isIsPublicField()) {
-            getter = varName + ".get" + StringUtils.firstToUpperCase(column.getName()) + "()";
+    public static String getGetter(String varName, DbField dbField) {
+        String getter = varName + "." + dbField.getName();
+        if (!dbField.isIsPublicField()) {
+            getter = varName + ".get" + StringUtils.firstToUpperCase(dbField.getName()) + "()";
         }
         return getter;
     }
 
-    public static String getSetter(String varName, String valueVarName, Column column) {
-        String setter = varName + "." + column.getName() + " = " + valueVarName;
-        if (!column.isIsPublicField()) {
-            setter = varName + ".set" + StringUtils.firstToUpperCase(column.getName()) + "(" + valueVarName + ")";
+    public static String getSetter(String varName, String valueVarName, DbField dbField) {
+        String setter = varName + "." + dbField.getName() + " = " + valueVarName;
+        if (!dbField.isIsPublicField()) {
+            setter = varName + ".set" + StringUtils.firstToUpperCase(dbField.getName()) + "(" + valueVarName + ")";
         }
         return setter;
     }

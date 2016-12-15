@@ -1,7 +1,7 @@
 package net.frju.androidquery.preprocessor.processor.data.parse;
 
 import net.frju.androidquery.preprocessor.processor.data.Data;
-import net.frju.androidquery.preprocessor.processor.data.Table;
+import net.frju.androidquery.preprocessor.processor.data.DbModel;
 import net.frju.androidquery.preprocessor.processor.data.TypeConverter;
 
 import java.util.ArrayList;
@@ -19,16 +19,16 @@ public class ParseAnnotations {
         return data;
     }
 
-    private static List<Table> assembleTables(Set<? extends Element> elements) {
-        List<Table> tables = new ArrayList<>();
+    private static List<DbModel> assembleTables(Set<? extends Element> elements) {
+        List<DbModel> dbModels = new ArrayList<>();
 
         for (Element element : elements) {
             if (element.getKind().isClass()) {
-                tables.add(ParseTableAnnotation.parseTable(element));
+                dbModels.add(ParseTableAnnotation.parseTable(element));
             }
         }
 
-        return tables;
+        return dbModels;
     }
 
     private static List<TypeConverter> assembleConverters(Set<? extends Element> elements) {

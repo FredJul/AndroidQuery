@@ -1,7 +1,7 @@
 package net.frju.androidquery.preprocessor.processor.freemarker.method;
 
-import net.frju.androidquery.preprocessor.processor.data.Column;
-import net.frju.androidquery.preprocessor.processor.data.Table;
+import net.frju.androidquery.preprocessor.processor.data.DbField;
+import net.frju.androidquery.preprocessor.processor.data.DbModel;
 import net.frju.androidquery.preprocessor.processor.utils.StringUtils;
 
 import java.util.HashMap;
@@ -26,10 +26,10 @@ public class GetPrimaryKeySetterMethod implements TemplateMethodModelEx {
     private GetPrimaryKeySetterMethod() {
     }
 
-    private String assemblePrimaryKeySetter(String varName, String valueVarName, Table table) {
-        for (Column column : table.getColumns()) {
-            if (column.hasPrimaryKey()) {
-                return StringUtils.getSetter(varName, valueVarName, column);
+    private String assemblePrimaryKeySetter(String varName, String valueVarName, DbModel dbModel) {
+        for (DbField dbField : dbModel.getFields()) {
+            if (dbField.hasPrimaryKey()) {
+                return StringUtils.getSetter(varName, valueVarName, dbField);
             }
         }
 
@@ -50,15 +50,15 @@ public class GetPrimaryKeySetterMethod implements TemplateMethodModelEx {
 
         Object tableValue = arguments.get(2);
 
-        Table table;
+        DbModel dbModel;
         if (tableValue instanceof StringModel) {
             StringModel stringModel = (StringModel) tableValue;
-            table = (Table) stringModel.getAdaptedObject(Table.class);
+            dbModel = (DbModel) stringModel.getAdaptedObject(DbModel.class);
         } else {
             throw new IllegalStateException("The assemblePrimaryKeySetter argument must be type of " +
-                    "net.frju.androidquery.preprocessor.processor.data.Table");
+                    "net.frju.androidquery.preprocessor.processor.data.DbModel");
         }
 
-        return assemblePrimaryKeySetter(varName, valueVarName, table);
+        return assemblePrimaryKeySetter(varName, valueVarName, dbModel);
     }
 }

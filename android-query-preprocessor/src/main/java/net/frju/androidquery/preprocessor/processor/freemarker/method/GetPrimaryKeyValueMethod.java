@@ -1,8 +1,8 @@
 package net.frju.androidquery.preprocessor.processor.freemarker.method;
 
-import net.frju.androidquery.preprocessor.processor.data.Column;
 import net.frju.androidquery.preprocessor.processor.data.Data;
-import net.frju.androidquery.preprocessor.processor.data.Table;
+import net.frju.androidquery.preprocessor.processor.data.DbField;
+import net.frju.androidquery.preprocessor.processor.data.DbModel;
 import net.frju.androidquery.preprocessor.processor.data.TypeConverter;
 import net.frju.androidquery.preprocessor.processor.utils.StringUtils;
 
@@ -31,16 +31,16 @@ public class GetPrimaryKeyValueMethod implements TemplateMethodModelEx {
         mData = data;
     }
 
-    private String assemblePrimaryKeyValue(String varName, Table table) {
-        for (Column column : table.getColumns()) {
-            if (column.hasPrimaryKey()) {
-                TypeConverter converter = mData.getConverterFromClass(column.getType());
+    private String assemblePrimaryKeyValue(String varName, DbModel dbModel) {
+        for (DbField dbField : dbModel.getFields()) {
+            if (dbField.hasPrimaryKey()) {
+                TypeConverter converter = mData.getConverterFromClass(dbField.getType());
                 if (converter != null) {
-                    return "new " + converter.getName() + "().convertToDb(" + StringUtils.getGetter(varName, column) + ")";
+                    return "new " + converter.getName() + "().convertToDb(" + StringUtils.getGetter(varName, dbField) + ")";
                 }
 
-                String result = StringUtils.getGetter(varName, column);
-                switch (column.getType()) {
+                String result = StringUtils.getGetter(varName, dbField);
+                switch (dbField.getType()) {
                     case "long":
                         result = "java.lang.Long.valueOf(" + result + ")";
                         break;
@@ -64,7 +64,7 @@ public class GetPrimaryKeyValueMethod implements TemplateMethodModelEx {
                     case "java.lang.String":
                         break; // Nothing to do
                     default:
-                        throw new IllegalStateException("PrimaryKey can not have the type: " + column.getType());
+                        throw new IllegalStateException("PrimaryKey can not have the type: " + dbField.getType());
                 }
                 return result;
             }
@@ -82,15 +82,15 @@ public class GetPrimaryKeyValueMethod implements TemplateMethodModelEx {
 
         Object tableNameValue = arguments.get(1);
 
-        Table table;
+        DbModel dbModel;
         if (tableNameValue instanceof StringModel) {
             StringModel stringModel = (StringModel) tableNameValue;
-            table = (Table) stringModel.getAdaptedObject(Table.class);
+            dbModel = (DbModel) stringModel.getAdaptedObject(DbModel.class);
         } else {
             throw new IllegalStateException("The getPrimaryKeyValue argument must be type of " +
-                    "net.frju.androidquery.preprocessor.processor.data.Table");
+                    "net.frju.androidquery.preprocessor.processor.data.DbModel");
         }
 
-        return assemblePrimaryKeyValue(varName, table);
+        return assemblePrimaryKeyValue(varName, dbModel);
     }
 }

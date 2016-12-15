@@ -1,8 +1,8 @@
 package net.frju.androidquery.preprocessor.processor.freemarker.method;
 
-import net.frju.androidquery.preprocessor.processor.data.Column;
 import net.frju.androidquery.preprocessor.processor.data.Data;
-import net.frju.androidquery.preprocessor.processor.data.Table;
+import net.frju.androidquery.preprocessor.processor.data.DbField;
+import net.frju.androidquery.preprocessor.processor.data.DbModel;
 import net.frju.androidquery.preprocessor.processor.utils.StringUtils;
 
 import java.util.HashMap;
@@ -29,23 +29,23 @@ public class JoinSettersMethod implements TemplateMethodModelEx {
         mData = data;
     }
 
-    private String build(String joinTableName, List<Table> tables) {
+    private String build(String joinTableName, List<DbModel> dbModels) {
         StringBuilder sb = new StringBuilder();
 
-        for (Table table : tables) {
-            if (table.getName().toLowerCase().equals(joinTableName.toLowerCase())) {
-                List<Column> columns = table.getColumns();
-                for (Column column : columns) {
-                    if (column.isJoinable(tables)) {
-                        sb.append(build(column.getClassName(), tables));
+        for (DbModel dbModel : dbModels) {
+            if (dbModel.getName().toLowerCase().equals(joinTableName.toLowerCase())) {
+                List<DbField> dbFields = dbModel.getFields();
+                for (DbField dbField : dbFields) {
+                    if (dbField.isJoinable(dbModels)) {
+                        sb.append(build(dbField.getClassName(), dbModels));
                     } else {
                         sb.append("} else if (cursor.getColumnName(x).equals(\"")
-                                .append(table.getRealName())
+                                .append(dbModel.getRealName())
                                 .append("_")
-                                .append(column.getName())
+                                .append(dbField.getName())
                                 .append("\")) {")
                                 .append(System.getProperty("line.separator"))
-                                .append(StringUtils.getSetter(table.getName().toLowerCase(), StringUtils.assembleTypeGetter(mData, column.getType()), column))
+                                .append(StringUtils.getSetter(dbModel.getName().toLowerCase(), StringUtils.assembleTypeGetter(mData, dbField.getType()), dbField))
                                 .append(";");
                     }
 
@@ -68,9 +68,9 @@ public class JoinSettersMethod implements TemplateMethodModelEx {
                 joinTableNameValue.toString() :
                 String.valueOf(joinTableNameValue);
 
-        List<Table> tables = Util.getTables(tablesValue);
+        List<DbModel> dbModels = Util.getTables(tablesValue);
 
-        String join = build(joinTableName, tables);
+        String join = build(joinTableName, dbModels);
         if (join.length() > 0) {
             // remove the trailing "}"
             join = join.substring(0,join.length()-1);

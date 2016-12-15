@@ -1,10 +1,10 @@
 package net.frju.androidquery.integration.models;
 
-import net.frju.androidquery.annotation.Column;
+import net.frju.androidquery.annotation.DbField;
+import net.frju.androidquery.annotation.DbModel;
 import net.frju.androidquery.annotation.ForeignKey;
-import net.frju.androidquery.annotation.Table;
 
-@Table(
+@DbModel(
         foreignKeys = {
                 @ForeignKey(
                         targetTable = "User",
@@ -15,18 +15,18 @@ import net.frju.androidquery.annotation.Table;
         localDatabaseProvider = LocalDatabaseProvider.class
 )
 public class Post {
-    @Column(index = true)
+    @DbField(index = true)
     public long id;
-    @Column
+    @DbField
     public String title;
-    @Column
+    @DbField
     public String body;
-    @Column
+    @DbField
     public long timestamp;
-    @Column
+    @DbField
     public long userId;
-    @Column
+    @DbField
     public User user;
-    @Column
+    @DbField
     public Data data;
 }

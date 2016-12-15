@@ -1,6 +1,6 @@
 package net.frju.androidquery.preprocessor.processor.data.parse;
 
-import net.frju.androidquery.preprocessor.processor.data.Column;
+import net.frju.androidquery.preprocessor.processor.data.DbField;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
@@ -9,22 +9,22 @@ import javax.lang.model.type.TypeMirror;
 
 class ParseColumnAnnotation {
 
-    static Column parseColumn(Element element) {
+    static DbField parseColumn(Element element) {
 
         String type = assembleType(element);
 
-        Column column = new Column();
-        column.setName(assembleName(element));
-        column.setRealName(assembleRealName(element));
-        column.setIsIndex(assembleIsIndex(element));
-        column.setIsUnique(assembleIsUnique(element));
-        column.setHasPrimaryKey(assemblePrimaryKey(element));
-        column.setHasAutoIncrement(assembleAutoIncrement(element));
-        column.setType(type);
-        column.setClassName(assembleClassName(type));
-        column.setIsPublicField(assembleIsPublic(element));
+        DbField dbField = new DbField();
+        dbField.setName(assembleName(element));
+        dbField.setRealName(assembleRealName(element));
+        dbField.setIsIndex(assembleIsIndex(element));
+        dbField.setIsUnique(assembleIsUnique(element));
+        dbField.setHasPrimaryKey(assemblePrimaryKey(element));
+        dbField.setHasAutoIncrement(assembleAutoIncrement(element));
+        dbField.setType(type);
+        dbField.setClassName(assembleClassName(type));
+        dbField.setIsPublicField(assembleIsPublic(element));
 
-        return column;
+        return dbField;
     }
 
     private static String assembleName(Element element) {
@@ -33,8 +33,8 @@ class ParseColumnAnnotation {
     }
 
     private static String assembleRealName(Element element) {
-        net.frju.androidquery.annotation.Column column = element.getAnnotation(net.frju.androidquery.annotation.Column.class);
-        return column.realName();
+        net.frju.androidquery.annotation.DbField dbField = element.getAnnotation(net.frju.androidquery.annotation.DbField.class);
+        return dbField.realName();
     }
 
     private static String assembleType(Element element) {
@@ -48,23 +48,23 @@ class ParseColumnAnnotation {
     }
 
     private static boolean assembleIsIndex(Element element) {
-        net.frju.androidquery.annotation.Column column = element.getAnnotation(net.frju.androidquery.annotation.Column.class);
-        return column != null && column.index();
+        net.frju.androidquery.annotation.DbField dbField = element.getAnnotation(net.frju.androidquery.annotation.DbField.class);
+        return dbField != null && dbField.index();
     }
 
     private static boolean assembleIsUnique(Element element) {
-        net.frju.androidquery.annotation.Column column = element.getAnnotation(net.frju.androidquery.annotation.Column.class);
-        return column != null && column.unique();
+        net.frju.androidquery.annotation.DbField dbField = element.getAnnotation(net.frju.androidquery.annotation.DbField.class);
+        return dbField != null && dbField.unique();
     }
 
     private static boolean assemblePrimaryKey(Element element) {
-        net.frju.androidquery.annotation.Column column = element.getAnnotation(net.frju.androidquery.annotation.Column.class);
-        return column.primaryKey();
+        net.frju.androidquery.annotation.DbField dbField = element.getAnnotation(net.frju.androidquery.annotation.DbField.class);
+        return dbField.primaryKey();
     }
 
     private static boolean assembleAutoIncrement(Element element) {
-        net.frju.androidquery.annotation.Column column = element.getAnnotation(net.frju.androidquery.annotation.Column.class);
-        return column.autoIncrement();
+        net.frju.androidquery.annotation.DbField dbField = element.getAnnotation(net.frju.androidquery.annotation.DbField.class);
+        return dbField.autoIncrement();
     }
 
     private static boolean assembleIsPublic(Element element) {

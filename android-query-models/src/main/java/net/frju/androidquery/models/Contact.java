@@ -3,24 +3,24 @@ package net.frju.androidquery.models;
 import android.net.Uri;
 import android.provider.ContactsContract;
 
-import net.frju.androidquery.annotation.Column;
-import net.frju.androidquery.annotation.Table;
+import net.frju.androidquery.annotation.DbField;
+import net.frju.androidquery.annotation.DbModel;
 
 @SuppressWarnings("unused")
-@Table(realName = "contacts", contentDatabaseProvider = ContactContentDatabaseProvider.class)
+@DbModel(realName = "contacts", contentDatabaseProvider = ContactContentDatabaseProvider.class)
 public class Contact {
 
     /**
      * The unique ID for a row.
      */
-    @Column(primaryKey = true, autoIncrement = true, realName = ContactsContract.Contacts._ID)
+    @DbField(primaryKey = true, autoIncrement = true, realName = ContactsContract.Contacts._ID)
     public long id;
 
     /**
      * The display name for the contact.
      * <P>Type: TEXT</P>
      */
-    @Column(realName = ContactsContract.Contacts.DISPLAY_NAME)
+    @DbField(realName = ContactsContract.Contacts.DISPLAY_NAME)
     public String displayName;
 
     /**
@@ -29,7 +29,7 @@ public class Contact {
      * {@link ContactsContract.DisplayPhoto#CONTENT_URI}.  Otherwise, this will
      * be populated with the same value as {@link #photoThumbnailUri}.
      */
-    @Column(realName = ContactsContract.Contacts.PHOTO_URI)
+    @DbField(realName = ContactsContract.Contacts.PHOTO_URI)
     public Uri photoUri;
 
     /**
@@ -38,51 +38,51 @@ public class Contact {
      * and thumbnail photos, {@link #photoThumbnailUri} and {@link #photoUri} can contain
      * the same value, but either both shall be null or both not null.
      */
-    @Column(realName = ContactsContract.Contacts.PHOTO_THUMBNAIL_URI)
+    @DbField(realName = ContactsContract.Contacts.PHOTO_THUMBNAIL_URI)
     public Uri photoThumbnailUri;
 
     /**
      * The number of times a contact has been contacted
      */
-    @Column(realName = ContactsContract.Contacts.TIMES_CONTACTED)
+    @DbField(realName = ContactsContract.Contacts.TIMES_CONTACTED)
     public int timesContacted;
 
     /**
      * The last time a contact was contacted.
      */
-    @Column(realName = ContactsContract.Contacts.LAST_TIME_CONTACTED)
+    @DbField(realName = ContactsContract.Contacts.LAST_TIME_CONTACTED)
     public int lastTimeContacted;
 
     /**
      * Is the contact starred?
      */
-    @Column(realName = ContactsContract.Contacts.STARRED)
+    @DbField(realName = ContactsContract.Contacts.STARRED)
     public boolean starred;
 
     /**
      * URI for a custom ringtone associated with the contact. If null or missing,
      * the default ringtone is used.
      */
-    @Column(realName = ContactsContract.Contacts.CUSTOM_RINGTONE)
+    @DbField(realName = ContactsContract.Contacts.CUSTOM_RINGTONE)
     public Uri customRingtone;
 
     /**
      * An opaque value that contains hints on how to find the contact if
      * its row id changed as a result of a sync or aggregation.
      */
-    @Column(realName = ContactsContract.Contacts.LOOKUP_KEY)
+    @DbField(realName = ContactsContract.Contacts.LOOKUP_KEY)
     public Uri lookupKey;
 
     /**
      * Flag that reflects the {@link ContactsContract.Groups#GROUP_VISIBLE} state of any
      * {@link ContactsContract.CommonDataKinds.GroupMembership} for this contact.
      */
-    @Column(realName = ContactsContract.Contacts.IN_VISIBLE_GROUP)
+    @DbField(realName = ContactsContract.Contacts.IN_VISIBLE_GROUP)
     public boolean inVisibleGroup;
 
     /**
      * An indicator of whether this contact has at least one phone number.
      */
-    @Column(realName = ContactsContract.Contacts.HAS_PHONE_NUMBER)
+    @DbField(realName = ContactsContract.Contacts.HAS_PHONE_NUMBER)
     public boolean hasPhoneNumber;
 }

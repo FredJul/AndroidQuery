@@ -52,7 +52,7 @@ public class Q {
         }
 
         @Override
-        public @NonNull TableDescription getTableDescription(@NonNull Class<?> classDef) {
+        public @NonNull DbModelDescriptor getDbModelDescriptor(@NonNull Class<?> classDef) {
             <#assign isAssignableFrom>
                 <#list tables as table>
                 } else if (classDef.isAssignableFrom(${table.getPackage()}.${table.getName()}.class)) {
@@ -62,7 +62,7 @@ public class Q {
             </#assign>
 
             ${isAssignableFrom?trim?remove_beginning("} else ")} else {
-                throw new IllegalStateException("Please ensure all SQL tables are annotated with @Table");
+                throw new IllegalStateException("Please ensure all SQL tables are annotated with @DbModel");
             }
         }
 
@@ -77,7 +77,7 @@ public class Q {
             </#list>
 
             if (result.size() == 0) {
-                throw new IllegalStateException("This provider does not have any @Table models registered into that resolver");
+                throw new IllegalStateException("This provider does not have any @DbModel models registered into that resolver");
             }
 
             return result.toArray(new Class<?>[result.size()]);
@@ -97,25 +97,25 @@ public class Q {
     <#list tables as table>
 
         <#assign getColumnNames>
-            <#list table.getMutableColumns(tables) as column>
+            <#list table.getMutableFields(tables) as column>
                 "${column.getRealName()}",
             </#list>
         </#assign>
         <#assign getColumnNamesWithTablePrefix>
-            <#list table.getMutableColumns(tables) as column>
+            <#list table.getMutableFields(tables) as column>
                 "${table.getRealName()}.${column.getRealName()}",
             </#list>
         </#assign>
 
-        <#assign unionInsertColumnNames><#list table.getMutableColumns(tables) as column>${column.getRealName()},</#list></#assign>
+        <#assign unionInsertColumnNames><#list table.getMutableFields(tables) as column>${column.getRealName()},</#list></#assign>
 
         <#assign packagedTableName>
             ${table.getPackage()}.${table.getName()}
         </#assign>
 
-        public static class ${table.getName()} implements TableDescription {
+        public static class ${table.getName()} implements DbModelDescriptor {
 
-            <#list table.getColumns() as column>
+            <#list table.getFields() as column>
                 public static final String ${formatConstant(column.getName())} = "${column.getRealName()}";
             </#list>
 
@@ -142,7 +142,7 @@ public class Q {
             @Override
             public String[] getIndexNames() {
                 return new String[]{
-                <#list table.getMutableColumns(tables) as column>
+                <#list table.getMutableFields(tables) as column>
                     <#if column.isIndex()>
                         "${table.getName()}_${column.getName()}_index",
                     </#if>
@@ -154,7 +154,7 @@ public class Q {
             public String getCreateIndexQuery() {
                 StringBuilder sb = new StringBuilder();
 
-                <#list table.getMutableColumns(tables) as column>
+                <#list table.getMutableFields(tables) as column>
                     <#if column.isIndex()>
                         sb.append("CREATE INDEX ${table.getName()}_${column.getName()}_index ON ${table.getRealName()} (${column.getRealName()});");
                     </#if>
@@ -172,7 +172,7 @@ public class Q {
 
                     for (int x = 0; x < cursor.getColumnCount(); x++) {
                         <#assign retrieveSQLSelectResults>
-                            <#list table.getColumns() as column>
+                            <#list table.getFields() as column>
                                 <#if column.isJoinable(tables)>
                                     ${join(column.getClassName(),tables)}
                                 <#else>
@@ -247,7 +247,7 @@ public class Q {
 
                 ContentValues contentValues = new ContentValues();
 
-                <#list table.getMutableColumns(tables) as column>
+                <#list table.getMutableFields(tables) as column>
                     <#if !column.hasAutoIncrement()>
                     contentValues.put(${formatConstant(column.getName())}, ${getContentValue(table.getName()?lower_case, column)});
                     </#if>

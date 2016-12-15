@@ -1,9 +1,9 @@
 package net.frju.androidquery.preprocessor.processor.data.parse;
 
 import net.frju.androidquery.preprocessor.processor.Context;
-import net.frju.androidquery.preprocessor.processor.data.Column;
+import net.frju.androidquery.preprocessor.processor.data.DbField;
+import net.frju.androidquery.preprocessor.processor.data.DbModel;
 import net.frju.androidquery.preprocessor.processor.data.ForeignKey;
-import net.frju.androidquery.preprocessor.processor.data.Table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,23 +19,23 @@ import static net.frju.androidquery.preprocessor.processor.data.parse.ParseColum
 
 class ParseTableAnnotation {
 
-    static Table parseTable(Element element) {
+    static DbModel parseTable(Element element) {
 
         String name = assembleName(element);
         String tablePackage = assemblePackage(element);
 
-        Table table = new Table();
-        table.setElement(element);
-        table.setName(name);
-        table.setRealName(assembleRealName(element));
-        table.setPackage(tablePackage);
-        table.setType(tablePackage + "." + name);
-        table.setColumns(assembleColumns(element));
-        table.setForeignKeys(assembleForeignKeys(element));
-        table.setLocalDatabaseProvider(assembleLocalDatabaseProvider(element));
-        table.setContentDatabaseProvider(assembleContentDatabaseProvider(element));
+        DbModel dbModel = new DbModel();
+        dbModel.setElement(element);
+        dbModel.setName(name);
+        dbModel.setRealName(assembleRealName(element));
+        dbModel.setPackage(tablePackage);
+        dbModel.setType(tablePackage + "." + name);
+        dbModel.setFields(assembleColumns(element));
+        dbModel.setForeignKeys(assembleForeignKeys(element));
+        dbModel.setLocalDatabaseProvider(assembleLocalDatabaseProvider(element));
+        dbModel.setContentDatabaseProvider(assembleContentDatabaseProvider(element));
 
-        return table;
+        return dbModel;
     }
 
     private static String assembleName(Element element) {
@@ -44,10 +44,10 @@ class ParseTableAnnotation {
     }
 
     private static TypeMirror assembleLocalDatabaseProvider(Element element) {
-        net.frju.androidquery.annotation.Table tableAnnotation = element.getAnnotation(net.frju.androidquery.annotation.Table.class);
+        net.frju.androidquery.annotation.DbModel dbModelAnnotation = element.getAnnotation(net.frju.androidquery.annotation.DbModel.class);
         TypeMirror type = null;
         try {
-            tableAnnotation.localDatabaseProvider();
+            dbModelAnnotation.localDatabaseProvider();
         } catch (MirroredTypeException mte) {
             type = mte.getTypeMirror();
         }
@@ -55,10 +55,10 @@ class ParseTableAnnotation {
     }
 
     private static TypeMirror assembleContentDatabaseProvider(Element element) {
-        net.frju.androidquery.annotation.Table tableAnnotation = element.getAnnotation(net.frju.androidquery.annotation.Table.class);
+        net.frju.androidquery.annotation.DbModel dbModelAnnotation = element.getAnnotation(net.frju.androidquery.annotation.DbModel.class);
         TypeMirror type = null;
         try {
-            tableAnnotation.contentDatabaseProvider();
+            dbModelAnnotation.contentDatabaseProvider();
         } catch (MirroredTypeException mte) {
             type = mte.getTypeMirror();
         }
@@ -66,8 +66,8 @@ class ParseTableAnnotation {
     }
 
     private static String assembleRealName(Element element) {
-        net.frju.androidquery.annotation.Table tableAnnotation = element.getAnnotation(net.frju.androidquery.annotation.Table.class);
-        return tableAnnotation.realName();
+        net.frju.androidquery.annotation.DbModel dbModelAnnotation = element.getAnnotation(net.frju.androidquery.annotation.DbModel.class);
+        return dbModelAnnotation.realName();
     }
 
     private static String assemblePackage(Element element) {
@@ -76,21 +76,21 @@ class ParseTableAnnotation {
         return name.toString();
     }
 
-    private static List<Column> assembleColumns(Element element) {
-        List<Column> columns = new ArrayList<>();
+    private static List<DbField> assembleColumns(Element element) {
+        List<DbField> dbFields = new ArrayList<>();
 
         for (Element childElement : Context.getInstance().getElementUtils().getAllMembers((TypeElement) element)) {
-            if (childElement.getKind().isField() && childElement.getAnnotation(net.frju.androidquery.annotation.Column.class) != null) {
-                columns.add(parseColumn(childElement));
+            if (childElement.getKind().isField() && childElement.getAnnotation(net.frju.androidquery.annotation.DbField.class) != null) {
+                dbFields.add(parseColumn(childElement));
             }
         }
 
-        return columns;
+        return dbFields;
     }
 
     private static List<ForeignKey> assembleForeignKeys(Element element) {
-        net.frju.androidquery.annotation.Table tableAnnotation = element.getAnnotation(net.frju.androidquery.annotation.Table.class);
-        net.frju.androidquery.annotation.ForeignKey[] foreignKeysAnnotation = tableAnnotation.foreignKeys();
+        net.frju.androidquery.annotation.DbModel dbModelAnnotation = element.getAnnotation(net.frju.androidquery.annotation.DbModel.class);
+        net.frju.androidquery.annotation.ForeignKey[] foreignKeysAnnotation = dbModelAnnotation.foreignKeys();
 
         List<ForeignKey> foreignKeys = new ArrayList<>();
 

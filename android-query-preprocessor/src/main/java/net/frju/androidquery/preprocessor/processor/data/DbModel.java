@@ -6,13 +6,13 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 
-public class Table {
+public class DbModel {
     private Element mElement;
     private String mName;
     private String mRealName;
     private String mPackage;
     private String mType;
-    private List<Column> mColumns;
+    private List<DbField> mDbFields;
     private List<ForeignKey> mForeignKeys;
     private TypeMirror mLocalDatabaseProvider;
     private TypeMirror mContentDatabaseProvider;
@@ -57,36 +57,36 @@ public class Table {
         mType = newVal;
     }
 
-    public List<Column> getColumns() {
-        return mColumns;
+    public List<DbField> getFields() {
+        return mDbFields;
     }
 
-    public void setColumns(List<Column> newVal) {
-        mColumns = newVal;
+    public void setFields(List<DbField> newVal) {
+        mDbFields = newVal;
     }
 
     public String getPrimaryKeyName() {
-        for (Column column : mColumns) {
-            if (column.hasPrimaryKey()) {
-                return column.getName();
+        for (DbField dbField : mDbFields) {
+            if (dbField.hasPrimaryKey()) {
+                return dbField.getName();
             }
         }
         return "";
     }
 
     public String getPrimaryKeyRealName() {
-        for (Column column : mColumns) {
-            if (column.hasPrimaryKey()) {
-                return column.getRealName();
+        for (DbField dbField : mDbFields) {
+            if (dbField.hasPrimaryKey()) {
+                return dbField.getRealName();
             }
         }
         return "";
     }
 
     public String getPrimaryKeyType() {
-        for (Column column : mColumns) {
-            if (column.hasPrimaryKey()) {
-                return column.getType();
+        for (DbField dbField : mDbFields) {
+            if (dbField.hasPrimaryKey()) {
+                return dbField.getType();
             }
         }
         return "";
@@ -118,15 +118,15 @@ public class Table {
 
     /**
      * (Used in Q.java freemarker template)
-     * @param tables all tables
+     * @param dbModels all dbModels
      * @return  all columns ignoring any object mappings
      */
-    public List<Column> getMutableColumns(List<Table> tables) {
-        List<Column> withoutOtherModels = new ArrayList<>();
+    public List<DbField> getMutableFields(List<DbModel> dbModels) {
+        List<DbField> withoutOtherModels = new ArrayList<>();
 
-        for (Column column : mColumns) {
-            if (!column.isJoinable(tables)) {
-                withoutOtherModels.add(column);
+        for (DbField dbField : mDbFields) {
+            if (!dbField.isJoinable(dbModels)) {
+                withoutOtherModels.add(dbField);
             }
         }
 

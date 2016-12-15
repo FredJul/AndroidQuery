@@ -2,7 +2,7 @@ package net.frju.androidquery.preprocessor.processor.data;
 
 import java.util.List;
 
-public class Column {
+public class DbField {
     private String mName;
     private String mRealName;
     private String mClassName;
@@ -85,11 +85,11 @@ public class Column {
         mIsPublicField = newVal;
     }
 
-    public Table getRootTable(List<Table> tables) {
-        if (isJoinable(tables)) {
-            for (Table table : tables) {
-                if (table.getType().equals(mType)) {
-                    return table;
+    public DbModel getRootTable(List<DbModel> dbModels) {
+        if (isJoinable(dbModels)) {
+            for (DbModel dbModel : dbModels) {
+                if (dbModel.getType().equals(mType)) {
+                    return dbModel;
                 }
             }
         }
@@ -97,9 +97,9 @@ public class Column {
         throw new IllegalStateException("Only joinable columns can call getRootTable");
     }
 
-    public boolean isJoinable(List<Table> tables) {
-        for (Table table : tables) {
-            if (table.getName().toLowerCase().equals(mClassName.toLowerCase())) {
+    public boolean isJoinable(List<DbModel> dbModels) {
+        for (DbModel dbModel : dbModels) {
+            if (dbModel.getName().toLowerCase().equals(mClassName.toLowerCase())) {
                 return true;
             }
         }
