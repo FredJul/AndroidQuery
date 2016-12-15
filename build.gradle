@@ -22,7 +22,7 @@ ext {
 
     publishedGroupId = 'net.frju.androidquery'
 
-    libraryVersion = '1.2.7'
+    libraryVersion = '1.2.8'
 
     developerId = 'frju'
     developerName = 'Frédéric Julian'
