@@ -2,6 +2,7 @@ package net.frju.androidquery.integration.models;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import net.frju.androidquery.database.BaseLocalDatabaseProvider;
 import net.frju.androidquery.database.Resolver;
@@ -26,6 +27,7 @@ public class LocalDatabaseProvider extends BaseLocalDatabaseProvider {
         return 1;
     }
 
+    @NonNull
     @Override
     protected Resolver getResolver() {
         return Q.getResolver();
