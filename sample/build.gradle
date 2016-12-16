@@ -7,7 +7,8 @@ android {
     defaultConfig {
         applicationId "net.frju.androidquery.sample"
         minSdkVersion 15
-        targetSdkVersion 22
+        //noinspection OldTargetApi
+        targetSdkVersion 22 // to avoid runtime permission handling
         versionCode 1
         versionName "1.0"
     }
@@ -29,6 +30,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 
-    compile 'com.android.support:recyclerview-v7:25.0.1'
-    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile 'com.android.support:appcompat-v7:25.1.0'
 }

@@ -32,10 +32,6 @@ import net.frju.androidquery.operation.join.Join;
 import net.frju.androidquery.operation.keyword.Limit;
 import net.frju.androidquery.operation.keyword.OrderBy;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
@@ -46,7 +42,6 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
     private final String[][] mColumnsSqlArray;
     private final String[] mTableRealNameArray;
     private final String[] mCreateIndexQuery;
-    private final List<String> mIndexNames;
 
     public BaseLocalDatabaseProvider(Context context) {
         super(context);
@@ -58,7 +53,6 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         mTableRealNameArray = new String[modelCount];
         mColumnsSqlArray = new String[modelCount][];
         mCreateIndexQuery = new String[modelCount];
-        mIndexNames = new ArrayList<>();
 
         for (int i = 0; i < modelClassDef.length; i++) {
             DbModelDescriptor dbModelDescriptor = getResolver().getDbModelDescriptor(modelClassDef[i]);
@@ -66,8 +60,6 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
             mColumnsSqlArray[i] = dbModelDescriptor.getColumnsSqlArray();
             mTableRealNameArray[i] = dbModelDescriptor.getTableDbName();
             mCreateIndexQuery[i] = dbModelDescriptor.getCreateIndexQuery();
-
-            Collections.addAll(mIndexNames, dbModelDescriptor.getIndexNames());
         }
 
         SQLiteOpenHelper openHelper = new SQLiteOpenHelper(context, getDbName(), null, getDbVersion()) {
@@ -145,10 +137,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         long newId = mDatabase.insert(tableName, null, values);
 
         if (newId != -1) {
-            Uri uri = getUri(tableName);
-            if (uri != null) {
-                mContext.getContentResolver().notifyChange(uri, null);
-            }
+            mContext.getContentResolver().notifyChange(getUri(tableName), null);
         }
 
         return newId;
@@ -168,10 +157,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         mDatabase.endTransaction();
 
         if (nbInsert > 0) {
-            Uri uri = getUri(tableName);
-            if (uri != null) {
-                mContext.getContentResolver().notifyChange(uri, null);
-            }
+            mContext.getContentResolver().notifyChange(getUri(tableName), null);
         }
 
         return nbInsert;
@@ -195,10 +181,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
         if (nbUpdate > 0) {
             //TODO do not always use the table Uri
-            Uri uri = getUri(tableName);
-            if (uri != null) {
-                mContext.getContentResolver().notifyChange(uri, null);
-            }
+            mContext.getContentResolver().notifyChange(getUri(tableName), null);
         }
 
         return nbUpdate;
@@ -235,9 +218,8 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
                     mClauseHelper.getLimit(limit)
             );
 
-            Uri uri = getUri(tableName);
-            if (cursor != null && uri != null) {
-                cursor.setNotificationUri(mContext.getContentResolver(), uri);
+            if (cursor != null) {
+                cursor.setNotificationUri(mContext.getContentResolver(), getUri(tableName));
             }
 
             return cursor;
@@ -254,10 +236,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
         if (nbDeleted > 0 || TextUtils.isEmpty(whereClause)) {
             //TODO do not always use the table Uri
-            Uri uri = getUri(tableName);
-            if (uri != null) {
-                mContext.getContentResolver().notifyChange(uri, null);
-            }
+            mContext.getContentResolver().notifyChange(getUri(tableName), null);
         }
 
         return nbDeleted;
