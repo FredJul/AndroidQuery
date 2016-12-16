@@ -20,10 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <provider
-            android:name="net.frju.androidquery.sample.provider.ModelContentProvider"
-            android:authorities="net.frju.androidquery.sample.provider.ModelContentProvider"
-            android:exported="false" />
     </application>
 
 </manifest>

@@ -15,15 +15,20 @@
  */
 package net.frju.androidquery.database;
 
+import android.support.annotation.NonNull;
+
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public interface Resolver {
-    DbModelDescriptor getDbModelDescriptor(Class<?> classDef);
+    @NonNull
+    Class<?> getModelClassFromName(@NonNull String modelDbName);
 
+    @NonNull
+    DbModelDescriptor getDbModelDescriptor(@NonNull Class<?> classDef);
+
+    @NonNull
     Class<?>[] getModelsForProvider(Class<? extends DatabaseProvider> providerClass);
 
-    BaseLocalDatabaseProvider getLocalDatabaseProviderForModel(Class<?> model);
-
-    BaseContentDatabaseProvider getContentDatabaseProviderForModel(Class<?> model);
+    DatabaseProvider getDatabaseProviderForModel(Class<?> model);
 }

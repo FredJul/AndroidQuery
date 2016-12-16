@@ -17,10 +17,12 @@ package net.frju.androidquery.database;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 
 import net.frju.androidquery.operation.condition.Condition;
 import net.frju.androidquery.operation.join.Join;
@@ -34,20 +36,22 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
 
     protected final ContentResolver mContentResolver;
 
-    public BaseContentDatabaseProvider(ContentResolver contentResolver) {
-        super();
-        mContentResolver = contentResolver;
+    public BaseContentDatabaseProvider(Context context) {
+        super(context);
+        mContentResolver = context.getContentResolver();
     }
 
-    protected abstract String getAuthority();
-
-    public Uri getUri(Class model) {
-        String tableRealName = getResolver().getDbModelDescriptor(model).getTableRealName();
-        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableRealName)).build();
+    public
+    @NonNull
+    Uri getUri(@NonNull Class model) {
+        String tableDbName = getResolver().getDbModelDescriptor(model).getTableDbName();
+        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableDbName)).build();
     }
 
-    protected Uri getUri(String tableName) {
-        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableName)).build();
+    public
+    @NonNull
+    Uri getUri(@NonNull String modelDbName) {
+        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(modelDbName)).build();
     }
 
     protected long insert(String tableName, ContentValues values) {
@@ -68,6 +72,7 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         int nbUpdate = 0;
 
         for (int i = 0; i < valuesArray.length; i++) {
+            //TODO do not always use the table Uri
             nbUpdate += mContentResolver.update(getUri(tableName),
                     valuesArray[i],
                     mClauseHelper.getCondition(conditionsArray[i]),
@@ -148,13 +153,5 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
 
     protected Cursor rawQuery(String sql) {
         throw new SQLException("Raw queries not supported by ContentProvider");
-    }
-
-    static String firstToUpperCase(String value) {
-        return Character.toUpperCase(value.charAt(0)) + value.substring(1);
-    }
-
-    static String firstToLowerCase(String value) {
-        return Character.toLowerCase(value.charAt(0)) + value.substring(1);
     }
 }

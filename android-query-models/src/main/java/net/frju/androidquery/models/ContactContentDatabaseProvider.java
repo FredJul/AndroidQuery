@@ -1,7 +1,8 @@
 package net.frju.androidquery.models;
 
-import android.content.ContentResolver;
+import android.content.Context;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 
 import net.frju.androidquery.database.BaseContentDatabaseProvider;
 import net.frju.androidquery.database.Resolver;
@@ -10,17 +11,21 @@ import net.frju.androidquery.models.gen.Q;
 
 public class ContactContentDatabaseProvider extends BaseContentDatabaseProvider {
 
-    public ContactContentDatabaseProvider(ContentResolver contentResolver) {
-        super(contentResolver);
+    public ContactContentDatabaseProvider(Context context) {
+        super(context);
     }
 
     @Override
-    protected String getAuthority() {
+    protected
+    @NonNull
+    String getAuthority() {
         return ContactsContract.AUTHORITY;
     }
 
     @Override
-    protected Resolver getResolver() {
+    protected
+    @NonNull
+    Resolver getResolver() {
         return Q.getResolver();
     }
 }

@@ -251,13 +251,13 @@ public class ClauseHelper {
 
         String stringBuilder = ON +
                 SPACE +
-                initialTableDesc.getTableRealName() +
+                initialTableDesc.getTableDbName() +
                 "." +
                 join.getInitialTableColumn() +
                 SPACE +
                 "=" +
                 SPACE +
-                addedTableDesc.getTableRealName() +
+                addedTableDesc.getTableDbName() +
                 "." +
                 join.getAddedTableColumn();
 
@@ -269,7 +269,7 @@ public class ClauseHelper {
 
         for (Join join : joins) {
             DbModelDescriptor dbModelDescriptor = resolver.getDbModelDescriptor(join.getAddedTable());
-            String table2RealName = dbModelDescriptor.getTableRealName();
+            String table2RealName = dbModelDescriptor.getTableDbName();
 
             stringBuilder
                     .append(" ")

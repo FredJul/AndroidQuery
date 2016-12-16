@@ -8,13 +8,13 @@ import net.frju.androidquery.annotation.DbModel;
 
 @SuppressWarnings("unused")
 @TargetApi(24)
-@DbModel(realName = "blocked", contentDatabaseProvider = BlockedNumberContentDatabaseProvider.class)
+@DbModel(dbName = "blocked", databaseProvider = BlockedNumberContentDatabaseProvider.class)
 public class BlockedNumber {
 
     /**
      * Auto-generated ID field which monotonically increases.
      */
-    @DbField(primaryKey = true, autoIncrement = true, realName = BlockedNumberContract.BlockedNumbers.COLUMN_ID)
+    @DbField(primaryKey = true, autoIncrement = true, dbName = BlockedNumberContract.BlockedNumbers.COLUMN_ID)
     public long id;
 
     /**
@@ -23,13 +23,13 @@ public class BlockedNumber {
      * <p>Optional in {@code insert}.  When not specified, the system tries to generate it
      * assuming the current country. (Which will still be null if the number is not valid.)
      */
-    @DbField(realName = BlockedNumberContract.BlockedNumbers.COLUMN_E164_NUMBER)
+    @DbField(dbName = BlockedNumberContract.BlockedNumbers.COLUMN_E164_NUMBER)
     public String e164Number;
 
     /**
      * Phone number to block.
      * <p>Must be specified in {@code insert}.
      */
-    @DbField(realName = BlockedNumberContract.BlockedNumbers.COLUMN_ORIGINAL_NUMBER)
+    @DbField(dbName = BlockedNumberContract.BlockedNumbers.COLUMN_ORIGINAL_NUMBER)
     public String originalNumber;
 }

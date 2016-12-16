@@ -12,7 +12,7 @@ import net.frju.androidquery.annotation.ForeignKey;
                         localColumn = "userId"
                 )
         },
-        localDatabaseProvider = LocalDatabaseProvider.class
+        databaseProvider = LocalDatabaseProvider.class
 )
 public class Post {
     @DbField(index = true)

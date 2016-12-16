@@ -27,13 +27,12 @@ class ParseTableAnnotation {
         DbModel dbModel = new DbModel();
         dbModel.setElement(element);
         dbModel.setName(name);
-        dbModel.setRealName(assembleRealName(element));
+        dbModel.setDbName(assembleRealName(element));
         dbModel.setPackage(tablePackage);
         dbModel.setType(tablePackage + "." + name);
         dbModel.setFields(assembleColumns(element));
         dbModel.setForeignKeys(assembleForeignKeys(element));
-        dbModel.setLocalDatabaseProvider(assembleLocalDatabaseProvider(element));
-        dbModel.setContentDatabaseProvider(assembleContentDatabaseProvider(element));
+        dbModel.setDatabaseProvider(assembleDatabaseProvider(element));
 
         return dbModel;
     }
@@ -43,22 +42,11 @@ class ParseTableAnnotation {
         return name.toString();
     }
 
-    private static TypeMirror assembleLocalDatabaseProvider(Element element) {
+    private static TypeMirror assembleDatabaseProvider(Element element) {
         net.frju.androidquery.annotation.DbModel dbModelAnnotation = element.getAnnotation(net.frju.androidquery.annotation.DbModel.class);
         TypeMirror type = null;
         try {
-            dbModelAnnotation.localDatabaseProvider();
-        } catch (MirroredTypeException mte) {
-            type = mte.getTypeMirror();
-        }
-        return type;
-    }
-
-    private static TypeMirror assembleContentDatabaseProvider(Element element) {
-        net.frju.androidquery.annotation.DbModel dbModelAnnotation = element.getAnnotation(net.frju.androidquery.annotation.DbModel.class);
-        TypeMirror type = null;
-        try {
-            dbModelAnnotation.contentDatabaseProvider();
+            dbModelAnnotation.databaseProvider();
         } catch (MirroredTypeException mte) {
             type = mte.getTypeMirror();
         }
@@ -67,7 +55,7 @@ class ParseTableAnnotation {
 
     private static String assembleRealName(Element element) {
         net.frju.androidquery.annotation.DbModel dbModelAnnotation = element.getAnnotation(net.frju.androidquery.annotation.DbModel.class);
-        return dbModelAnnotation.realName();
+        return dbModelAnnotation.dbName();
     }
 
     private static String assemblePackage(Element element) {

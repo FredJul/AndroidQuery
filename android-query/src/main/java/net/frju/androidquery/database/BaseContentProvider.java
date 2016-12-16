@@ -118,11 +118,11 @@ public abstract class BaseContentProvider extends ContentProvider {
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         String[] nameAndSelection = getTableRealNameAndSelection(uri, selection);
 
-        int count = mDatabase.delete(nameAndSelection[0], nameAndSelection[1], selectionArgs);
-        if (count > 0) {
+        int nbDeleted = mDatabase.delete(nameAndSelection[0], nameAndSelection[1], selectionArgs);
+        if (nbDeleted > 0 || TextUtils.isEmpty(nameAndSelection[1])) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
-        return count;
+        return nbDeleted;
     }
 }

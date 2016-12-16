@@ -26,7 +26,7 @@ public class StringUtils {
         if (!dbField.isJoinable(dbModels)) {
             StringBuilder statementBuilder = new StringBuilder();
 
-            statementBuilder.append(dbField.getRealName());
+            statementBuilder.append(dbField.getDbName());
             statementBuilder.append(" ");
 
             String sqlType = StringUtils.getSQLDataTypeFromClassRef(dbField.getType());

@@ -28,9 +28,7 @@ import java.lang.annotation.Target;
 public @interface DbModel {
     ForeignKey[] foreignKeys() default {};
 
-    String realName() default "";
+    String dbName() default "";
 
-    Class<?> localDatabaseProvider() default Void.class;
-
-    Class<?> contentDatabaseProvider() default Void.class;
+    Class<?> databaseProvider();
 }

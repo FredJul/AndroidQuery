@@ -39,7 +39,7 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
         StringBuilder statementBuilder = new StringBuilder();
 
         statementBuilder.append("CREATE TABLE ");
-        statementBuilder.append(dbModel.getRealName());
+        statementBuilder.append(dbModel.getDbName());
         statementBuilder.append(" (");
 
         for (int i = 0; i < dbModel.getFields().size(); i++) {

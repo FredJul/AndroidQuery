@@ -3,9 +3,9 @@ package net.frju.androidquery.integration.models;
 import net.frju.androidquery.annotation.DbField;
 import net.frju.androidquery.annotation.DbModel;
 
-@DbModel(localDatabaseProvider = LocalDatabaseProvider.class)
+@DbModel(databaseProvider = LocalDatabaseProvider.class)
 public class ModelWithGettersSetters {
-    @DbField(primaryKey = true, autoIncrement = true, realName = "_id")
+    @DbField(primaryKey = true, autoIncrement = true, dbName = "_id")
     private long id;
     @DbField
     protected String name;

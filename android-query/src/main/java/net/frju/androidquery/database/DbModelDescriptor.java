@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
  */
 public interface DbModelDescriptor {
     @NonNull
-    String getTableRealName();
+    String getTableDbName();
 
     @NonNull
     String getTableCreateQuery();
@@ -32,7 +32,7 @@ public interface DbModelDescriptor {
     @NonNull
     String[] getColumnsSqlArray();
 
-    String getPrimaryKeyRealName();
+    String getPrimaryKeyDbName();
     String[] getIndexNames();
     String getCreateIndexQuery();
     String[] getColumnNames();

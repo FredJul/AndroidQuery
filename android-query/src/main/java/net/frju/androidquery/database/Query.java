@@ -65,7 +65,7 @@ public abstract class Query {
             }
 
             if (models.length == 1) {
-                long newId = databaseProvider.insert(dbModelDescriptor.getTableRealName(), valuesArray[0]);
+                long newId = databaseProvider.insert(dbModelDescriptor.getTableDbName(), valuesArray[0]);
                 if (newId != -1) {
                     dbModelDescriptor.setIdToModel(models[0], newId);
                     return 1;
@@ -73,7 +73,7 @@ public abstract class Query {
                     return 0;
                 }
             } else {
-                return databaseProvider.bulkInsert(dbModelDescriptor.getTableRealName(), valuesArray);
+                return databaseProvider.bulkInsert(dbModelDescriptor.getTableDbName(), valuesArray);
             }
         }
 
@@ -85,7 +85,7 @@ public abstract class Query {
         DbModelDescriptor dbModelDescriptor = getTableDescription(classDef, databaseProvider);
 
         return databaseProvider.query(
-                dbModelDescriptor.getTableRealName(),
+                dbModelDescriptor.getTableDbName(),
                 select.getJoins() != null ? dbModelDescriptor.getColumnNamesWithTablePrefix() : dbModelDescriptor.getColumnNames(),
                 select.getClause(),
                 select.getJoins(),
@@ -117,7 +117,7 @@ public abstract class Query {
         Object[] models = update.getModels();
         if (models != null) {
             DbModelDescriptor tableDesc = getTableDescription(classDef, databaseProvider);
-            String primaryKeyName = tableDesc.getPrimaryKeyRealName();
+            String primaryKeyName = tableDesc.getPrimaryKeyDbName();
             ContentValues[] valuesArray = new ContentValues[models.length];
             Condition[][] conditionsArray = new Condition[models.length][];
             for (int i = 0; i < models.length; i++) {
@@ -139,13 +139,13 @@ public abstract class Query {
                 valuesArray[i] = tableDesc.getContentValues(model);
             }
             return databaseProvider.bulkUpdate(
-                    tableDesc.getTableRealName(),
+                    tableDesc.getTableDbName(),
                     valuesArray,
                     conditionsArray
             );
         } else {
             return databaseProvider.bulkUpdate(
-                    getTableDescription(classDef, databaseProvider).getTableRealName(),
+                    getTableDescription(classDef, databaseProvider).getTableDbName(),
                     new ContentValues[]{update.getContentValues()},
                     new Condition[][]{update.getConditions()}
             );
@@ -154,7 +154,7 @@ public abstract class Query {
 
     protected static long count(Count count, Class<?> classDef, DatabaseProvider databaseProvider) {
         return databaseProvider.count(
-                getTableDescription(classDef, databaseProvider).getTableRealName(),
+                getTableDescription(classDef, databaseProvider).getTableDbName(),
                 count.getClause()
         );
     }
@@ -164,7 +164,7 @@ public abstract class Query {
 
         if (models != null) {
             DbModelDescriptor tableDesc = getTableDescription(classDef, databaseProvider);
-            String primaryKeyName = tableDesc.getPrimaryKeyRealName();
+            String primaryKeyName = tableDesc.getPrimaryKeyDbName();
             if (TextUtils.isEmpty(primaryKeyName)) {
                 throw new IllegalStateException("delete with model() method require a primary key");
             }
@@ -181,12 +181,12 @@ public abstract class Query {
             Condition condition = new In(primaryKeyName, keys);
 
             return databaseProvider.delete(
-                    tableDesc.getTableRealName(),
+                    tableDesc.getTableDbName(),
                     new Condition[]{condition}
             );
         } else {
             return databaseProvider.delete(
-                    getTableDescription(classDef, databaseProvider).getTableRealName(),
+                    getTableDescription(classDef, databaseProvider).getTableDbName(),
                     delete.getConditions()
             );
         }

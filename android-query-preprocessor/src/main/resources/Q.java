@@ -30,25 +30,30 @@ public class Q {
 
     public static class DefaultResolver implements Resolver {
 
-        private static HashMap<Class<?>, BaseLocalDatabaseProvider> mLocalProviders = new HashMap<>();
-        private static HashMap<Class<?>, BaseContentDatabaseProvider> mContentProviders = new HashMap<>();
+        private static HashMap<Class<?>, DatabaseProvider> mProviders = new HashMap<>();
 
         public void init(@NonNull Context context) {
-            BaseLocalDatabaseProvider localProvider;
-            BaseContentDatabaseProvider contentProvider;
+            DatabaseProvider provider;
 
             <#list tables as table>
-            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
-                    localProvider = new ${table.getLocalDatabaseProvider().toString()}(context.getApplicationContext());
-                    mLocalProviders.put(${table.getPackage()}.${table.getName()}.class, localProvider);
-                    mLocalProviders.put(${table.getName()}.class, localProvider); // to be more error-tolerant
-            </#if>
-            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-                    contentProvider = new ${table.getContentDatabaseProvider().toString()}(context.getContentResolver());
-                    mContentProviders.put(${table.getPackage()}.${table.getName()}.class, contentProvider);
-                    mContentProviders.put(${table.getName()}.class, contentProvider); // to be more error-tolerant
+            <#if table.getDatabaseProvider().toString() != "java.lang.Void">
+                    provider = new ${table.getDatabaseProvider().toString()}(context.getApplicationContext());
+                    mProviders.put(${table.getPackage()}.${table.getName()}.class, provider);
+                    mProviders.put(${table.getName()}.class, provider); // to be more error-tolerant
             </#if>
             </#list>
+        }
+
+        @Override
+        public @NonNull Class<?> getModelClassFromName(@NonNull String modelDbName) {
+            switch (modelDbName) {
+            <#list tables as table>
+            case "${table.getDbName()}":
+                return ${table.getPackage()}.${table.getName()}.class;
+            </#list>
+            default:
+                throw new IllegalStateException("The modelDbName " + modelDbName + " is not a correct");
+            }
         }
 
         @Override
@@ -71,7 +76,7 @@ public class Q {
             ArrayList<Class<?>> result = new ArrayList<>();
 
             <#list tables as table>
-            if (${table.getLocalDatabaseProvider().toString()}.class.equals(providerClass) || ${table.getContentDatabaseProvider().toString()}.class.equals(providerClass)) {
+            if (${table.getDatabaseProvider().toString()}.class.equals(providerClass)) {
                 result.add(${table.getPackage()}.${table.getName()}.class);
             }
             </#list>
@@ -84,13 +89,8 @@ public class Q {
         }
 
         @Override
-        public BaseLocalDatabaseProvider getLocalDatabaseProviderForModel(Class<?> model) {
-            return mLocalProviders.get(model);
-        }
-
-        @Override
-        public BaseContentDatabaseProvider getContentDatabaseProviderForModel(Class<?> model) {
-            return mContentProviders.get(model);
+        public DatabaseProvider getDatabaseProviderForModel(Class<?> model) {
+            return mProviders.get(model);
         }
     }
 
@@ -98,16 +98,16 @@ public class Q {
 
         <#assign getColumnNames>
             <#list table.getMutableFields(tables) as column>
-                "${column.getRealName()}",
+                "${column.getDbName()}",
             </#list>
         </#assign>
         <#assign getColumnNamesWithTablePrefix>
             <#list table.getMutableFields(tables) as column>
-                "${table.getRealName()}.${column.getRealName()}",
+                "${table.getDbName()}.${column.getDbName()}",
             </#list>
         </#assign>
 
-        <#assign unionInsertColumnNames><#list table.getMutableFields(tables) as column>${column.getRealName()},</#list></#assign>
+        <#assign unionInsertColumnNames><#list table.getMutableFields(tables) as column>${column.getDbName()},</#list></#assign>
 
         <#assign packagedTableName>
             ${table.getPackage()}.${table.getName()}
@@ -116,12 +116,12 @@ public class Q {
         public static class ${table.getName()} implements DbModelDescriptor {
 
             <#list table.getFields() as column>
-                public static final String ${formatConstant(column.getName())} = "${column.getRealName()}";
+                public static final String ${formatConstant(column.getName())} = "${column.getDbName()}";
             </#list>
 
             @Override
-            public @NonNull String getTableRealName() {
-                return "${table.getRealName()}";
+            public @NonNull String getTableDbName() {
+                return "${table.getDbName()}";
             }
 
             @Override
@@ -135,8 +135,8 @@ public class Q {
             }
 
             @Override
-            public String getPrimaryKeyRealName() {
-                return "${table.getPrimaryKeyRealName()}";
+            public String getPrimaryKeyDbName() {
+                return "${table.getPrimaryKeyDbName()}";
             }
 
             @Override
@@ -156,7 +156,7 @@ public class Q {
 
                 <#list table.getMutableFields(tables) as column>
                     <#if column.isIndex()>
-                        sb.append("CREATE INDEX ${table.getName()}_${column.getName()}_index ON ${table.getRealName()} (${column.getRealName()});");
+                        sb.append("CREATE INDEX ${table.getName()}_${column.getName()}_index ON ${table.getDbName()} (${column.getDbName()});");
                     </#if>
                 </#list>
 
@@ -256,100 +256,43 @@ public class Q {
                 return contentValues;
             }
 
-            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
             public static @NonNull Uri getContentUri() {
-                return Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class).getUri(${packagedTableName}.class);
+                return Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class).getUri(${packagedTableName}.class);
             }
-            </#if>
 
             public static @NonNull Count.Builder<${packagedTableName}> count() {
-                <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
-                return Count.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
-                <#else>
-                return Count.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
-                </#if>
+                return Count.getBuilder(${packagedTableName}.class, Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class));
             }
 
-            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
             public static @NonNull Select.Builder<${packagedTableName}> select() {
-                return Select.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
+                return Select.getBuilder(${packagedTableName}.class, Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class));
             }
-            </#if>
-            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static @NonNull Select.Builder<${packagedTableName}> selectViaContentProvider() {
-                return Select.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
-            }
-            </#if>
 
-            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
             public static @NonNull Delete.Builder<${packagedTableName}> delete() {
-                return Delete.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
+                return Delete.getBuilder(${packagedTableName}.class, Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class));
             }
-            </#if>
-            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static @NonNull Delete.Builder<${packagedTableName}> deleteViaContentProvider() {
-                return Delete.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
-            }
-            </#if>
 
-            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
             public static @NonNull Update.Builder<${packagedTableName}> update() {
-                return Update.getBuilder(${packagedTableName}.class, Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class));
+                return Update.getBuilder(${packagedTableName}.class, Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class));
             }
-            </#if>
-            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static @NonNull Update.Builder<${packagedTableName}> updateViaContentProvider() {
-                return Update.getBuilder(${packagedTableName}.class, Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class));
-            }
-            </#if>
 
-            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
             public static @NonNull Save.Builder<${packagedTableName}> save(@NonNull ${packagedTableName}... models) {
-                return Save.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), models);
+                return Save.getBuilder(Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class), models);
             }
-            </#if>
-            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static @NonNull Save.Builder<${packagedTableName}> saveViaContentProvider(@NonNull ${packagedTableName}... models) {
-                return Save.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
-            }
-            </#if>
-            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
             public static @NonNull Save.Builder<${packagedTableName}> save(@NonNull List<${packagedTableName}> models) {
-                return Save.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), models);
+                return Save.getBuilder(Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class), models);
             }
-            </#if>
-            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static @NonNull Save.Builder<${packagedTableName}> saveViaContentProvider(@NonNull List<${packagedTableName}> models) {
-                return Save.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
-            }
-            </#if>
 
-            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
             public static @NonNull Insert.Builder<${packagedTableName}> insert(@NonNull ${packagedTableName}... models) {
-                return Insert.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), models);
+                return Insert.getBuilder(Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class), models);
             }
-            </#if>
-            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static @NonNull Insert.Builder<${packagedTableName}> insertViaContentProvider(@NonNull ${packagedTableName}... models) {
-                return Insert.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
-            }
-            </#if>
-            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
             public static @NonNull Insert.Builder<${packagedTableName}> insert(@NonNull List<${packagedTableName}> models) {
-                return Insert.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), models);
+                return Insert.getBuilder(Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class), models);
             }
-            </#if>
-            <#if table.getContentDatabaseProvider().toString() != "java.lang.Void">
-            public static @NonNull Insert.Builder<${packagedTableName}> insertViaContentProvider(@NonNull List<${packagedTableName}> models) {
-                return Insert.getBuilder(Q.getResolver().getContentDatabaseProviderForModel(${packagedTableName}.class), models);
-            }
-            </#if>
 
-            <#if table.getLocalDatabaseProvider().toString() != "java.lang.Void">
             public static @NonNull Raw.Builder raw(@NonNull String query) {
-                return Raw.getBuilder(Q.getResolver().getLocalDatabaseProviderForModel(${packagedTableName}.class), query);
+                return Raw.getBuilder(Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class), query);
             }
-            </#if>
 
             public static @NonNull CursorResult<${packagedTableName}> fromCursor(Cursor cursor) {
                 return new CursorResult<>(${packagedTableName}.class, Q.getResolver(), cursor);

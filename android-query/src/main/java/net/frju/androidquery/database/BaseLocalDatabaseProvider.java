@@ -15,6 +15,7 @@
  */
 package net.frju.androidquery.database;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -22,6 +23,9 @@ import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import net.frju.androidquery.operation.condition.Condition;
 import net.frju.androidquery.operation.join.Join;
@@ -45,6 +49,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
     private final List<String> mIndexNames;
 
     public BaseLocalDatabaseProvider(Context context) {
+        super(context);
 
         Class<?> modelClassDef[] = getResolver().getModelsForProvider(this.getClass());
         int modelCount = modelClassDef.length;
@@ -59,7 +64,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
             DbModelDescriptor dbModelDescriptor = getResolver().getDbModelDescriptor(modelClassDef[i]);
             mSchemaArray[i] = dbModelDescriptor.getTableCreateQuery();
             mColumnsSqlArray[i] = dbModelDescriptor.getColumnsSqlArray();
-            mTableRealNameArray[i] = dbModelDescriptor.getTableRealName();
+            mTableRealNameArray[i] = dbModelDescriptor.getTableDbName();
             mCreateIndexQuery[i] = dbModelDescriptor.getCreateIndexQuery();
 
             Collections.addAll(mIndexNames, dbModelDescriptor.getIndexNames());
@@ -79,6 +84,26 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
         //TODO should handle error cases and notably the corrupted database one: we could reconstruct it
         mDatabase = openHelper.getWritableDatabase();
+    }
+
+    @Override
+    protected
+    @NonNull
+    String getAuthority() {
+        return getClass().getPackage().getName();
+    }
+
+    public
+    @NonNull
+    Uri getUri(@NonNull Class model) {
+        String tableName = getResolver().getDbModelDescriptor(model).getTableDbName();
+        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableName)).build();
+    }
+
+    public
+    @NonNull
+    Uri getUri(@NonNull String modelDbName) {
+        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(modelDbName)).build();
     }
 
     protected abstract String getDbName();
@@ -117,7 +142,16 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
     }
 
     protected long insert(String tableName, ContentValues values) {
-        return mDatabase.insert(tableName, null, values);
+        long newId = mDatabase.insert(tableName, null, values);
+
+        if (newId != -1) {
+            Uri uri = getUri(tableName);
+            if (uri != null) {
+                mContext.getContentResolver().notifyChange(uri, null);
+            }
+        }
+
+        return newId;
     }
 
     protected int bulkInsert(String tableName, ContentValues[] valuesArray) {
@@ -132,6 +166,13 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
         mDatabase.setTransactionSuccessful();
         mDatabase.endTransaction();
+
+        if (nbInsert > 0) {
+            Uri uri = getUri(tableName);
+            if (uri != null) {
+                mContext.getContentResolver().notifyChange(uri, null);
+            }
+        }
 
         return nbInsert;
     }
@@ -151,6 +192,14 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
         mDatabase.setTransactionSuccessful();
         mDatabase.endTransaction();
+
+        if (nbUpdate > 0) {
+            //TODO do not always use the table Uri
+            Uri uri = getUri(tableName);
+            if (uri != null) {
+                mContext.getContentResolver().notifyChange(uri, null);
+            }
+        }
 
         return nbUpdate;
     }
@@ -175,7 +224,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
                 throw new SQLException(e.getMessage());
             }
         } else {
-            return mDatabase.query(
+            Cursor cursor = mDatabase.query(
                     tableName,
                     columns,
                     mClauseHelper.getCondition(condition),
@@ -185,15 +234,33 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
                     mClauseHelper.getOrderBy(orderBy),
                     mClauseHelper.getLimit(limit)
             );
+
+            Uri uri = getUri(tableName);
+            if (cursor != null && uri != null) {
+                cursor.setNotificationUri(mContext.getContentResolver(), uri);
+            }
+
+            return cursor;
         }
     }
 
     protected int delete(String tableName, Condition[] condition) {
-        return mDatabase.delete(
+        String whereClause = mClauseHelper.getCondition(condition);
+        int nbDeleted = mDatabase.delete(
                 tableName,
-                mClauseHelper.getCondition(condition),
+                whereClause,
                 mClauseHelper.getConditionArgs(condition)
         );
+
+        if (nbDeleted > 0 || TextUtils.isEmpty(whereClause)) {
+            //TODO do not always use the table Uri
+            Uri uri = getUri(tableName);
+            if (uri != null) {
+                mContext.getContentResolver().notifyChange(uri, null);
+            }
+        }
+
+        return nbDeleted;
     }
 
     protected long count(String tableName, Condition[] condition) {

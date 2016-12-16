@@ -9,13 +9,12 @@ import javax.lang.model.type.TypeMirror;
 public class DbModel {
     private Element mElement;
     private String mName;
-    private String mRealName;
+    private String mDbName;
     private String mPackage;
     private String mType;
     private List<DbField> mDbFields;
     private List<ForeignKey> mForeignKeys;
-    private TypeMirror mLocalDatabaseProvider;
-    private TypeMirror mContentDatabaseProvider;
+    private TypeMirror mDatabaseProvider;
 
     public Element getElement() {
         return mElement;
@@ -33,12 +32,12 @@ public class DbModel {
         mName = newVal;
     }
 
-    public String getRealName() {
-        return mRealName.length() != 0 ? mRealName : mName;
+    public String getDbName() {
+        return mDbName.length() != 0 ? mDbName : mName;
     }
 
-    public void setRealName(String newVal) {
-        mRealName = newVal;
+    public void setDbName(String newVal) {
+        mDbName = newVal;
     }
 
     public String getPackage() {
@@ -74,10 +73,10 @@ public class DbModel {
         return "";
     }
 
-    public String getPrimaryKeyRealName() {
+    public String getPrimaryKeyDbName() {
         for (DbField dbField : mDbFields) {
             if (dbField.hasPrimaryKey()) {
-                return dbField.getRealName();
+                return dbField.getDbName();
             }
         }
         return "";
@@ -100,20 +99,12 @@ public class DbModel {
         mForeignKeys = newVal;
     }
 
-    public TypeMirror getLocalDatabaseProvider() {
-        return mLocalDatabaseProvider;
+    public TypeMirror getDatabaseProvider() {
+        return mDatabaseProvider;
     }
 
-    public void setLocalDatabaseProvider(TypeMirror localDatabaseProvider) {
-        mLocalDatabaseProvider = localDatabaseProvider;
-    }
-
-    public TypeMirror getContentDatabaseProvider() {
-        return mContentDatabaseProvider;
-    }
-
-    public void setContentDatabaseProvider(TypeMirror contentDatabaseProvider) {
-        mContentDatabaseProvider = contentDatabaseProvider;
+    public void setDatabaseProvider(TypeMirror databaseProvider) {
+        mDatabaseProvider = databaseProvider;
     }
 
     /**

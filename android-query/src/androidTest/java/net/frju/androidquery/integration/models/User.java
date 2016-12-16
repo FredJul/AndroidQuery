@@ -12,11 +12,11 @@ import net.frju.androidquery.annotation.ForeignKey;
                         localColumn = "logId"
                 )
         },
-        localDatabaseProvider = LocalDatabaseProvider.class,
-        realName = "users"
+        databaseProvider = LocalDatabaseProvider.class,
+        dbName = "users"
 )
 public class User {
-    @DbField(primaryKey = true, realName = "_id")
+    @DbField(primaryKey = true, dbName = "_id")
     public long id; // no index supplied for the @Test testNoUserIndexesAreCreated()
     @DbField
     public String username;

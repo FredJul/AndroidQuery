@@ -4,7 +4,7 @@ import java.util.List;
 
 public class DbField {
     private String mName;
-    private String mRealName;
+    private String mDbName;
     private String mClassName;
     private String mType;
     private boolean mIsIndex;
@@ -21,12 +21,12 @@ public class DbField {
         mName = newVal;
     }
 
-    public String getRealName() {
-        return mRealName.length() != 0 ? mRealName : mName;
+    public String getDbName() {
+        return mDbName.length() != 0 ? mDbName : mName;
     }
 
-    public void setRealName(String newVal) {
-        mRealName = newVal;
+    public void setDbName(String newVal) {
+        mDbName = newVal;
     }
 
     public String getClassName() {

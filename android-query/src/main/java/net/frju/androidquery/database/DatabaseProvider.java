@@ -16,7 +16,10 @@
 package net.frju.androidquery.database;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import net.frju.androidquery.operation.condition.Condition;
 import net.frju.androidquery.operation.join.Join;
@@ -27,13 +30,29 @@ import net.frju.androidquery.operation.keyword.OrderBy;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public abstract class DatabaseProvider {
+    protected final Context mContext;
     protected final ClauseHelper mClauseHelper;
 
-    protected abstract Resolver getResolver();
-
-    protected DatabaseProvider() {
+    protected DatabaseProvider(Context context) {
+        mContext = context;
         mClauseHelper = new ClauseHelper();
     }
+
+    protected abstract
+    @NonNull
+    Resolver getResolver();
+
+    protected abstract
+    @NonNull
+    String getAuthority();
+
+    abstract public
+    @NonNull
+    Uri getUri(@NonNull Class model);
+
+    abstract public
+    @NonNull
+    Uri getUri(@NonNull String modelDbName);
 
     abstract protected long insert(String tableName, ContentValues valuesArray);
 
@@ -49,4 +68,12 @@ public abstract class DatabaseProvider {
     abstract protected long count(String tableName, Condition[] condition);
 
     abstract protected Cursor rawQuery(String sql);
+
+    static String firstToUpperCase(String value) {
+        return Character.toUpperCase(value.charAt(0)) + value.substring(1);
+    }
+
+    static String firstToLowerCase(String value) {
+        return Character.toLowerCase(value.charAt(0)) + value.substring(1);
+    }
 }
