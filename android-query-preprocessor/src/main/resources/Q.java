@@ -208,7 +208,7 @@ public class Q {
                     return result;
                 }
 
-                return null;
+                return new ${packagedTableName}[]{}; // empty array
             }
 
             @Override
