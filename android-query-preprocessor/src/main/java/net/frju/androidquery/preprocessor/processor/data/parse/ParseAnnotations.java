@@ -70,6 +70,12 @@ public class ParseAnnotations {
         defaultConverter.setModelClassName("java.util.UUID");
         converters.add(defaultConverter);
 
+        defaultConverter = new TypeConverter();
+        defaultConverter.setName("net.frju.androidquery.converter.BitSetConverter");
+        defaultConverter.setDbClassName("byte[]");
+        defaultConverter.setModelClassName("java.util.BitSet");
+        converters.add(defaultConverter);
+
         for (Element element : elements) {
             if (element.getKind().isClass()) {
                 converters.add(ParseTypeConverterAnnotation.parseTypeConverter(element));
