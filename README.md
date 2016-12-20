@@ -307,8 +307,9 @@ public class User {
 }
 
 Comment[] comments = Q.Comment.select()
-                .join(innerJoin(Comment.class, Q.Comment.USER_ID, User.class, Q.User.ID))
-        .query().toArray();
+        .join(innerJoin(Comment.class, Q.Comment.USER_ID, User.class, Q.User.ID))
+        .query()
+        .toArray();
         
 User user = comments[0].getUser(); // The nested User object is populated by the join
 ```
@@ -488,7 +489,7 @@ public class UserContentDatabaseProvider extends BaseContentDatabaseProvider {
 ```
 
 ```java
-@DbModel(databaseProvider = ContentDatabaseProvider.class)
+@DbModel(databaseProvider = UserContentDatabaseProvider.class)
 public class User {
     @DbField(primaryKey = true, dbName = "_id", autoIncrement = true)
     public int id;
@@ -523,9 +524,13 @@ public class App extends Application {
 }
 ```
 
-Then you can queries the models as you would do with your own ones:
+Then you can queries the lib models as you would do with your own models:
 ```java
-Contact[] contacts = Q.Contact.select().query().toArray();
+Contact[] contacts = Q.Contact.select()
+         .where(Condition.where(Q.Contact.IN_VISIBLE_GROUP, Where.Op.IS, true))
+         .orderBy(new OrderBy(Q.Contact.DISPLAY_NAME, OrderBy.Order.ASC, OrderBy.Collate.LOCALIZED))
+         .query()
+         .toArray();
 ```
 
 #TODO#
