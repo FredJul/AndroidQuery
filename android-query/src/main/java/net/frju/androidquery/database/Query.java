@@ -18,9 +18,10 @@ import net.frju.androidquery.operation.function.Update;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
+import rx.SingleSubscriber;
 
 public abstract class Query {
 
@@ -196,28 +197,28 @@ public abstract class Query {
         return databaseProvider.rawQuery(query);
     }
 
-    protected static <T> rx.Observable<T> wrapRx(final Callable<T> func) {
-        return rx.Observable.create(
-                new rx.Observable.OnSubscribe<T>() {
+    protected static <T> rx.Single<T> wrapRx(final Callable<T> func) {
+        return rx.Single.create(
+                new rx.Single.OnSubscribe<T>() {
                     @Override
-                    public void call(rx.Subscriber<? super T> subscriber) {
+                    public void call(SingleSubscriber<? super T> singleSubscriber) {
                         try {
-                            subscriber.onNext(func.call());
+                            singleSubscriber.onSuccess(func.call());
                         } catch (Exception e) {
-                            subscriber.onError(e);
+                            singleSubscriber.onError(e);
                         }
                     }
                 }
         );
     }
 
-    protected static <T> Observable<T> wrapRx2(final Callable<T> func) {
-        return Observable.create(
-                new ObservableOnSubscribe<T>() {
+    protected static <T> Single<T> wrapRx2(final Callable<T> func) {
+        return Single.create(
+                new SingleOnSubscribe<T>() {
                     @Override
-                    public void subscribe(ObservableEmitter<T> emitter) throws Exception {
+                    public void subscribe(SingleEmitter<T> emitter) throws Exception {
                         try {
-                            emitter.onNext(func.call());
+                            emitter.onSuccess(func.call());
                         } catch (Exception e) {
                             emitter.onError(e);
                         }

@@ -8,7 +8,7 @@ import net.frju.androidquery.database.Query;
 
 import java.util.concurrent.Callable;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 public class Raw extends Query {
 
@@ -41,7 +41,7 @@ public class Raw extends Query {
          */
         public
         @NonNull
-        rx.Observable<Cursor> rx() {
+        rx.Single<Cursor> rx() {
             return wrapRx(new Callable<Cursor>() {
                 @Override
                 public Cursor call() throws Exception {
@@ -57,7 +57,7 @@ public class Raw extends Query {
          */
         public
         @NonNull
-        Observable<Cursor> rx2() {
+        Single<Cursor> rx2() {
             return wrapRx2(new Callable<Cursor>() {
                 @Override
                 public Cursor call() throws Exception {

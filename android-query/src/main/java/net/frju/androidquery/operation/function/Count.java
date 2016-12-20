@@ -23,7 +23,7 @@ import net.frju.androidquery.operation.condition.Condition;
 
 import java.util.concurrent.Callable;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Executes a Count query against the SQLite database
@@ -86,7 +86,7 @@ public class Count extends Query {
          */
         public
         @NonNull
-        rx.Observable<Long> rx() {
+        rx.Single<Long> rx() {
             return wrapRx(new Callable<Long>() {
                 @Override
                 public Long call() throws Exception {
@@ -102,7 +102,7 @@ public class Count extends Query {
          */
         public
         @NonNull
-        Observable<Long> rx2() {
+        Single<Long> rx2() {
             return wrapRx2(new Callable<Long>() {
                 @Override
                 public Long call() throws Exception {

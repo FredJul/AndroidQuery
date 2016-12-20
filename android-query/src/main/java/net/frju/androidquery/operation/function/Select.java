@@ -27,7 +27,7 @@ import net.frju.androidquery.operation.keyword.OrderBy;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Executes a Select query against the SQLite database
@@ -172,7 +172,7 @@ public class Select extends Query {
          * Executes a Select query that expects a single result
          * @return The row returned by the Select query
          */
-        public T querySingle() {
+        public T queryFirst() {
             // For a single query, always put a limit for performance reasons
             return selectSingle(
                     new Select(mCondition, mJoins, mOrderBy, new Limit(0, 1)),
@@ -187,7 +187,7 @@ public class Select extends Query {
          */
         public
         @NonNull
-        rx.Observable<CursorResult<T>> rx() {
+        rx.Single<CursorResult<T>> rx() {
             return wrapRx(new Callable<CursorResult<T>>() {
                 @Override
                 public CursorResult<T> call() throws Exception {
@@ -202,11 +202,11 @@ public class Select extends Query {
          */
         public
         @NonNull
-        rx.Observable<T> rxSingle() {
+        rx.Single<T> rxFirst() {
             return wrapRx(new Callable<T>() {
                 @Override
                 public T call() throws Exception {
-                    return querySingle();
+                    return queryFirst();
                 }
             });
         }
@@ -218,7 +218,7 @@ public class Select extends Query {
          */
         public
         @NonNull
-        Observable<CursorResult<T>> rx2() {
+        Single<CursorResult<T>> rx2() {
             return wrapRx2(new Callable<CursorResult<T>>() {
                 @Override
                 public CursorResult<T> call() throws Exception {
@@ -234,11 +234,11 @@ public class Select extends Query {
          */
         public
         @NonNull
-        Observable<T> rx2Single() {
+        Single<T> rx2First() {
             return wrapRx2(new Callable<T>() {
                 @Override
                 public T call() throws Exception {
-                    return querySingle();
+                    return queryFirst();
                 }
             });
         }

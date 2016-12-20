@@ -26,7 +26,7 @@ import net.frju.androidquery.operation.condition.Where;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Executes an Update query against the SQLite database
@@ -153,7 +153,7 @@ public class Update extends Query {
          */
         public
         @NonNull
-        rx.Observable<Integer> rx() {
+        rx.Single<Integer> rx() {
             return wrapRx(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
@@ -169,7 +169,7 @@ public class Update extends Query {
          */
         public
         @NonNull
-        Observable<Integer> rx2() {
+        Single<Integer> rx2() {
             return wrapRx2(new Callable<Integer>() {
                 @Override
                 public Integer call() throws Exception {
