@@ -366,14 +366,14 @@ public class ExampleActivity extends Activity {
 
 You can also use a simple `ContentObserver`
 ```java
-private ContentObserver mContentObserver = new ContentObserver(new Handler()) {
+private final ContentObserver mContentObserver = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange) {
             // ...
         }
     });
 
-// Register to changes (for instance on your activity's onCreate())
+// Register to changes (for example on your activity's onCreate())
 getContentResolver().registerContentObserver(Q.User.getContentUri(), true, mContentObserver);
 
 // Unregister when not needed anymore (potentially in your activity's onDestroy())
@@ -383,7 +383,7 @@ getContentResolver().unregisterContentObserver(mContentObserver);
 You can instanciate an `ThrottledContentObserver` instead if you want to group the calls for performance reasons.
 
 ```java
-private ContentObserver mContentObserver = new ThrottledContentObserver(new Handler(), 100) {
+private final ContentObserver mContentObserver = new ThrottledContentObserver(new Handler(), 100) {
         @Override
         public void onChangeThrottled() {
             // ...
