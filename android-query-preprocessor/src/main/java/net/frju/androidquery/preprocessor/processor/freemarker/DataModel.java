@@ -19,12 +19,14 @@ import java.util.Map;
 public class DataModel {
 
     private static final String PACKAGE_NAME = "package_name";
+    private static final String DATABASE_PROVIDERS = "providers";
     private static final String TABLES = "tables";
 
     public static Map<String, Object> create(String packageName, Data data) {
         Map<String, Object> map = new HashMap<>();
 
         map.put(PACKAGE_NAME, packageName);
+        map.put(DATABASE_PROVIDERS, data.getDatabaseProviders());
         map.put(TABLES, data.getTables());
         map.putAll(GetCursorGetterMethod.getMethodMap(data));
         map.putAll(GetContentValueMethod.getMethodMap(data));

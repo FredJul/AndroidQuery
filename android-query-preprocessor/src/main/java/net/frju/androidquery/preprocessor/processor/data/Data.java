@@ -2,12 +2,23 @@ package net.frju.androidquery.preprocessor.processor.data;
 
 
 import java.util.List;
+import java.util.Set;
+
+import javax.lang.model.type.TypeMirror;
 
 public class Data {
+    private Set<TypeMirror> mDatabaseProviders;
     private List<DbModel> mDbModels;
 
     private List<TypeConverter> mConverters;
 
+    public Set<TypeMirror> getDatabaseProviders() {
+        return mDatabaseProviders;
+    }
+
+    public void setDatabaseProviders(Set<TypeMirror> newVal) {
+        mDatabaseProviders = newVal;
+    }
 
     public List<DbModel> getTables() {
         return mDbModels;

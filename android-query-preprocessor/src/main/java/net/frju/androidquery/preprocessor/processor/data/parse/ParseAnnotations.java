@@ -5,18 +5,33 @@ import net.frju.androidquery.preprocessor.processor.data.DbModel;
 import net.frju.androidquery.preprocessor.processor.data.TypeConverter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
 
 public class ParseAnnotations {
 
     public static Data parse(Set<? extends Element> tableElements, Set<? extends Element> converterElements) {
         Data data = new Data();
+        data.setDatabaseProviders(assembleDatabaseProviders(tableElements));
         data.setTables(assembleTables(tableElements));
         data.setConverters(assembleConverters(converterElements));
         return data;
+    }
+
+    private static Set<TypeMirror> assembleDatabaseProviders(Set<? extends Element> elements) {
+        Set<TypeMirror> providersSet = new HashSet<>();
+
+        for (Element element : elements) {
+            if (element.getKind().isClass()) {
+                providersSet.add(ParseTableAnnotation.assembleDatabaseProvider(element));
+            }
+        }
+
+        return providersSet;
     }
 
     private static List<DbModel> assembleTables(Set<? extends Element> elements) {

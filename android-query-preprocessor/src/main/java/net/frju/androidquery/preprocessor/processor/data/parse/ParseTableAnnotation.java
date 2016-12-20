@@ -23,6 +23,7 @@ class ParseTableAnnotation {
 
         String name = assembleName(element);
         String tablePackage = assemblePackage(element);
+        TypeMirror mirror = assembleDatabaseProvider(element);
 
         DbModel dbModel = new DbModel();
         dbModel.setElement(element);
@@ -32,7 +33,8 @@ class ParseTableAnnotation {
         dbModel.setType(tablePackage + "." + name);
         dbModel.setFields(assembleColumns(element));
         dbModel.setForeignKeys(assembleForeignKeys(element));
-        dbModel.setDatabaseProvider(assembleDatabaseProvider(element));
+        dbModel.setDatabaseProvider(mirror);
+        dbModel.setHasLocalDatabaseProvider(assembleHasLocalDatabaseProvider(mirror));
 
         return dbModel;
     }
@@ -42,7 +44,7 @@ class ParseTableAnnotation {
         return name.toString();
     }
 
-    private static TypeMirror assembleDatabaseProvider(Element element) {
+    static TypeMirror assembleDatabaseProvider(Element element) {
         net.frju.androidquery.annotation.DbModel dbModelAnnotation = element.getAnnotation(net.frju.androidquery.annotation.DbModel.class);
         TypeMirror type = null;
         try {
@@ -51,6 +53,17 @@ class ParseTableAnnotation {
             type = mte.getTypeMirror();
         }
         return type;
+    }
+
+    static boolean assembleHasLocalDatabaseProvider(TypeMirror mirror) {
+        TypeElement providerElement = Context.getInstance().getElementUtils().getTypeElement(mirror.toString());
+
+        if (providerElement != null && providerElement.getSuperclass() != null &&
+                providerElement.getSuperclass().toString().equals("net.frju.androidquery.database.BaseLocalDatabaseProvider")) {
+            return true;
+        }
+
+        return false;
     }
 
     private static String assembleRealName(Element element) {

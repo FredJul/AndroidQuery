@@ -33,13 +33,16 @@ public class Q {
         private static HashMap<Class<?>, DatabaseProvider> mProviders = new HashMap<>();
 
         public void init(@NonNull Context context) {
-            DatabaseProvider provider;
+            HashMap<String, DatabaseProvider> providersByName = new HashMap<>();
+
+            <#list providers as provider>
+            providersByName.put("${provider.toString()}", new ${provider.toString()}(context.getApplicationContext()));
+            </#list>
 
             <#list tables as table>
             <#if table.getDatabaseProvider().toString() != "java.lang.Void">
-                    provider = new ${table.getDatabaseProvider().toString()}(context.getApplicationContext());
-                    mProviders.put(${table.getPackage()}.${table.getName()}.class, provider);
-                    mProviders.put(${table.getName()}.class, provider); // to be more error-tolerant
+                    mProviders.put(${table.getPackage()}.${table.getName()}.class, providersByName.get("${table.getDatabaseProvider().toString()}"));
+                    mProviders.put(${table.getName()}.class, providersByName.get("${table.getDatabaseProvider().toString()}")); // to be more error-tolerant
             </#if>
             </#list>
         }
@@ -116,8 +119,19 @@ public class Q {
         public static class ${table.getName()} implements DbModelDescriptor {
 
             <#list table.getFields() as column>
-                public static final String ${formatConstant(column.getName())} = "${column.getDbName()}";
+            public static final String ${formatConstant(column.getName())} = "${column.getDbName()}";
             </#list>
+
+            <#if table.hasLocalDatabaseProvider()>
+            public static class ContentProvider extends BaseContentProvider {
+
+                @Override
+                protected BaseLocalDatabaseProvider getLocalSQLProvider() {
+                    Q.init(getContext());
+                    return (BaseLocalDatabaseProvider) Q.getResolver().getDatabaseProviderForModel(${table.getName()}.class);
+                }
+            }
+            </#if>
 
             @Override
             public @NonNull String getTableDbName() {
@@ -290,9 +304,11 @@ public class Q {
                 return Insert.getBuilder(Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class), models);
             }
 
+            <#if table.hasLocalDatabaseProvider()>
             public static @NonNull Raw.Builder raw(@NonNull String query) {
                 return Raw.getBuilder(Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class), query);
             }
+            </#if>
 
             public static @NonNull CursorResult<${packagedTableName}> fromCursor(Cursor cursor) {
                 return new CursorResult<>(${packagedTableName}.class, Q.getResolver(), cursor);

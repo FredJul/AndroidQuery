@@ -433,6 +433,7 @@ Again, be careful: you will not be notified if you modify the data with raw quer
 
 Your data can also be accessed by an external application through a ContentProvider.
 To do so, you first need to declare the authority of your `BaseLocalDatabaseProvider`:
+
 ```java
 public class LocalDatabaseProvider extends BaseLocalDatabaseProvider {
 
@@ -446,26 +447,21 @@ public class LocalDatabaseProvider extends BaseLocalDatabaseProvider {
 }
 ```
 
-Then declare your ContentProvider with that `BaseLocalDatabaseProvider` and authority:
-```java
-public class ModelContentProvider extends BaseContentProvider {
+Then declare your ContentProvider with that authority:
 
-    @Override
-    protected BaseLocalDatabaseProvider getLocalSQLProvider() {
-        Q.init(getContext());
-        return Q.getResolver().getDatabaseProviderForModel(User.class); // any of the models stored in that provider
-    }
-}
-```
 ```xml
 <application
     android:name=".App">
     <provider
-        android:name="net.frju.androidquery.sample.provider.ModelContentProvider"
+        android:name="net.frju.androidquery.gen.Q.User$ContentProvider"
         android:authorities="net.frju.androidquery.sample"
         android:exported="true" />
 </application>
 ```
+
+If several model share the same `DatabaseProvider`, they will all be available with only one ContentProvider declaration.
+
+From the external application, you will be able to access to the data either by manual `ContentProvider` queries, or either by setting up AndroidQuery in that project as well (see below).
 
 #Access to some external data#
 

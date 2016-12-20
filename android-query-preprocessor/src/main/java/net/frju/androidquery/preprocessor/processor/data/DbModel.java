@@ -15,6 +15,7 @@ public class DbModel {
     private List<DbField> mDbFields;
     private List<ForeignKey> mForeignKeys;
     private TypeMirror mDatabaseProvider;
+    private boolean mHasLocalDatabaseProvider;
 
     public Element getElement() {
         return mElement;
@@ -105,6 +106,14 @@ public class DbModel {
 
     public void setDatabaseProvider(TypeMirror databaseProvider) {
         mDatabaseProvider = databaseProvider;
+    }
+
+    public boolean hasLocalDatabaseProvider() {
+        return mHasLocalDatabaseProvider;
+    }
+
+    public void setHasLocalDatabaseProvider(boolean newValue) {
+        mHasLocalDatabaseProvider = newValue;
     }
 
     /**
