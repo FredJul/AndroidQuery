@@ -7,7 +7,7 @@ AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotati
 
 ###Gradle dependencies###
 ```groovy
-def androidquery_version = "1.2.9"
+def androidquery_version = "1.3.0"
 
 dependencies {
     annotationProcessor 'net.frju.androidquery:android-query-preprocessor:${androidquery_version}'
