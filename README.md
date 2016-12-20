@@ -25,7 +25,7 @@ If you want to use RxJava1 or RxJava2 you also need to add some of the following
 ```
 
 ###Initialize the ORM###
-You need to initiate the ORM with a context to make it work properly. A good way to do it is by defining your Application object:
+You need to initialize the ORM with a context to make it work properly. A good way to do it is by defining your Application object:
 ```java
 public class App extends Application {
 
@@ -509,7 +509,21 @@ dependencies {
 
 Currently the supported models are `Contact`, `RawContact` and `BlockedNumber`.
 
-You can queries them this way:
+You need to add the initialization of the corresponding Q class in your `Application` object this way:
+
+```java
+public class App extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        net.frju.androidquery.models.gen.Q.init(this);
+    }
+}
+```
+
+Then you can queries the models as you would do with your own ones:
 ```java
 Contact[] contacts = Q.Contact.select().query().toArray();
 ```
