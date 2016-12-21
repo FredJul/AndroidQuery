@@ -27,10 +27,8 @@ import net.frju.androidquery.sample.model.User;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 import static net.frju.androidquery.operation.join.Join.innerJoin;
 
@@ -126,8 +124,6 @@ public class MainActivity extends AppCompatActivity {
     private void checkUserExists() {
         Q.User.count()
                 .rx2()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long count) throws Exception {
@@ -147,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
 
         mCompositeDisposable.add(Q.User.insert(user)
                 .rx2()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Integer>() {
                     @Override
                     public void accept(Integer nbInserted) throws Exception {
@@ -160,8 +154,6 @@ public class MainActivity extends AppCompatActivity {
     private void countComments() {
         mCompositeDisposable.add(Q.Comment.count()
                 .rx2()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long count) throws Exception {
@@ -179,8 +171,6 @@ public class MainActivity extends AppCompatActivity {
 
         mCompositeDisposable.add(Q.Comment.insert(comment)
                 .rx2()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Integer>() {
                     @Override
                     public void accept(Integer nbInserted) throws Exception {
@@ -196,8 +186,6 @@ public class MainActivity extends AppCompatActivity {
                 .join(innerJoin(Comment.class, Q.Comment.USER_ID, User.class, Q.User.ID))
                 .orderBy(Comment.class.getSimpleName() + '.' + Q.Comment.TIMESTAMP, OrderBy.Order.DESC)
                 .rx2()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<CursorResult<Comment>>() {
                     @Override
                     public void accept(CursorResult<Comment> comments) throws Exception {

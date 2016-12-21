@@ -137,5 +137,6 @@
     <orderEntry type="library" exported="" scope="TEST" name="rules-0.4" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
     <orderEntry type="library" exported="" name="rxjava-1.2.3" level="project" />
+    <orderEntry type="library" exported="" name="rxandroid-1.2.1" level="project" />
   </component>
 </module>

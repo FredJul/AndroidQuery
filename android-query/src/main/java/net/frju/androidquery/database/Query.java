@@ -21,6 +21,8 @@ import java.util.concurrent.Callable;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import rx.SingleSubscriber;
 
 public abstract class Query {
@@ -209,7 +211,8 @@ public abstract class Query {
                         }
                     }
                 }
-        );
+        ).subscribeOn(rx.schedulers.Schedulers.io())
+                .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread());
     }
 
     protected static <T> Single<T> wrapRx2(final Callable<T> func) {
@@ -224,7 +227,8 @@ public abstract class Query {
                         }
                     }
                 }
-        );
+        ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     private static DbModelDescriptor getTableDescription(Class<?> classDef, DatabaseProvider databaseProvider) {
