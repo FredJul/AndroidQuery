@@ -13,7 +13,11 @@ import net.frju.androidquery.preprocessor.processor.data.validator.PrimaryKeyMus
 import net.frju.androidquery.preprocessor.processor.data.validator.TableNamesMustBeUniqueValidator;
 import net.frju.androidquery.preprocessor.processor.freemarker.DataModel;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,19 +36,19 @@ public class Processor extends AbstractProcessor {
     private static final String GENERATED_FILE_PATH = "Q.java";
     private static final String GENERATED_FILE_NAME = "Q";
 
-	private FreeMarker mFreeMarker;
+    private FreeMarker mFreeMarker;
     private String mGenFilePackage = "net.frju.androidquery.gen";
 
-	@Override
-	public synchronized void init(ProcessingEnvironment env) {
-		mFreeMarker = getFreeMarker();
+    @Override
+    public synchronized void init(ProcessingEnvironment env) {
+        mFreeMarker = getFreeMarker();
         if (env.getOptions().containsKey("generatedFilePackageName")) {
             mGenFilePackage = env.getOptions().get("generatedFilePackageName");
         }
         Context.createInstance(env);
-	}
+    }
 
-	@Override
+    @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
         Set<? extends Element> tableElements = env.getElementsAnnotatedWith(DbModel.class);
 
@@ -77,20 +81,20 @@ public class Processor extends AbstractProcessor {
         }
 
         return true;
-	}
+    }
 
-	@Override
-	public SourceVersion getSupportedSourceVersion() {
-		return SourceVersion.latestSupported();
-	}
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    }
 
-	@Override
-	public Set<String> getSupportedAnnotationTypes() {
-		Set<String> set = new HashSet<>();
+    @Override
+    public Set<String> getSupportedAnnotationTypes() {
+        Set<String> set = new HashSet<>();
         set.add(DbModel.class.getCanonicalName());
         set.add(DbField.class.getCanonicalName());
         return set;
-	}
+    }
 
     private void validate(Data data) throws ValidatorException {
         for (Validator validator : getValidators(data))
@@ -107,7 +111,7 @@ public class Processor extends AbstractProcessor {
         };
     }
 
-	private void createFile(String packageName, String name, String body) throws IOException, FormatterException {
+    private void createFile(String packageName, String name, String body) throws IOException, FormatterException {
         String nameWithPackage = packageName + "." + name;
         JavaFileObject jfo = Context.getInstance().getFiler().createSourceFile(nameWithPackage);
 
@@ -120,13 +124,27 @@ public class Processor extends AbstractProcessor {
         Writer writer = jfo.openWriter();
         writer.append(formattedSource);
         writer.close();
-	}
 
-	private FreeMarker getFreeMarker() {
-		try {
-			return new FreeMarker();
-		} catch (IOException e) {
-			return null;
-		}
-	}
+        // Workaround for some AndroidStudio display errors where he is searching for debug folder by default
+        if (jfo.getName().contains("/apt/release/")) {
+            try {
+                String debugFileName = jfo.getName().replace("/apt/release/", "/apt/debug/");
+                new File(debugFileName).getParentFile().mkdirs();
+                Writer debugFileWriter = new BufferedWriter(new OutputStreamWriter(
+                        new FileOutputStream(debugFileName), "utf-8"));
+                debugFileWriter.write(formattedSource);
+                debugFileWriter.close();
+            } catch (Exception e) {
+                // ignore it
+            }
+        }
+    }
+
+    private FreeMarker getFreeMarker() {
+        try {
+            return new FreeMarker();
+        } catch (IOException e) {
+            return null;
+        }
+    }
 }
