@@ -286,21 +286,13 @@ User[] users = Q.User.select()
         .toArray();
 ```
 
-###Keywords###
+###Order and limit results###
 The `OrderBy` and `Limit` classes are used to manipulate the results of the `select()` method
 
 ```java
-// SELECT * FROM user ORDER BY username DESC
+// SELECT * FROM user ORDER BY username DESC LIMIT 10
 User[] users = Q.User.select()
-        .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
-        .query()
-        .toArray();
-```
-
-```java
-// SELECT * FROM user ORDER BY username DESC LIMIT 2,4
-User[] users = Q.User.select()
-        .limit(2,4)
+        .limit(10)
         .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
         .query()
         .toArray();
