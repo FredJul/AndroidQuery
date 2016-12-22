@@ -48,6 +48,21 @@ public class Q {
         }
 
         @Override
+        public void initModelWithInitMethods(@NonNull Object model) {
+            <#assign isAssignableFrom>
+                <#list tables as table>
+                else if (model instanceof ${table.getPackage()}.${table.getName()}) {
+                    <#list table.getInitMethodNames() as initMethod>
+                    ((${table.getPackage()}.${table.getName()})model).${initMethod}();
+                    </#list>
+                }
+                </#list>
+            </#assign>
+
+            ${isAssignableFrom?trim?remove_beginning("else ")}
+        }
+
+        @Override
         public @NonNull Class<?> getModelClassFromName(@NonNull String modelDbName) {
             switch (modelDbName) {
             <#list tables as table>

@@ -174,7 +174,33 @@ public class Select extends Query {
          */
         public T queryFirst() {
             // For a single query, always put a limit for performance reasons
-            return selectSingle(
+            return selectFirst(
+                    new Select(mCondition, mJoins, mOrderBy, new Limit(0, 1)),
+                    mClassDef,
+                    mDatabaseProvider
+            );
+        }
+
+        /**
+         * Executes a Select query with all initialization done (including sub queries)
+         * @return The rows returned by the Select query
+         */
+        public T[] queryAndInit() {
+            return selectAndInit(
+                    new Select(mCondition, mJoins, mOrderBy, mLimit),
+                    mClassDef,
+                    mDatabaseProvider
+            );
+        }
+
+        /**
+         * Executes a Select query that expects a single result with all initialization done (including sub queries)
+         *
+         * @return The row returned by the Select query
+         */
+        public T queryFirstAndInit() {
+            // For a single query, always put a limit for performance reasons
+            return selectFirstAndInit(
                     new Select(mCondition, mJoins, mOrderBy, new Limit(0, 1)),
                     mClassDef,
                     mDatabaseProvider
@@ -197,6 +223,22 @@ public class Select extends Query {
         }
 
         /**
+         * Executes a Select query with all initialization done (including sub queries)
+         *
+         * @return An RxJava Observable
+         */
+        public
+        @NonNull
+        rx.Single<T[]> rxAndInit() {
+            return wrapRx(new Callable<T[]>() {
+                @Override
+                public T[] call() throws Exception {
+                    return queryAndInit();
+                }
+            });
+        }
+
+        /**
          * Executes a Select query that expects a single result
          * @return An RxJava Observable
          */
@@ -207,6 +249,22 @@ public class Select extends Query {
                 @Override
                 public T call() throws Exception {
                     return queryFirst();
+                }
+            });
+        }
+
+        /**
+         * Executes a Select query that expects a single result with all initialization done (including sub queries)
+         *
+         * @return An RxJava Observable
+         */
+        public
+        @NonNull
+        rx.Single<T> rxFirstAndInit() {
+            return wrapRx(new Callable<T>() {
+                @Override
+                public T call() throws Exception {
+                    return queryFirstAndInit();
                 }
             });
         }
@@ -228,6 +286,22 @@ public class Select extends Query {
         }
 
         /**
+         * Executes a Select query with all initialization done (including sub queries)
+         *
+         * @return An RxJava2 Observable
+         */
+        public
+        @NonNull
+        Single<T[]> rx2AndInit() {
+            return wrapRx2(new Callable<T[]>() {
+                @Override
+                public T[] call() throws Exception {
+                    return queryAndInit();
+                }
+            });
+        }
+
+        /**
          * Executes a Select query that expects a single result
          *
          * @return An RxJava2 Observable
@@ -239,6 +313,22 @@ public class Select extends Query {
                 @Override
                 public T call() throws Exception {
                     return queryFirst();
+                }
+            });
+        }
+
+        /**
+         * Executes a Select query that expects a single result with all initialization done (including sub queries)
+         *
+         * @return An RxJava2 Observable
+         */
+        public
+        @NonNull
+        Single<T> rx2FirstAndInit() {
+            return wrapRx2(new Callable<T>() {
+                @Override
+                public T call() throws Exception {
+                    return queryFirstAndInit();
                 }
             });
         }

@@ -104,12 +104,38 @@ public abstract class Query {
         return new CursorResult<>(classDef, databaseProvider.getResolver(), cursor);
     }
 
-    protected static <T> T selectSingle(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
+    protected static <T> T[] selectAndInit(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
+        Cursor cursor = selectCursor(select, classDef, databaseProvider);
+
+        Resolver resolver = databaseProvider.getResolver();
+        T[] result = new CursorResult<>(classDef, resolver, cursor).toArray();
+
+        for (T object : result) {
+            resolver.initModelWithInitMethods(object);
+        }
+
+        return result;
+    }
+
+    protected static <T> T selectFirst(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
         Cursor cursor = selectCursor(select, classDef, databaseProvider);
 
         T[] results = getTableDescription(classDef, databaseProvider).getArrayResult(cursor);
 
         if (results != null && results.length > 0) {
+            return results[0];
+        } else {
+            return null;
+        }
+    }
+
+    protected static <T> T selectFirstAndInit(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
+        Cursor cursor = selectCursor(select, classDef, databaseProvider);
+
+        T[] results = getTableDescription(classDef, databaseProvider).getArrayResult(cursor);
+
+        if (results != null && results.length > 0) {
+            databaseProvider.getResolver().initModelWithInitMethods(results[0]);
             return results[0];
         } else {
             return null;

@@ -55,7 +55,7 @@ public class ReadTest extends IntegrationTest {
     public void testEqualToSingleSelection() {
         User user = Q.User.select()
                 .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME))
-                .querySingle();
+                .queryFirst();
 
         assertEquals(SetupUser.CLYDE_USER_NAME, user.username);
     }
@@ -93,7 +93,7 @@ public class ReadTest extends IntegrationTest {
     public void testEqualToLongSelection() {
         User user = Q.User.select()
                 .where(where(Q.User.TIMESTAMP, Where.Op.IS, SetupUser.CLYDE_TIMESTAMP))
-                .querySingle();
+                .queryFirst();
 
         assertEquals(SetupUser.CLYDE_USER_NAME, user.username);
         assertEquals(SetupUser.CLYDE_TIMESTAMP, user.timestamp);

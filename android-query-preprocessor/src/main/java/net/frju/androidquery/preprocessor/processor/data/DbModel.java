@@ -13,6 +13,7 @@ public class DbModel {
     private String mPackage;
     private String mType;
     private List<DbField> mDbFields;
+    private List<String> mInitMethodNames;
     private List<ForeignKey> mForeignKeys;
     private TypeMirror mDatabaseProvider;
     private boolean mHasLocalDatabaseProvider;
@@ -63,6 +64,14 @@ public class DbModel {
 
     public void setFields(List<DbField> newVal) {
         mDbFields = newVal;
+    }
+
+    public List<String> getInitMethodNames() {
+        return mInitMethodNames;
+    }
+
+    public void setInitMethodNames(List<String> newVal) {
+        mInitMethodNames = newVal;
     }
 
     public String getPrimaryKeyName() {

@@ -7,9 +7,9 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeMirror;
 
-class ParseColumnAnnotation {
+class ParseFieldAnnotation {
 
-    static DbField parseColumn(Element element) {
+    static DbField parseField(Element element) {
 
         String type = assembleType(element);
 

@@ -9,17 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
 
-import static net.frju.androidquery.preprocessor.processor.data.parse.ParseColumnAnnotation.parseColumn;
+import static net.frju.androidquery.preprocessor.processor.data.parse.ParseFieldAnnotation.parseField;
 
-class ParseTableAnnotation {
+class ParseModelAnnotation {
 
-    static DbModel parseTable(Element element) {
+    static DbModel parseModel(Element element) {
 
         String name = assembleName(element);
         String tablePackage = assemblePackage(element);
@@ -35,6 +36,7 @@ class ParseTableAnnotation {
         dbModel.setForeignKeys(assembleForeignKeys(element));
         dbModel.setDatabaseProvider(mirror);
         dbModel.setHasLocalDatabaseProvider(assembleHasLocalDatabaseProvider(mirror));
+        dbModel.setInitMethodNames(assembleInitMethods(element));
 
         return dbModel;
     }
@@ -82,11 +84,23 @@ class ParseTableAnnotation {
 
         for (Element childElement : Context.getInstance().getElementUtils().getAllMembers((TypeElement) element)) {
             if (childElement.getKind().isField() && childElement.getAnnotation(net.frju.androidquery.annotation.DbField.class) != null) {
-                dbFields.add(parseColumn(childElement));
+                dbFields.add(parseField(childElement));
             }
         }
 
         return dbFields;
+    }
+
+    private static List<String> assembleInitMethods(Element element) {
+        List<String> initMethods = new ArrayList<>();
+
+        for (Element childElement : Context.getInstance().getElementUtils().getAllMembers((TypeElement) element)) {
+            if (childElement instanceof ExecutableElement && childElement.getAnnotation(net.frju.androidquery.annotation.InitMethod.class) != null) {
+                initMethods.add(childElement.getSimpleName().toString());
+            }
+        }
+
+        return initMethods;
     }
 
     private static List<ForeignKey> assembleForeignKeys(Element element) {

@@ -7,11 +7,13 @@ AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotati
 
 ###Gradle dependencies###
 ```groovy
-def androidquery_version = "1.3.0"
+ext {
+    androidquery_version = '1.3.0'
+}
 
 dependencies {
-    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:${androidquery_version}'
-    compile 'net.frju.androidquery:android-query:${androidquery_version}'
+    annotationProcessor "net.frju.androidquery:android-query-preprocessor:${androidquery_version}"
+    compile "net.frju.androidquery:android-query:${androidquery_version}"
 }
 ```
 
@@ -125,7 +127,7 @@ you should not write the field name yourself and should use theses constants.
 ###Functions###
 The `insert()`, `select()`, `update()`, `save()`, `delete()`, `count()` and `raw()` methods are used to query the database models. The `save()` method will either insert the data if not in database or will update it, since this can be slower you should use that method only if you don't know if the data has been already inserted.
 
-If you want synchronous query, you can directly call `query()`/`querySingle()` methods or the RxJava methods (`rx()`/`rxSingle()`, `rx2()`/`rx2Single()`).
+If you want synchronous query, you can directly call `query()`/`queryFirst()` methods or the RxJava methods (`rx()`/`rxFirst()`, `rx2()`/`rx2First()`).
 For a `select()` query you will get back a `CursorResult` object, which needs to be closed after use. You can use a try-with-resources statement for that:
 
 ```java
@@ -160,12 +162,10 @@ It is recommended to put all the returned `Disposable` into a `CompositeDisposab
     private void doQuery() {
         mCompositeDisposable.add(Q.User.select()
                 .rx2()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<CursorResult<User>>() {
                     @Override
                     public void accept(CursorResult<User> users) throws Exception {
-            		// do something with the users on UI thread
+            		    // do something with the users on UI thread
                     }
                 }));
     }
@@ -175,6 +175,27 @@ It is recommended to put all the returned `Disposable` into a `CompositeDisposab
         super.onDestroy();
         mCompositeDisposable.clear();
     }
+```
+
+By default RxJava queries are always executed on `Schedulers.io()` and the result given on `AndroidSchedulers.mainThread()` unless you call the methods `subscribeOn()` and `observeOn()`.
+
+You can of course chain the queries thanks to RxJava:
+
+```java
+mCompositeDisposable.add(Q.User.select()
+        .rx2First()
+        .flatMap(new Function<User, Single<CursorResult<Comment>>>() {
+            @Override
+            public Single<CursorResult<Comment>> apply(User user) throws Exception {
+                return Q.Comment.select().where(Condition.where(Q.Comment.USER_UD, Where.Op.IS, user.id)).rx2();
+            }
+        })
+        .subscribe(new Consumer<CursorResult<Comment>>() {
+            @Override
+            public void accept(CursorResult<Comment> comments) throws Exception {
+                // do something with the comments of first users on UI thread
+            }
+        }));
 ```
 
 Other kind of queries are available:
@@ -285,7 +306,39 @@ User[] users = Q.User.select()
         .toArray();
 ```
 
-###Joins###
+#Relations between models#
+
+Sometimes you want to automatically populate data of a model from another one (ie. get all posts of a user). There is actually two ways of doing so.
+
+###Variable initializer###
+
+You can initialize some variable thanks to the `InitMethod` annotation.
+
+```java
+@DbModel(databaseProvider = LocalDatabaseProvider.class)
+public class User {
+    @DbField(primaryKey = true, dbName = "_id")
+    public long id;
+
+    public Post[] posts; // No @DbField annotation here. Post declared as another model.
+
+    @InitMethod
+    public void initPosts() {
+        // Do another query here. Can call queryAndInit() if and only if there is no circular reference
+        posts = Q.Post.select().where(Condition.where(Q.Post.USER_ID, Where.Op.IS, id)).queryAndInit();
+    }
+}
+```
+
+When you call `queryAndInit()` or similar RxJava methods, you will actually execute all init methods. This can be noticeably slower depending of what you do inside (could even be a network request).
+
+Be careful to not do any circular reference.
+
+###Local database and joins###
+
+If you do not need a list of sub models and if both model share the same `BaseLocalDatabaseProvider` (does not work with `BaseContentDatabaseProvider`), you could use a join.
+This is far more efficient than the previous method since it does not add any database request.
+
 Joins can be performed using the `innerJoin()`, `leftOutJoin()`, `crossInnerJoin()`, `naturalInnerJoin()`, `naturalLeftOuterJoin()` methods.
 The target model for the join must be defined as an @DbField, the object will be populated with any join results.
 
@@ -294,6 +347,8 @@ The target model for the join must be defined as an @DbField, the object will be
 public class Comment {
     @DbField(index = true)
     public int id;
+    @DbField
+    public long timestamp;
     @DbField
     public int userId;
     @DbField
@@ -304,10 +359,13 @@ public class Comment {
 public class User {
     @DbField(index = true)
     public int id;
+    @DbField
+    public String username;
 }
 
 Comment[] comments = Q.Comment.select()
         .join(innerJoin(Comment.class, Q.Comment.USER_ID, User.class, Q.User.ID))
+        .orderBy(Comment.class.getSimpleName() + '.' + Q.Comment.TIMESTAMP, OrderBy.Order.DESC)
         .query()
         .toArray();
         
@@ -354,7 +412,6 @@ public class ExampleActivity extends Activity {
             // ...
         }
     };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -503,8 +560,8 @@ Then you can query that model in the same way. However, please note that raw que
 AndroidQuery also provide a library which allows you to easily access to default Android ContentProviders. You need to add `android-query-models` into your dependencies.
 ```groovy
 dependencies {
-    annotationProcessor 'net.frju.androidquery:android-query-preprocessor:${androidquery_version}'
-    compile 'net.frju.androidquery:android-query-models:${androidquery_version}'
+    annotationProcessor "net.frju.androidquery:android-query-preprocessor:${androidquery_version}"
+    compile "net.frju.androidquery:android-query-models:${androidquery_version}"
 }
 ```
 
@@ -534,6 +591,7 @@ Contact[] contacts = Q.Contact.select()
 ```
 
 #TODO#
+- Support for transactions
 - Support for more constraints
 - Support for Trigger
 - Better default database updater (which also adds new constraints)

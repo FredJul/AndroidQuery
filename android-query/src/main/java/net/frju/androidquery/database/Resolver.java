@@ -31,4 +31,6 @@ public interface Resolver {
     Class<?>[] getModelsForProvider(Class<? extends DatabaseProvider> providerClass);
 
     DatabaseProvider getDatabaseProviderForModel(Class<?> model);
+
+    void initModelWithInitMethods(@NonNull Object model);
 }

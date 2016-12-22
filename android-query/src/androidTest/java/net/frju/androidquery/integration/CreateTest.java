@@ -54,7 +54,7 @@ public class CreateTest extends IntegrationTest {
         Q.User.insert(user).query();
 
         // verify
-        User responseUser = Q.User.select().querySingle();
+        User responseUser = Q.User.select().queryFirst();
 
         assertTrue(user.username.equals(responseUser.username));
         assertTrue(user.timestamp == responseUser.timestamp);
@@ -106,11 +106,11 @@ public class CreateTest extends IntegrationTest {
         // verify
         User angieUser = Q.User.select()
                 .where(where(Q.User.USERNAME, Where.Op.IS, ANGIE_USERNAME))
-                .querySingle();
+                .queryFirst();
 
         User samUser = Q.User.select()
                 .where(where(Q.User.USERNAME, Where.Op.IS, SAM_USERNAME))
-                .querySingle();
+                .queryFirst();
 
         assertEquals(ANGIE_USERNAME, angieUser.username);
         assertEquals(ANGIE_TIMESTAMP, angieUser.timestamp);

@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.neenbedankt.android-apt'
 
 ext {
     artifact = 'android-query-models'
@@ -35,7 +34,7 @@ android {
 
 dependencies {
     compile project(':android-query')
-    apt project(':android-query-preprocessor')
+    annotationProcessor project(':android-query-preprocessor')
 
     androidTestAnnotationProcessor project(':android-query-preprocessor')
 

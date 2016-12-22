@@ -27,7 +27,7 @@ public class ParseAnnotations {
 
         for (Element element : elements) {
             if (element.getKind().isClass()) {
-                providersSet.add(ParseTableAnnotation.assembleDatabaseProvider(element));
+                providersSet.add(ParseModelAnnotation.assembleDatabaseProvider(element));
             }
         }
 
@@ -39,7 +39,7 @@ public class ParseAnnotations {
 
         for (Element element : elements) {
             if (element.getKind().isClass()) {
-                dbModels.add(ParseTableAnnotation.parseTable(element));
+                dbModels.add(ParseModelAnnotation.parseModel(element));
             }
         }
 

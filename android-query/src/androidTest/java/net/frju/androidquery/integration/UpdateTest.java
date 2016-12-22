@@ -60,7 +60,7 @@ public class UpdateTest extends IntegrationTest {
         // verify
         User user = Q.User.select()
                 .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME))
-                .querySingle();
+                .queryFirst();
 
         assertEquals(true, user.isRegistered);
         assertEquals(timestamp, user.timestamp);
