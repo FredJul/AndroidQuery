@@ -6,6 +6,7 @@ AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotati
 #Setup#
 
 ###Gradle dependencies###
+
 ```groovy
 ext {
     androidquery_version = '1.3.1'
@@ -18,6 +19,7 @@ dependencies {
 ```
 
 If you want to use RxJava1 or RxJava2 you also need to add some of the following lines:
+
 ```groovy
     compile 'io.reactivex:rxjava:1.2.3' // For RxJava1 and rx() method
     compile 'io.reactivex:rxandroid:1.2.1' // For RxJava1 and rx() method
@@ -27,7 +29,9 @@ If you want to use RxJava1 or RxJava2 you also need to add some of the following
 ```
 
 ###Initialize the ORM###
+
 You need to initialize the ORM with a context to make it work properly. A good way to do it is by defining your Application object:
+
 ```java
 public class App extends Application {
 
@@ -41,13 +45,16 @@ public class App extends Application {
 ```
 
 And then declare it into your AndroidManifest.xml:
+
 ```xml
 <application
         android:name=".App">
 ```
 
-###Define your models###
-You first need to declare your database. It can be a LocalDatabaseProvider (SQLite) or a ContentDatabaseProvider (ContentProvider) 
+###Define your local database and models###
+
+You first need to declare your database. A `BaseLocalDatabaseProvider` is using SQLite to store data.
+
 ```java
 public class LocalDatabaseProvider extends BaseLocalDatabaseProvider {
 
@@ -249,8 +256,6 @@ User[] users = Q.User.select()
         .where(Condition.where(Q.User.IS_REGISTERED, Where.Op.IS, true))
         .query()
         .toArray();
-...
-users.close();
 ```
 
 ```java
@@ -259,8 +264,6 @@ User[] users = Q.User.select()
         .where(Condition.where(Q.User.USERNAME, Where.Op.LIKE, "jo%"))
         .query()
         .toArray();
-...
-users.close();
 ```
 
 ```java
