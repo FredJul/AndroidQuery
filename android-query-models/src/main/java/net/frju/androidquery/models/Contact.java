@@ -5,6 +5,10 @@ import android.provider.ContactsContract;
 
 import net.frju.androidquery.annotation.DbField;
 import net.frju.androidquery.annotation.DbModel;
+import net.frju.androidquery.annotation.InitMethod;
+import net.frju.androidquery.models.gen.Q;
+import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.Where;
 
 @SuppressWarnings("unused")
 @DbModel(dbName = "contacts", databaseProvider = ContactContentDatabaseProvider.class)
@@ -85,4 +89,14 @@ public class Contact {
      */
     @DbField(dbName = ContactsContract.Contacts.HAS_PHONE_NUMBER)
     public boolean hasPhoneNumber;
+
+    /**
+     * The list of associated raw contacts. Only populated if queryAndInit()/rxAndInit() is called.
+     */
+    public RawContact[] rawContacts;
+
+    @InitMethod
+    public void initRawContacts() {
+        rawContacts = Q.RawContact.select().where(Condition.where(Q.RawContact.CONTACT_ID, Where.Op.IS, id)).queryAndInit();
+    }
 }

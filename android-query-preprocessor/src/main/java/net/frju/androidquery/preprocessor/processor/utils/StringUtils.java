@@ -95,7 +95,7 @@ public class StringUtils {
                 break;
             case "java.lang.Boolean":
             case "boolean":
-                getter = "cursor.getInt(x) == 1 ? true : false";
+                getter = "cursor.getInt(x) > 0 ? true : false";
                 break;
             case "java.lang.Double":
             case "double":

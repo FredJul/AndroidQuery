@@ -5,6 +5,10 @@ import android.provider.ContactsContract;
 
 import net.frju.androidquery.annotation.DbField;
 import net.frju.androidquery.annotation.DbModel;
+import net.frju.androidquery.annotation.InitMethod;
+import net.frju.androidquery.models.gen.Q;
+import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.Where;
 
 @SuppressWarnings("unused")
 @DbModel(dbName = "raw_contacts", databaseProvider = ContactContentDatabaseProvider.class)
@@ -112,4 +116,14 @@ public class RawContact {
      */
     @DbField(dbName = ContactsContract.RawContacts.CUSTOM_RINGTONE)
     public Uri customRingtone;
+
+    /**
+     * The list of associated raw contacts. Only populated if queryAndInit()/rxAndInit() is called.
+     */
+    public RawContactData[] rawContactData;
+
+    @InitMethod
+    public void initRawContactData() {
+        rawContactData = Q.RawContactData.select().where(Condition.where(Q.RawContactData.RAW_CONTACT_ID, Where.Op.IS, id)).queryAndInit();
+    }
 }
