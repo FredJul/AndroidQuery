@@ -7,6 +7,8 @@ public class DbField {
     private String mDbName;
     private String mClassName;
     private String mType;
+    private String mGetterName;
+    private String mSetterName;
     private boolean mIsIndex;
     private boolean mIsUnique;
     private boolean mPrimaryKey;
@@ -43,6 +45,22 @@ public class DbField {
 
     public void setType(String newVal) {
         mType = newVal;
+    }
+
+    public String getGetterName() {
+        return mGetterName;
+    }
+
+    public void setGetterName(String newVal) {
+        mGetterName = newVal;
+    }
+
+    public String getSetterName() {
+        return mSetterName;
+    }
+
+    public void setSetterName(String newVal) {
+        mSetterName = newVal;
     }
 
     public boolean isIndex() {

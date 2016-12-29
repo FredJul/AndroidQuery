@@ -35,4 +35,8 @@ public @interface DbField {
     boolean unique() default false;
 
     String dbName() default "";
+
+    String getterName() default "";
+
+    String setterName() default "";
 }

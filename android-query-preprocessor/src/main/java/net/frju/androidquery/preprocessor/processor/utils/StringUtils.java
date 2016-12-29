@@ -55,16 +55,30 @@ public class StringUtils {
 
     public static String getGetter(String varName, DbField dbField) {
         String getter = varName + "." + dbField.getName();
-        if (!dbField.isIsPublicField()) {
-            getter = varName + ".get" + StringUtils.firstToUpperCase(dbField.getName()) + "()";
+        if (dbField.getGetterName() != null && dbField.getGetterName().length() > 0) {
+            getter = varName + "." + dbField.getGetterName() + "()";
+        } else if (!dbField.isIsPublicField()) {
+            if (dbField.getName().charAt(0) == 'i' && dbField.getName().charAt(1) == 's'
+                    && Character.isUpperCase(dbField.getName().charAt(2))) {
+                getter = varName + "." + dbField.getName() + "()";
+            } else {
+                getter = varName + ".get" + StringUtils.firstToUpperCase(dbField.getName()) + "()";
+            }
         }
         return getter;
     }
 
     public static String getSetter(String varName, String valueVarName, DbField dbField) {
         String setter = varName + "." + dbField.getName() + " = " + valueVarName;
-        if (!dbField.isIsPublicField()) {
-            setter = varName + ".set" + StringUtils.firstToUpperCase(dbField.getName()) + "(" + valueVarName + ")";
+        if (dbField.getSetterName() != null && dbField.getSetterName().length() > 0) {
+            setter = varName + "." + dbField.getSetterName() + "(" + valueVarName + ")";
+        } else if (!dbField.isIsPublicField()) {
+            if (dbField.getName().charAt(0) == 'i' && dbField.getName().charAt(1) == 's'
+                    && Character.isUpperCase(dbField.getName().charAt(2))) {
+                setter = varName + ".set" + dbField.getName().substring(2) + "(" + valueVarName + ")";
+            } else {
+                setter = varName + ".set" + StringUtils.firstToUpperCase(dbField.getName()) + "(" + valueVarName + ")";
+            }
         }
         return setter;
     }

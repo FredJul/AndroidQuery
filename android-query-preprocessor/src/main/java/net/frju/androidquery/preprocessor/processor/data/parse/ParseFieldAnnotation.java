@@ -16,6 +16,8 @@ class ParseFieldAnnotation {
         DbField dbField = new DbField();
         dbField.setName(assembleName(element));
         dbField.setDbName(assembleRealName(element));
+        dbField.setGetterName(assembleGetterName(element));
+        dbField.setSetterName(assembleSetterName(element));
         dbField.setIsIndex(assembleIsIndex(element));
         dbField.setIsUnique(assembleIsUnique(element));
         dbField.setHasPrimaryKey(assemblePrimaryKey(element));
@@ -35,6 +37,16 @@ class ParseFieldAnnotation {
     private static String assembleRealName(Element element) {
         net.frju.androidquery.annotation.DbField dbField = element.getAnnotation(net.frju.androidquery.annotation.DbField.class);
         return dbField.dbName();
+    }
+
+    private static String assembleGetterName(Element element) {
+        net.frju.androidquery.annotation.DbField dbField = element.getAnnotation(net.frju.androidquery.annotation.DbField.class);
+        return dbField.getterName();
+    }
+
+    private static String assembleSetterName(Element element) {
+        net.frju.androidquery.annotation.DbField dbField = element.getAnnotation(net.frju.androidquery.annotation.DbField.class);
+        return dbField.setterName();
     }
 
     private static String assembleType(Element element) {
