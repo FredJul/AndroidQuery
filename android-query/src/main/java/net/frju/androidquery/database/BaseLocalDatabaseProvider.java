@@ -116,20 +116,46 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
     protected void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (newVersion > oldVersion) {
+
+            db.beginTransaction();
+
+            // Try to create new table
+            for (String schema : mSchemaArray) {
+                try {
+                    db.execSQL(schema);
+                } catch (SQLException e) {
+                    // table already exists, nothing to do
+                }
+            }
+
+            // Try to create new index
+            for (String createIndex : mCreateIndexQuery) {
+                try {
+                    if (createIndex != null) {
+                        db.execSQL(createIndex);
+                    }
+                } catch (SQLException e) {
+                    // index already exists, nothing to do
+                }
+            }
+
             for (int i = 0; i < mTableRealNameArray.length; i++) {
                 String tableName = mTableRealNameArray[i];
 
-                // By default, create new columns
+                // Try to create new columns
                 for (String columnsSql : mColumnsSqlArray[i]) {
                     try {
                         db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnsSql + ";");
                     } catch (SQLException e) {
-                        // columns already exists, nothing to do
+                        // column already exists, nothing to do
                     }
                 }
 
-                //TODO also create new indexes, constraints, ...
+                //TODO also add others new constraints, ...
             }
+
+            db.setTransactionSuccessful();
+            db.endTransaction();
         }
     }
 
@@ -147,14 +173,17 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         int nbInsert = 0;
         mDatabase.beginTransaction();
 
-        for (ContentValues values : valuesArray) {
-            if (mDatabase.insert(tableName, null, values) != -1) {
-                nbInsert++;
+        try {
+            for (ContentValues values : valuesArray) {
+                if (mDatabase.insert(tableName, null, values) != -1) {
+                    nbInsert++;
+                }
             }
-        }
 
-        mDatabase.setTransactionSuccessful();
-        mDatabase.endTransaction();
+            mDatabase.setTransactionSuccessful();
+        } finally {
+            mDatabase.endTransaction();
+        }
 
         if (nbInsert > 0) {
             mContext.getContentResolver().notifyChange(getUri(tableName), null);
@@ -167,17 +196,20 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         int nbUpdate = 0;
         mDatabase.beginTransaction();
 
-        for (int i = 0; i < valuesArray.length; i++) {
-            nbUpdate += mDatabase.update(
-                    tableName,
-                    valuesArray[i],
-                    mClauseHelper.getCondition(conditionsArray[i]),
-                    mClauseHelper.getConditionArgs(conditionsArray[i])
-            );
-        }
+        try {
+            for (int i = 0; i < valuesArray.length; i++) {
+                nbUpdate += mDatabase.update(
+                        tableName,
+                        valuesArray[i],
+                        mClauseHelper.getCondition(conditionsArray[i]),
+                        mClauseHelper.getConditionArgs(conditionsArray[i])
+                );
+            }
 
-        mDatabase.setTransactionSuccessful();
-        mDatabase.endTransaction();
+            mDatabase.setTransactionSuccessful();
+        } finally {
+            mDatabase.endTransaction();
+        }
 
         if (nbUpdate > 0) {
             //TODO do not always use the table Uri
