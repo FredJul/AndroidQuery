@@ -43,6 +43,14 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
     private final String[] mTableRealNameArray;
     private final String[] mCreateIndexQuery;
 
+    private class DbInitFeedback {
+        boolean onCreateCalled = false;
+        boolean onDowngradeCalled = false;
+        boolean onUpgradeCalled = false;
+        int oldVersion;
+        int newVersion;
+    }
+
     public BaseLocalDatabaseProvider(Context context) {
         super(context);
 
@@ -62,20 +70,40 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
             mCreateIndexQuery[i] = dbModelDescriptor.getCreateIndexQuery();
         }
 
+        final DbInitFeedback dbInitFeedback = new DbInitFeedback();
+
         SQLiteOpenHelper openHelper = new SQLiteOpenHelper(context, getDbName(), null, getDbVersion()) {
             @Override
             public void onCreate(SQLiteDatabase db) {
-                BaseLocalDatabaseProvider.this.onCreate(db);
+                dbInitFeedback.onCreateCalled = true;
+            }
+
+            @Override
+            public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+                dbInitFeedback.onDowngradeCalled = true;
+                dbInitFeedback.oldVersion = oldVersion;
+                dbInitFeedback.newVersion = newVersion;
             }
 
             @Override
             public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-                BaseLocalDatabaseProvider.this.onUpgrade(db, oldVersion, newVersion);
+                dbInitFeedback.onUpgradeCalled = true;
+                dbInitFeedback.oldVersion = oldVersion;
+                dbInitFeedback.newVersion = newVersion;
             }
         };
 
         //TODO should handle error cases and notably the corrupted database one: we could reconstruct it
         mDatabase = openHelper.getWritableDatabase();
+
+        // We call that after the creation of the database to be able to call AndroidQuery methods in here
+        if (dbInitFeedback.onCreateCalled) {
+            BaseLocalDatabaseProvider.this.onCreate(mDatabase);
+        } else if (dbInitFeedback.onDowngradeCalled) {
+            BaseLocalDatabaseProvider.this.onDowngrade(mDatabase, dbInitFeedback.oldVersion, dbInitFeedback.newVersion);
+        } else if (dbInitFeedback.onUpgradeCalled) {
+            BaseLocalDatabaseProvider.this.onUpgrade(mDatabase, dbInitFeedback.oldVersion, dbInitFeedback.newVersion);
+        }
     }
 
     @Override
@@ -112,6 +140,9 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
                 db.execSQL(createIndex);
             }
         }
+    }
+
+    protected void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
     protected void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
