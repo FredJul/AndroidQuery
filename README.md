@@ -8,7 +8,7 @@ AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotati
 ###Gradle dependencies###
 
 ```groovy
-ext.androidquery_version = '1.3.2'
+ext.androidquery_version = '1.3.4'
 
 dependencies {
     annotationProcessor "net.frju.androidquery:android-query-preprocessor:${androidquery_version}"
@@ -77,9 +77,14 @@ public class LocalDatabaseProvider extends BaseLocalDatabaseProvider {
 
     @Override
     protected void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        super.onUpgrade(db, oldVersion, newVersion);
+        super.onUpgrade(db, oldVersion, newVersion); // by default, AndroidQueries will create new models and add new fields
 
-        // Put here your migration code
+        // Put here your migration code, do that directly on the db object, no AndroidQueries methods
+    }
+
+    @Override
+    protected void onPostUpgrade(int oldVersion, int newVersion) {
+        // Here you can directly call all kind of Q methods, including Q.XXX.insert()/update()/delete()...
     }
 }
 ```
