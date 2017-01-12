@@ -24,6 +24,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -75,11 +76,13 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         SQLiteOpenHelper openHelper = new SQLiteOpenHelper(context, getDbName(), null, getDbVersion()) {
             @Override
             public void onCreate(SQLiteDatabase db) {
+                BaseLocalDatabaseProvider.this.onCreate(db);
                 dbInitFeedback.onCreateCalled = true;
             }
 
             @Override
             public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+                BaseLocalDatabaseProvider.this.onDowngrade(db, oldVersion, newVersion);
                 dbInitFeedback.onDowngradeCalled = true;
                 dbInitFeedback.oldVersion = oldVersion;
                 dbInitFeedback.newVersion = newVersion;
@@ -87,6 +90,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
             @Override
             public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+                BaseLocalDatabaseProvider.this.onUpgrade(db, oldVersion, newVersion);
                 dbInitFeedback.onUpgradeCalled = true;
                 dbInitFeedback.oldVersion = oldVersion;
                 dbInitFeedback.newVersion = newVersion;
@@ -98,11 +102,26 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
         // We call that after the creation of the database to be able to call AndroidQuery methods in here
         if (dbInitFeedback.onCreateCalled) {
-            BaseLocalDatabaseProvider.this.onCreate(mDatabase);
+            new Handler(mContext.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    BaseLocalDatabaseProvider.this.onPostCreate();
+                }
+            });
         } else if (dbInitFeedback.onDowngradeCalled) {
-            BaseLocalDatabaseProvider.this.onDowngrade(mDatabase, dbInitFeedback.oldVersion, dbInitFeedback.newVersion);
+            new Handler(mContext.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    BaseLocalDatabaseProvider.this.onPostDowngrade(dbInitFeedback.oldVersion, dbInitFeedback.newVersion);
+                }
+            });
         } else if (dbInitFeedback.onUpgradeCalled) {
-            BaseLocalDatabaseProvider.this.onUpgrade(mDatabase, dbInitFeedback.oldVersion, dbInitFeedback.newVersion);
+            new Handler(mContext.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    BaseLocalDatabaseProvider.this.onPostUpgrade(dbInitFeedback.oldVersion, dbInitFeedback.newVersion);
+                }
+            });
         }
     }
 
@@ -142,7 +161,13 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         }
     }
 
+    protected void onPostCreate() {
+    }
+
     protected void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    }
+
+    protected void onPostDowngrade(int oldVersion, int newVersion) {
     }
 
     protected void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -188,6 +213,9 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
             db.setTransactionSuccessful();
             db.endTransaction();
         }
+    }
+
+    protected void onPostUpgrade(int oldVersion, int newVersion) {
     }
 
     protected long insert(String tableName, ContentValues values) {
