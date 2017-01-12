@@ -22,7 +22,6 @@ import net.frju.androidquery.operation.condition.Where;
 import org.junit.Before;
 import org.junit.Test;
 
-import static net.frju.androidquery.operation.condition.Where.where;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -46,7 +45,7 @@ public class CountTest extends IntegrationTest {
     @Test
     public void testEqualToCount() {
         long count = Q.User.count()
-                .where(where(Q.User.TIMESTAMP, Where.Op.IS, SetupUser.CLYDE_TIMESTAMP))
+                .where(Where.field(Q.User.TIMESTAMP).is(SetupUser.CLYDE_TIMESTAMP))
                 .query();
 
         // 1 of the users created by #setupFourTestUsers will match the
@@ -57,7 +56,7 @@ public class CountTest extends IntegrationTest {
     @Test
     public void testMoreThanCount() {
         long count = Q.User.count()
-                .where(where(Q.User.TIMESTAMP, Where.Op.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
+                .where(Where.field(Q.User.TIMESTAMP).isMoreThan(SetupUser.CLYDE_TIMESTAMP))
                 .query();
 
         // 3 of the users created by #setupFourTestUsers will match the

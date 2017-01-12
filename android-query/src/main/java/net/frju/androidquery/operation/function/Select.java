@@ -19,7 +19,7 @@ import android.support.annotation.NonNull;
 
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
-import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.join.Join;
 import net.frju.androidquery.operation.keyword.Limit;
 import net.frju.androidquery.operation.keyword.OrderBy;
@@ -34,13 +34,13 @@ import io.reactivex.Single;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Select extends Query {
-    private final Condition[] mCondition;
+    private final Where[] mWhere;
     private final Join[] mJoins;
     private final OrderBy[] mOrderBy;
     private final Limit mLimit;
 
-    public Condition[] getClause() {
-        return mCondition;
+    public Where[] getClause() {
+        return mWhere;
     }
 
     public Join[] getJoins() {
@@ -55,8 +55,8 @@ public class Select extends Query {
         return mLimit;
     }
 
-    private Select(Condition[] condition, Join[] join, OrderBy[] orderBy, Limit limit) {
-        mCondition = condition;
+    private Select(Where[] where, Join[] join, OrderBy[] orderBy, Limit limit) {
+        mWhere = where;
         mJoins = join;
         mOrderBy = orderBy;
         mLimit = limit;
@@ -69,7 +69,7 @@ public class Select extends Query {
     }
 
     public static class Builder<T> {
-        private Condition[] mCondition;
+        private Where[] mWhere;
         private Join[] mJoins;
         private OrderBy[] mOrderBy;
         private Limit mLimit;
@@ -82,12 +82,12 @@ public class Select extends Query {
         }
 
         /**
-         * Specify a Where condition for the Select query
-         * @param condition Where condition
+         * Specify a Compare where for the Select query
+         * @param where Compare where
          * @return Call Builder#query or the rx methods to run the query
          */
-        public Builder<T> where(Condition... condition) {
-            mCondition = condition;
+        public Builder<T> where(Where... where) {
+            mWhere = where;
             return this;
         }
 
@@ -162,7 +162,7 @@ public class Select extends Query {
         @NonNull
         CursorResult<T> query() {
             return select(
-                    new Select(mCondition, mJoins, mOrderBy, mLimit),
+                    new Select(mWhere, mJoins, mOrderBy, mLimit),
                     mClassDef,
                     mDatabaseProvider
             );
@@ -175,7 +175,7 @@ public class Select extends Query {
         public T queryFirst() {
             // For a single query, always put a limit for performance reasons
             return selectFirst(
-                    new Select(mCondition, mJoins, mOrderBy, new Limit(0, 1)),
+                    new Select(mWhere, mJoins, mOrderBy, new Limit(0, 1)),
                     mClassDef,
                     mDatabaseProvider
             );
@@ -187,7 +187,7 @@ public class Select extends Query {
          */
         public T[] queryAndInit() {
             return selectAndInit(
-                    new Select(mCondition, mJoins, mOrderBy, mLimit),
+                    new Select(mWhere, mJoins, mOrderBy, mLimit),
                     mClassDef,
                     mDatabaseProvider
             );
@@ -201,7 +201,7 @@ public class Select extends Query {
         public T queryFirstAndInit() {
             // For a single query, always put a limit for performance reasons
             return selectFirstAndInit(
-                    new Select(mCondition, mJoins, mOrderBy, new Limit(0, 1)),
+                    new Select(mWhere, mJoins, mOrderBy, new Limit(0, 1)),
                     mClassDef,
                     mDatabaseProvider
             );

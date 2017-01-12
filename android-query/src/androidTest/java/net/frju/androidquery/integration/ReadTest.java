@@ -24,10 +24,6 @@ import net.frju.androidquery.operation.keyword.OrderBy;
 import org.junit.Before;
 import org.junit.Test;
 
-import static net.frju.androidquery.operation.condition.And.and;
-import static net.frju.androidquery.operation.condition.In.in;
-import static net.frju.androidquery.operation.condition.Or.or;
-import static net.frju.androidquery.operation.condition.Where.where;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -54,7 +50,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testEqualToSingleSelection() {
         User user = Q.User.select()
-                .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME))
+                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME))
                 .queryFirst();
 
         assertEquals(SetupUser.CLYDE_USER_NAME, user.username);
@@ -63,7 +59,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testUsernameIsNullSelection() {
         User[] users = Q.User.select()
-                .where(where(Q.User.USERNAME, Where.Op.IS, null))
+                .where(Where.field(Q.User.USERNAME).is(null))
                 .query().toArray();
 
         assertEquals(0, users.length);
@@ -72,7 +68,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testIsNullSelection() {
         User[] users = Q.User.select()
-                .where(where(Q.User.NULL_FIELD, Where.Op.IS, null))
+                .where(Where.field(Q.User.NULL_FIELD).is(null))
                 .query().toArray();
 
         assertEquals(4, users.length);
@@ -81,7 +77,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testEqualToBooleanSelection() {
         User[] users = Q.User.select()
-                .where(where(Q.User.IS_REGISTERED, Where.Op.IS, true))
+                .where(Where.field(Q.User.IS_REGISTERED).is(true))
                 .query().toArray();
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -92,7 +88,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testEqualToLongSelection() {
         User user = Q.User.select()
-                .where(where(Q.User.TIMESTAMP, Where.Op.IS, SetupUser.CLYDE_TIMESTAMP))
+                .where(Where.field(Q.User.TIMESTAMP).is(SetupUser.CLYDE_TIMESTAMP))
                 .queryFirst();
 
         assertEquals(SetupUser.CLYDE_USER_NAME, user.username);
@@ -103,7 +99,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testMoreThanSelection() {
         User[] users = Q.User.select()
-                .where(where(Q.User.TIMESTAMP, Where.Op.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
+                .where(Where.field(Q.User.TIMESTAMP).isMoreThan(SetupUser.CLYDE_TIMESTAMP))
                 .query().toArray();
 
         // 3 of the users created by #setupFourTestUsers will match the
@@ -114,7 +110,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testMoreThanOrEqualToSelection() {
         User[] users = Q.User.select()
-                .where(where(Q.User.TIMESTAMP, Where.Op.MORE_THAN_OR_EQUAL, SetupUser.CLYDE_TIMESTAMP))
+                .where(Where.field(Q.User.TIMESTAMP).isMoreThanOrEqualTo(SetupUser.CLYDE_TIMESTAMP))
                 .query().toArray();
 
         // All 4 of the users created by #setupFourTestUsers will match the
@@ -125,7 +121,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testLessThanSelection() {
         User[] users = Q.User.select()
-                .where(where(Q.User.TIMESTAMP, Where.Op.LESS_THAN, SetupUser.ANGIE_TIMESTAMP))
+                .where(Where.field(Q.User.TIMESTAMP).isLessThan(SetupUser.ANGIE_TIMESTAMP))
                 .query().toArray();
 
         // 3 of the users created by #setupFourTestUsers will match the
@@ -136,7 +132,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testLessThanOrEqualToSelection() {
         User[] users = Q.User.select()
-                .where(where(Q.User.TIMESTAMP, Where.Op.LESS_THAN_OR_EQUAL, SetupUser.ANGIE_TIMESTAMP))
+                .where(Where.field(Q.User.TIMESTAMP).isLessThanOrEqualTo(SetupUser.ANGIE_TIMESTAMP))
                 .query().toArray();
 
         // 4 of the users created by #setupFourTestUsers will match the
@@ -147,7 +143,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testLikeStartingWithSelection() {
         User[] users = Q.User.select()
-                .where(where(Q.User.USERNAME, Where.Op.LIKE, "jo%"))
+                .where(Where.field(Q.User.USERNAME).isLike("jo%"))
                 .query().toArray();
 
         // 1 of the users created by #setupFourTestUsers will match the
@@ -158,7 +154,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testLikeEndingWithSelection() {
         User[] users = Q.User.select()
-                .where(where(Q.User.USERNAME, Where.Op.LIKE, "%e"))
+                .where(Where.field(Q.User.USERNAME).isLike("%e"))
                 .query().toArray();
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -169,7 +165,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testLikeContainingSelection() {
         User[] users = Q.User.select()
-                .where(where(Q.User.USERNAME, Where.Op.LIKE, "%lyd%"))
+                .where(Where.field(Q.User.USERNAME).isLike("%lyd%"))
                 .query().toArray();
 
         // 1 of the users created by #setupFourTestUsers will match the
@@ -178,9 +174,20 @@ public class ReadTest extends IntegrationTest {
     }
 
     @Test
+    public void testBetweenSelection() {
+        User[] users = Q.User.select()
+                .where(Where.field(Q.User.RATING).isNotBetween(10, 50))
+                .query().toArray();
+
+        // 2 of the users created by #setupFourTestUsers will match the
+        // exercise clause, therefore, we assert that 2 rows will be selected
+        assertEquals(3, users.length);
+    }
+
+    @Test
     public void testInStringSelection() {
         User[] users = Q.User.select()
-                .where(in(Q.User.USERNAME, SetupUser.CLYDE_USER_NAME, SetupUser.ANGIE_USER_NAME))
+                .where(Where.field(Q.User.USERNAME).isIn(SetupUser.CLYDE_USER_NAME, SetupUser.ANGIE_USER_NAME))
                 .query().toArray();
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -191,7 +198,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testInLongSelection() {
         User[] users = Q.User.select()
-                .where(in(Q.User.TIMESTAMP, SetupUser.CLYDE_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP, SetupUser.GILL_TIMESTAMP))
+                .where(Where.field(Q.User.TIMESTAMP).isIn(SetupUser.CLYDE_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP, SetupUser.GILL_TIMESTAMP))
                 .query().toArray();
 
         // 3 of the users created by #setupFourTestUsers will match the
@@ -202,10 +209,8 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testOrWhereInQueryIsBuiltFromClause() {
         User[] users = Q.User.select()
-                .where(or(
-                        where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME),
-                        in(Q.User.TIMESTAMP, SetupUser.GILL_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP)
-                ))
+                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME)
+                        .or(Where.field(Q.User.TIMESTAMP).isIn(SetupUser.GILL_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP)))
                 .query().toArray();
 
 
@@ -217,11 +222,10 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testAndEqualOperationsSelection() {
         User[] users = Q.User.select()
-                .where(and(
-                        where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME),
-                        where(Q.User.IS_REGISTERED, Where.Op.IS, SetupUser.CLYDE_IS_REGISTERED),
-                        where(Q.User.TIMESTAMP, Where.Op.IS, SetupUser.CLYDE_TIMESTAMP)
-                ))
+                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME),
+                        Where.field(Q.User.IS_REGISTERED).is(SetupUser.CLYDE_IS_REGISTERED),
+                        Where.field(Q.User.TIMESTAMP).is(SetupUser.CLYDE_TIMESTAMP)
+                )
                 .query().toArray();
 
         // 1 of the users created by #setupFourTestUsers will match the
@@ -232,10 +236,8 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testOrEqualOperationsSelection() {
         User[] users = Q.User.select()
-                .where(or(
-                        where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME),
-                        where(Q.User.USERNAME, Where.Op.IS, SetupUser.ANGIE_USER_NAME)
-                ))
+                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME)
+                        .or(Where.field(Q.User.USERNAME).is(SetupUser.ANGIE_USER_NAME)))
                 .query().toArray();
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -246,17 +248,9 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testAndOrEqualsOperationsSelection() {
         User[] users = Q.User.select()
-                .where(
-                        and(
-                                or(
-                                        where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME),
-                                        where(Q.User.USERNAME, Where.Op.IS, SetupUser.ANGIE_USER_NAME)
-                                ),
-                                and(
-                                        where(Q.User.TIMESTAMP, Where.Op.MORE_THAN_OR_EQUAL, SetupUser.ANGIE_TIMESTAMP)
-                                )
-                        )
-                )
+                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME)
+                                .or(Where.field(Q.User.USERNAME).is(SetupUser.ANGIE_USER_NAME)),
+                        Where.field(Q.User.TIMESTAMP).isMoreThanOrEqualTo(SetupUser.ANGIE_TIMESTAMP))
                 .query().toArray();
 
         // 1 of the users created by #setupFourTestUsers will match the

@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import net.frju.androidquery.operation.condition.Condition;
-import net.frju.androidquery.operation.condition.In;
 import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.function.Count;
 import net.frju.androidquery.operation.function.CursorResult;
@@ -148,7 +146,7 @@ public abstract class Query {
             DbModelDescriptor tableDesc = getTableDescription(classDef, databaseProvider);
             String primaryKeyName = tableDesc.getPrimaryKeyDbName();
             ContentValues[] valuesArray = new ContentValues[models.length];
-            Condition[][] conditionsArray = new Condition[models.length][];
+            Where[][] conditionsArray = new Where[models.length][];
             for (int i = 0; i < models.length; i++) {
                 Object model = models[i];
 
@@ -157,8 +155,8 @@ public abstract class Query {
                     if (TextUtils.isEmpty(primaryKeyName)) {
                         throw new IllegalStateException("update with model() method require a primary key");
                     }
-                    conditionsArray[i] = new Condition[1];
-                    conditionsArray[i][0] = Where.where(primaryKeyName, Where.Op.IS, tableDesc.getPrimaryKeyValue(model));
+                    conditionsArray[i] = new Where[1];
+                    conditionsArray[i][0] = Where.field(primaryKeyName).is(tableDesc.getPrimaryKeyValue(model));
                 }
 
                 if (model instanceof ModelListener) {
@@ -176,7 +174,7 @@ public abstract class Query {
             return databaseProvider.bulkUpdate(
                     getTableDescription(classDef, databaseProvider).getTableDbName(),
                     new ContentValues[]{update.getContentValues()},
-                    new Condition[][]{update.getConditions()}
+                    new Where[][]{update.getConditions()}
             );
         }
     }
@@ -207,11 +205,11 @@ public abstract class Query {
                 }
             }
 
-            Condition condition = new In(primaryKeyName, keys);
+            Where where = Where.field(primaryKeyName).isIn(keys);
 
             return databaseProvider.delete(
                     tableDesc.getTableDbName(),
-                    new Condition[]{condition}
+                    new Where[]{where}
             );
         } else {
             return databaseProvider.delete(

@@ -27,7 +27,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static net.frju.androidquery.operation.condition.Where.where;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -54,12 +53,12 @@ public class UpdateTest extends IntegrationTest {
         // exercise
         int updated = Q.User.update()
                 .values(contentValues)
-                .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME))
+                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME))
                 .query();
 
         // verify
         User user = Q.User.select()
-                .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.CLYDE_USER_NAME))
+                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME))
                 .queryFirst();
 
         assertEquals(true, user.isRegistered);
@@ -137,12 +136,12 @@ public class UpdateTest extends IntegrationTest {
         // exercise
         int updated = Q.User.update()
                 .values(contentValues)
-                .where(where(Q.User.TIMESTAMP, Where.Op.MORE_THAN, SetupUser.CLYDE_TIMESTAMP))
+                .where(Where.field(Q.User.TIMESTAMP).isMoreThan(SetupUser.CLYDE_TIMESTAMP))
                 .query();
 
         // verify
         User[] users = Q.User.select()
-                .where(where(Q.User.TIMESTAMP, Where.Op.IS, newTimestamp))
+                .where(Where.field(Q.User.TIMESTAMP).is(newTimestamp))
                 .query().toArray();
 
         // 3 of the users created by #setupFourTestUsers will match the

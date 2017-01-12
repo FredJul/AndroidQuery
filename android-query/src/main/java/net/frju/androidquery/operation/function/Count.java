@@ -19,7 +19,7 @@ import android.support.annotation.NonNull;
 
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
-import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.Where;
 
 import java.util.concurrent.Callable;
 
@@ -30,14 +30,14 @@ import io.reactivex.Single;
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Count extends Query {
-    private final Condition[] mCondition;
+    private final Where[] mWhere;
 
-    public Condition[] getClause() {
-        return mCondition;
+    public Where[] getClause() {
+        return mWhere;
     }
 
-    private Count(Condition[] condition) {
-        mCondition = condition;
+    private Count(Where[] where) {
+        mWhere = where;
     }
 
     public static
@@ -47,7 +47,7 @@ public class Count extends Query {
     }
 
     public static class Builder<T> {
-        private Condition[] mCondition;
+        private Where[] mWhere;
         private final Class<T> mClassDef;
         private final DatabaseProvider mDatabaseProvider;
 
@@ -57,14 +57,14 @@ public class Count extends Query {
         }
 
         /**
-         * Specify a Where condition for the Count query
-         * @param condition Where condition
+         * Specify a Compare where for the Count query
+         * @param where Compare where
          * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
-        Builder<T> where(Condition... condition) {
-            mCondition = condition;
+        Builder<T> where(Where... where) {
+            mWhere = where;
             return this;
         }
 
@@ -74,7 +74,7 @@ public class Count extends Query {
          */
         public long query() {
             return count(
-                    new Count(mCondition),
+                    new Count(mWhere),
                     mClassDef,
                     mDatabaseProvider
             );

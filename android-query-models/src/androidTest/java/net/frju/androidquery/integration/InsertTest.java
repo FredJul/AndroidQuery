@@ -37,7 +37,7 @@ public class InsertTest {
     @Test
     public void testInsertRawContact() {
 // TODO this is not working, should maybe have a "readOnly" attribute on some columns
-//        Q.RawContact.deleteViaContentProvider().where(Condition.where(Q.RawContact.DISPLAY_NAME_PRIMARY, Where.Op.IS, "__TEST_INTEGRATION__")).query();
+//        Q.RawContact.deleteViaContentProvider().where(Where.where(Q.RawContact.DISPLAY_NAME_PRIMARY, Compare.Op.IS, "__TEST_INTEGRATION__")).query();
 //
 //        long initialCount = Q.RawContact.count().query();
 //        RawContact newContact = new RawContact();
@@ -49,7 +49,7 @@ public class InsertTest {
 //        long afterInsertionCount = Q.RawContact.count().query();
 //        assertTrue(afterInsertionCount == initialCount + 1);
 //
-//        Q.RawContact.deleteViaContentProvider().where(Condition.where(Q.RawContact.DISPLAY_NAME_PRIMARY, Where.Op.IS, "__TEST_INTEGRATION__")).query();
+//        Q.RawContact.deleteViaContentProvider().where(Where.where(Q.RawContact.DISPLAY_NAME_PRIMARY, Compare.Op.IS, "__TEST_INTEGRATION__")).query();
 //        long afterDeletionCount = Q.RawContact.count().query();
 //        assertTrue(afterDeletionCount == initialCount);
     }

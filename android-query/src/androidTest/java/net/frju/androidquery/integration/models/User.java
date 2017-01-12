@@ -5,7 +5,6 @@ import net.frju.androidquery.annotation.DbModel;
 import net.frju.androidquery.annotation.ForeignKey;
 import net.frju.androidquery.annotation.InitMethod;
 import net.frju.androidquery.gen.Q;
-import net.frju.androidquery.operation.condition.Condition;
 import net.frju.androidquery.operation.condition.Where;
 
 @DbModel(
@@ -45,6 +44,6 @@ public class User {
 
     @InitMethod
     public void initPosts() {
-        posts = Q.Post.select().where(Condition.where(Q.Post.USER_ID, Where.Op.IS, id)).queryAndInit();
+        posts = Q.Post.select().where(Where.field(Q.Post.USER_ID).is(id)).queryAndInit();
     }
 }

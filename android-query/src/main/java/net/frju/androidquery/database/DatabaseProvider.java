@@ -21,7 +21,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.join.Join;
 import net.frju.androidquery.operation.keyword.Limit;
 import net.frju.androidquery.operation.keyword.OrderBy;
@@ -58,14 +58,14 @@ public abstract class DatabaseProvider {
 
     abstract protected int bulkInsert(String tableName, ContentValues[] valuesArray);
 
-    abstract protected int bulkUpdate(String tableName, ContentValues[] valuesArray, Condition[][] conditionsArray);
+    abstract protected int bulkUpdate(String tableName, ContentValues[] valuesArray, Where[][] conditionsArray);
 
-    abstract protected Cursor query(String tableName, String[] columns, Condition[] condition, Join[] joins,
+    abstract protected Cursor query(String tableName, String[] columns, Where[] where, Join[] joins,
                                     String groupBy, String having, OrderBy[] orderBy, Limit limit);
 
-    abstract protected int delete(String tableName, Condition[] condition);
+    abstract protected int delete(String tableName, Where[] where);
 
-    abstract protected long count(String tableName, Condition[] condition);
+    abstract protected long count(String tableName, Where[] where);
 
     abstract protected Cursor rawQuery(String sql);
 

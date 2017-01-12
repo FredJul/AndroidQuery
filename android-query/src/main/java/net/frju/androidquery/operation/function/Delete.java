@@ -19,7 +19,7 @@ import android.support.annotation.NonNull;
 
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
-import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.Where;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -32,22 +32,22 @@ import io.reactivex.Single;
  */
 public class Delete extends Query {
     private Object[] mModels;
-    private Condition[] mConditions;
+    private Where[] mWheres;
 
     public Object[] getModels() {
         return mModels;
     }
 
-    public Condition[] getConditions() {
-        return mConditions;
+    public Where[] getConditions() {
+        return mWheres;
     }
 
     private Delete(Object[] models) {
         mModels = models;
     }
 
-    private Delete(Condition[] conditions) {
-        mConditions = conditions;
+    private Delete(Where[] wheres) {
+        mWheres = wheres;
     }
 
     public static
@@ -58,7 +58,7 @@ public class Delete extends Query {
 
     public static class Builder<T> {
         private T[] mModels;
-        private Condition[] mCondition;
+        private Where[] mWhere;
         private final Class<T> mClassDef;
         private final DatabaseProvider mDatabaseProvider;
 
@@ -68,14 +68,14 @@ public class Delete extends Query {
         }
 
         /**
-         * Specify a Where condition for the Delete query
-         * @param condition Where condition
+         * Specify a Compare where for the Delete query
+         * @param where Compare where
          * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
-        Builder<T> where(Condition... condition) {
-            mCondition = condition;
+        Builder<T> where(Where... where) {
+            mWhere = where;
             return this;
         }
 
@@ -119,7 +119,7 @@ public class Delete extends Query {
                 );
             } else {
                 return delete(
-                        new Delete(mCondition),
+                        new Delete(mWhere),
                         mClassDef,
                         mDatabaseProvider
                 );

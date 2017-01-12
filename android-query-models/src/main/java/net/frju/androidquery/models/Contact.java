@@ -7,7 +7,6 @@ import net.frju.androidquery.annotation.DbField;
 import net.frju.androidquery.annotation.DbModel;
 import net.frju.androidquery.annotation.InitMethod;
 import net.frju.androidquery.models.gen.Q;
-import net.frju.androidquery.operation.condition.Condition;
 import net.frju.androidquery.operation.condition.Where;
 
 @SuppressWarnings("unused")
@@ -97,6 +96,6 @@ public class Contact {
 
     @InitMethod
     public void initRawContacts() {
-        rawContacts = Q.RawContact.select().where(Condition.where(Q.RawContact.CONTACT_ID, Where.Op.IS, id)).queryAndInit();
+        rawContacts = Q.RawContact.select().where(Where.field(Q.RawContact.CONTACT_ID).is(id)).queryAndInit();
     }
 }

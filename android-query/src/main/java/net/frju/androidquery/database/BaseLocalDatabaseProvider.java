@@ -28,7 +28,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.join.Join;
 import net.frju.androidquery.operation.keyword.Limit;
 import net.frju.androidquery.operation.keyword.OrderBy;
@@ -251,7 +251,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         return nbInsert;
     }
 
-    protected int bulkUpdate(String tableName, ContentValues[] valuesArray, Condition[][] conditionsArray) {
+    protected int bulkUpdate(String tableName, ContentValues[] valuesArray, Where[][] conditionsArray) {
         int nbUpdate = 0;
         mDatabase.beginTransaction();
 
@@ -278,7 +278,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         return nbUpdate;
     }
 
-    protected Cursor query(String tableName, String[] columns, Condition[] condition, Join[] joins,
+    protected Cursor query(String tableName, String[] columns, Where[] where, Join[] joins,
                            String groupBy, String having, OrderBy[] orderBy, Limit limit) {
 
         if (joins != null && joins.length > 0) {
@@ -287,13 +287,13 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
                         columns,
                         joins,
                         tableName,
-                        condition,
+                        where,
                         orderBy,
                         limit,
                         getResolver()
                 );
 
-                return mDatabase.rawQuery(joinQuery, mClauseHelper.getConditionArgs(condition));
+                return mDatabase.rawQuery(joinQuery, mClauseHelper.getConditionArgs(where));
             } catch (Exception e) {
                 throw new SQLException(e.getMessage());
             }
@@ -301,8 +301,8 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
             Cursor cursor = mDatabase.query(
                     tableName,
                     columns,
-                    mClauseHelper.getCondition(condition),
-                    mClauseHelper.getConditionArgs(condition),
+                    mClauseHelper.getCondition(where),
+                    mClauseHelper.getConditionArgs(where),
                     groupBy,
                     having,
                     mClauseHelper.getOrderBy(orderBy),
@@ -317,12 +317,12 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         }
     }
 
-    protected int delete(String tableName, Condition[] condition) {
-        String whereClause = mClauseHelper.getCondition(condition);
+    protected int delete(String tableName, Where[] where) {
+        String whereClause = mClauseHelper.getCondition(where);
         int nbDeleted = mDatabase.delete(
                 tableName,
                 whereClause,
-                mClauseHelper.getConditionArgs(condition)
+                mClauseHelper.getConditionArgs(where)
         );
 
         if (nbDeleted > 0 || TextUtils.isEmpty(whereClause)) {
@@ -333,12 +333,12 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         return nbDeleted;
     }
 
-    protected long count(String tableName, Condition[] condition) {
+    protected long count(String tableName, Where[] where) {
         return DatabaseUtils.queryNumEntries(
                 mDatabase,
                 tableName,
-                mClauseHelper.getCondition(condition),
-                mClauseHelper.getConditionArgs(condition)
+                mClauseHelper.getCondition(where),
+                mClauseHelper.getConditionArgs(where)
         );
     }
 

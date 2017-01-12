@@ -8,7 +8,7 @@ AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotati
 ###Gradle dependencies###
 
 ```groovy
-ext.androidquery_version = '1.3.4'
+ext.androidquery_version = '1.4.0'
 
 dependencies {
     annotationProcessor "net.frju.androidquery:android-query-preprocessor:${androidquery_version}"
@@ -250,13 +250,13 @@ if (cursor != null) {
 }
 ```
 
-###Conditions###
-The `Condition` class is used to build up the where query:
+###Where clauses###
+The `Where` class is used to build up the where query:
 
 ```java
 // SELECT * FROM User WHERE isRegistered = 'true';
 User[] users = Q.User.select()
-        .where(Condition.where(Q.User.IS_REGISTERED, Where.Op.IS, true))
+        .where(Where.field(Q.User.IS_REGISTERED).is(true))
         .query()
         .toArray();
 ```
@@ -264,7 +264,7 @@ User[] users = Q.User.select()
 ```java
 // SELECT * FROM User WHERE username LIKE 'jo%'
 User[] users = Q.User.select()
-        .where(Condition.where(Q.User.USERNAME, Where.Op.LIKE, "jo%"))
+        .where(Where.field(Q.User.USERNAME).isLike("jo%"))
         .query()
         .toArray();
 ```
@@ -272,22 +272,17 @@ User[] users = Q.User.select()
 ```java
 // SELECT * FROM User WHERE username IN ("sam","josh");
 User[] users = Q.User.select()
-        .where(Condition.in(Q.User.USERNAME, "sam", "josh"))
+        .where(Where.field(Q.User.USERNAME).isIn("sam", "josh"))
         .query()
         .toArray();
 ```
 
 ```java
-// SELECT * FROM User WHERE ((username = "sam" OR username = "angie") AND (timestamp >= 1234567890));
+// SELECT * FROM User WHERE ((username = "sam" OR username = "angie") AND timestamp >= 1234567890);
 User[] users = Q.User.select()
-		.where(Condition.and(
-                Condition.or(
-                        Condition.where(Q.User.USERNAME, Where.Op.IS, "sam"),
-                        Condition.where(Q.User.USERNAME, Where.Op.IS, "angie")
-                ),
-                Condition.and(
-                        Condition.where(Q.User.TIMESTAMP, Where.Op.MORE_THAN_OR_EQUAL_TO, 1234567890)
-                )))
+		.where(Where.field(Q.User.USERNAME).is("sam")
+                        .or(Where.field(Q.User.USERNAME).is("angie")),
+               Where.field(Q.User.TIMESTAMP).isMoreThanOrEqualTo(1234567890))
         .query()
         .toArray();
 ```
@@ -582,7 +577,7 @@ public class App extends Application {
 Then you can queries the lib models as you would do with your own models:
 ```java
 Contact[] contacts = Q.Contact.select()
-         .where(Condition.where(Q.Contact.IN_VISIBLE_GROUP, Where.Op.IS, true))
+         .where(Where.field(Q.Contact.IN_VISIBLE_GROUP).is(true))
          .orderBy(new OrderBy(Q.Contact.DISPLAY_NAME, OrderBy.Order.ASC, OrderBy.Collate.LOCALIZED))
          .query()
          .toArray();

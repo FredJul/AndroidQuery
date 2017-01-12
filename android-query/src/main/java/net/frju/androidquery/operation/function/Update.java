@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
-import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.Compare;
 import net.frju.androidquery.operation.condition.Where;
 
 import java.util.List;
@@ -35,7 +35,7 @@ import io.reactivex.Single;
 public class Update extends Query {
     private Object[] mModels;
     private ContentValues mContentValues;
-    private Condition[] mConditions;
+    private Where[] mWheres;
 
     public Object[] getModels() {
         return mModels;
@@ -45,17 +45,17 @@ public class Update extends Query {
         return mContentValues;
     }
 
-    public Condition[] getConditions() {
-        return mConditions;
+    public Where[] getConditions() {
+        return mWheres;
     }
 
     private Update(Object... models) {
         mModels = models;
     }
 
-    private Update(ContentValues contentValues, Condition[] conditions) {
+    private Update(ContentValues contentValues, Where[] wheres) {
         mContentValues = contentValues;
-        mConditions = conditions;
+        mWheres = wheres;
     }
 
     public static
@@ -67,7 +67,7 @@ public class Update extends Query {
     public static class Builder<T> {
         private T[] mModels;
         private ContentValues mValues;
-        private Condition[] mCondition;
+        private Where[] mWhere;
         private final Class<T> mClassDef;
         private final DatabaseProvider mDatabaseProvider;
 
@@ -77,14 +77,14 @@ public class Update extends Query {
         }
 
         /**
-         * Specify a Where clause for the Update query
-         * @param clause Where clause
+         * Specify a Compare clause for the Update query
+         * @param clause Compare clause
          * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
-        Builder<T> where(Where... clause) {
-            mCondition = clause;
+        Builder<T> where(Compare... clause) {
+            mWhere = clause;
             return this;
         }
 
@@ -140,7 +140,7 @@ public class Update extends Query {
                 );
             } else {
                 return update(
-                        new Update(mValues, mCondition),
+                        new Update(mValues, mWhere),
                         mClassDef,
                         mDatabaseProvider
                 );

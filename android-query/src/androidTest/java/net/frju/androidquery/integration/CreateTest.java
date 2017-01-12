@@ -23,7 +23,6 @@ import net.frju.androidquery.operation.condition.Where;
 import org.junit.Before;
 import org.junit.Test;
 
-import static net.frju.androidquery.operation.condition.Where.where;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -105,11 +104,11 @@ public class CreateTest extends IntegrationTest {
 
         // verify
         User angieUser = Q.User.select()
-                .where(where(Q.User.USERNAME, Where.Op.IS, ANGIE_USERNAME))
+                .where(Where.field(Q.User.USERNAME).is(ANGIE_USERNAME))
                 .queryFirst();
 
         User samUser = Q.User.select()
-                .where(where(Q.User.USERNAME, Where.Op.IS, SAM_USERNAME))
+                .where(Where.field(Q.User.USERNAME).is(SAM_USERNAME))
                 .queryFirst();
 
         assertEquals(ANGIE_USERNAME, angieUser.username);

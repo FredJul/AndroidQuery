@@ -70,6 +70,10 @@ public class OrderBy {
         return mCollate;
     }
 
+    public OrderBy(String field) {
+        this(field, Order.ASC, null);
+    }
+
     public OrderBy(String field, Order order) {
         this(field, order, null);
     }

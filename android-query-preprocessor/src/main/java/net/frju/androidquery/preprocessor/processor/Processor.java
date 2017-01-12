@@ -117,7 +117,7 @@ public class Processor extends AbstractProcessor {
 
         Context.getInstance().getMessager().printMessage(
                 Diagnostic.Kind.NOTE,
-                "creating SQLKing Q.java source file at: " + jfo.toUri());
+                "creating AndroidQuery Q.java source file at: " + jfo.toUri());
 
         String formattedSource = new Formatter().formatSource(body);
 

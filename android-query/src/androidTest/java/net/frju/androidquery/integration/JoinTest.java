@@ -28,7 +28,6 @@ import net.frju.androidquery.operation.keyword.OrderBy;
 import org.junit.Before;
 import org.junit.Test;
 
-import static net.frju.androidquery.operation.condition.Where.where;
 import static net.frju.androidquery.operation.join.Join.innerJoin;
 import static org.junit.Assert.assertEquals;
 
@@ -156,7 +155,7 @@ public class JoinTest extends IntegrationTest {
                         Log.class,
                         Q.Log.ID
                 ))
-                .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.ANGIE_USER_NAME))
+                .where(Where.field(Q.User.USERNAME).is(SetupUser.ANGIE_USER_NAME))
                 .query().toArray();
 
 

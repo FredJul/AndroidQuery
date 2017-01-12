@@ -18,19 +18,19 @@ package net.frju.androidquery.operation.condition;
 /**
  * @author Samuel Kirton [sam@memtrip.com]
  */
-public class And extends Condition {
-    private final Condition[] mCondition;
+public class And extends Where {
+    private final Where[] mWhere;
 
-    public Condition[] getCondition() {
-        return mCondition;
+    public Where[] getCondition() {
+        return mWhere;
     }
 
     /**
      * Specifies a SQLite AND operator
      *
-     * @param condition Combine multiple conditions
+     * @param where Combine multiple conditions
      */
-    public And(Condition... condition) {
-        mCondition = condition;
+    And(Where... where) {
+        mWhere = where;
     }
 }

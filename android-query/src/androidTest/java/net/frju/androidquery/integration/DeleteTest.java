@@ -23,8 +23,6 @@ import net.frju.androidquery.operation.condition.Where;
 import org.junit.Before;
 import org.junit.Test;
 
-import static net.frju.androidquery.operation.condition.In.in;
-import static net.frju.androidquery.operation.condition.Where.where;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -55,7 +53,7 @@ public class DeleteTest extends IntegrationTest {
     @Test
     public void testSingleUserIsDeleted() {
         int deletedRows = Q.User.delete()
-                .where(where(Q.User.USERNAME, Where.Op.IS, SetupUser.ANGIE_USER_NAME))
+                .where(Where.field(Q.User.USERNAME).is(SetupUser.ANGIE_USER_NAME))
                 .query();
 
         // verify
@@ -70,7 +68,7 @@ public class DeleteTest extends IntegrationTest {
     @Test
     public void testUsersAreDeleted() {
         int deletedRows = Q.User.delete()
-                .where(in(Q.User.USERNAME, SetupUser.ANGIE_USER_NAME, SetupUser.CLYDE_USER_NAME, SetupUser.GILL_USER_NAME))
+                .where(Where.field(Q.User.USERNAME).isIn(SetupUser.ANGIE_USER_NAME, SetupUser.CLYDE_USER_NAME, SetupUser.GILL_USER_NAME))
                 .query();
 
         // verify

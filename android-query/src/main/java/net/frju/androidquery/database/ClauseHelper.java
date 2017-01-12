@@ -16,7 +16,8 @@
 package net.frju.androidquery.database;
 
 import net.frju.androidquery.operation.condition.And;
-import net.frju.androidquery.operation.condition.Condition;
+import net.frju.androidquery.operation.condition.Between;
+import net.frju.androidquery.operation.condition.Compare;
 import net.frju.androidquery.operation.condition.In;
 import net.frju.androidquery.operation.condition.Or;
 import net.frju.androidquery.operation.condition.Where;
@@ -38,7 +39,9 @@ public class ClauseHelper {
     private static final String BRACKET_START = "(";
     private static final String BRACKET_END = ")";
     private static final String COMMA = ",";
+    private static final String NOT = "NOT";
     private static final String IN = "IN";
+    private static final String BETWEEN = "BETWEEN";
     private static final String AND = "AND";
     private static final String OR = "OR";
     private static final String ON = "ON";
@@ -47,31 +50,33 @@ public class ClauseHelper {
     protected ClauseHelper() {
     }
 
-    public String getCondition(Condition[] condition) {
+    public String getCondition(Where[] where) {
         StringBuilder clauseBuilder = new StringBuilder();
 
-        if (condition != null && condition.length > 0) {
-            if (condition.length == 1) {
-                clauseBuilder.append(getCondition(condition[0]));
+        if (where != null && where.length > 0) {
+            if (where.length == 1) {
+                clauseBuilder.append(getCondition(where[0]));
             } else {
-                clauseBuilder.append(getCondition(Condition.and(condition)));
+                clauseBuilder.append(getCondition(Where.combinesWithAnd(where)));
             }
         }
 
         return clauseBuilder.toString();
     }
 
-    private String getCondition(Condition condition) {
+    private String getCondition(Where where) {
         StringBuilder clauseBuilder = new StringBuilder();
 
-        if (condition instanceof In) {
-            clauseBuilder.append(buildInCondition((In) condition));
-        } else if (condition instanceof Where) {
-            clauseBuilder.append(buildWhereCondition((Where) condition));
-        } else if (condition instanceof And) {
+        if (where instanceof In) {
+            clauseBuilder.append(buildInCondition((In) where));
+        } else if (where instanceof Between) {
+            clauseBuilder.append(buildBetweenCondition((Between) where));
+        } else if (where instanceof Compare) {
+            clauseBuilder.append(buildCompareCondition((Compare) where));
+        } else if (where instanceof And) {
             clauseBuilder.append(BRACKET_START);
-            And and = (And) condition;
-            for (Condition item : and.getCondition()) {
+            And and = (And) where;
+            for (Where item : and.getCondition()) {
                 clauseBuilder.append(getCondition(item));
                 clauseBuilder.append(SPACE);
                 clauseBuilder.append(AND);
@@ -81,10 +86,10 @@ public class ClauseHelper {
             // remove the excess AND with its 2 spaces
             clauseBuilder.delete(clauseBuilder.length() - 5, clauseBuilder.length());
             clauseBuilder.append(BRACKET_END);
-        } else if (condition instanceof Or) {
+        } else if (where instanceof Or) {
             clauseBuilder.append(BRACKET_START);
-            Or or = (Or) condition;
-            for (Condition item : or.getCondition()) {
+            Or or = (Or) where;
+            for (Where item : or.getCondition()) {
                 clauseBuilder.append(getCondition(item));
                 clauseBuilder.append(SPACE);
                 clauseBuilder.append(OR);
@@ -99,7 +104,7 @@ public class ClauseHelper {
         return clauseBuilder.toString();
     }
 
-    private String buildWhereCondition(Where where) {
+    private String buildCompareCondition(Compare where) {
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(where.getColumn());
@@ -122,6 +127,10 @@ public class ClauseHelper {
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(row);
+        if (in.hasNot()) {
+            stringBuilder.append(SPACE);
+            stringBuilder.append(NOT);
+        }
         stringBuilder.append(SPACE);
         stringBuilder.append(IN);
         stringBuilder.append(SPACE);
@@ -142,11 +151,31 @@ public class ClauseHelper {
         return stringBuilder.toString();
     }
 
-    public String[] getConditionArgs(Condition[] condition) {
+    private String buildBetweenCondition(Between between) {
+        String row = between.getColumn();
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(row);
+        if (between.hasNot()) {
+            stringBuilder.append(SPACE);
+            stringBuilder.append(NOT);
+        }
+        stringBuilder.append(SPACE);
+        stringBuilder.append(BETWEEN);
+        stringBuilder.append(SPACE);
+        stringBuilder.append(VALUE);
+        stringBuilder.append(AND);
+        stringBuilder.append(VALUE);
+
+        return stringBuilder.toString();
+    }
+
+    public String[] getConditionArgs(Where[] where) {
         List<String> args = new ArrayList<>();
 
-        if (condition != null) {
-            for (Condition item : condition) {
+        if (where != null) {
+            for (Where item : where) {
                 args.addAll(getConditionArgs(item));
             }
         }
@@ -154,24 +183,26 @@ public class ClauseHelper {
         return args.toArray(new String[args.size()]);
     }
 
-    private List<String> getConditionArgs(Condition condition) {
+    private List<String> getConditionArgs(Where where) {
         List<String> args = new ArrayList<>();
 
-        if (condition instanceof In) {
-            args.addAll(buildInArgs((In) condition));
-        } else if (condition instanceof Where) {
-            String arg = buildWhereArgs((Where) condition);
+        if (where instanceof In) {
+            args.addAll(buildInArgs((In) where));
+        } else if (where instanceof Between) {
+            args.addAll(buildBetweenArgs((Between) where));
+        } else if (where instanceof Compare) {
+            String arg = buildCompareArgs((Compare) where);
             if (arg != null) {
                 args.add(arg);
             }
-        } else if (condition instanceof And) {
-            And and = (And) condition;
-            for (Condition item : and.getCondition()) {
+        } else if (where instanceof And) {
+            And and = (And) where;
+            for (Where item : and.getCondition()) {
                 args.addAll(getConditionArgs(item));
             }
-        } else if (condition instanceof Or) {
-            Or or = (Or) condition;
-            for (Condition item : or.getCondition()) {
+        } else if (where instanceof Or) {
+            Or or = (Or) where;
+            for (Where item : or.getCondition()) {
                 args.addAll(getConditionArgs(item));
             }
         }
@@ -179,7 +210,7 @@ public class ClauseHelper {
         return args;
     }
 
-    private String buildWhereArgs(Where where) {
+    private String buildCompareArgs(Compare where) {
         if (where.getValue() == null) {
             return null;
         } else {
@@ -193,6 +224,15 @@ public class ClauseHelper {
 
             return value;
         }
+    }
+
+    private List<String> buildBetweenArgs(Between between) {
+        List<String> args = new ArrayList<>();
+
+        args.add(String.valueOf(between.getValue1()));
+        args.add(String.valueOf(between.getValue2()));
+
+        return args;
     }
 
     private List<String> buildInArgs(In in) {
@@ -283,7 +323,7 @@ public class ClauseHelper {
         return stringBuilder.toString();
     }
 
-    public String buildJoinQuery(String[] tableColumns, Join[] joins, String tableName, Condition[] condition,
+    public String buildJoinQuery(String[] tableColumns, Join[] joins, String tableName, Where[] where,
                                  OrderBy[] orderBy, Limit limit, Resolver resolver) {
 
         String[] joinColumns = getJoinColumns(joins, resolver);
@@ -307,7 +347,7 @@ public class ClauseHelper {
         // remove the trailing comma
         stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
 
-        String clauseString = getCondition(condition);
+        String clauseString = getCondition(where);
         if (clauseString != null && clauseString.length() > 0) {
             clauseString = "WHERE " + clauseString;
         }
