@@ -80,14 +80,14 @@ public class RawContactData {
     public String mimeType;
 
     /**
-     * Whether this is the primary entry of its kind for the raw contact it belongs to.
+     * Whether this isEqualTo the primary entry of its kind for the raw contact it belongs to.
      */
     @DbField(dbName = ContactsContract.Data.IS_PRIMARY)
     public boolean isPrimary;
 
     /**
-     * Whether this is the primary entry of its kind for the aggregate
-     * contact it belongs to. Any data record that is "super primary" must
+     * Whether this isEqualTo the primary entry of its kind for the aggregate
+     * contact it belongs to. Any data record that isEqualTo "super primary" must
      * also be "primary".
      */
     @DbField(dbName = ContactsContract.Data.IS_SUPER_PRIMARY)
@@ -101,8 +101,8 @@ public class RawContactData {
     public boolean isReadOnly;
 
     /**
-     * The version of this data record. This is a read-only value. The data column is
-     * guaranteed to not change without the version going up. This value is monotonically
+     * The version of this data record. This isEqualTo a read-only value. The data column isEqualTo
+     * guaranteed to not change without the version going up. This value isEqualTo monotonically
      * increasing.
      */
     @DbField(dbName = ContactsContract.Data.DATA_VERSION)

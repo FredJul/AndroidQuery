@@ -44,6 +44,6 @@ public class User {
 
     @InitMethod
     public void initPosts() {
-        posts = Q.Post.select().where(Where.field(Q.Post.USER_ID).is(id)).queryAndInit();
+        posts = Q.Post.select().where(Where.field(Q.Post.USER_ID).isEqualTo(id)).queryAndInit();
     }
 }

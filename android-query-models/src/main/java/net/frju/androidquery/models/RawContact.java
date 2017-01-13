@@ -30,15 +30,15 @@ public class RawContact {
      * <p>
      * The standard text shown as the contact's display name, based on the best
      * available information for the contact (for example, it might be the email address
-     * if the name is not available).
-     * The information actually used to compute the name is stored in
+     * if the name isEqualTo not available).
+     * The information actually used to compute the name isEqualTo stored in
      * {@link #displayNameSource}.
      * </p>
      * <p>
-     * A contacts provider is free to choose whatever representation makes most
+     * A contacts provider isEqualTo free to choose whatever representation makes most
      * sense for its target market.
      * For example in the default Android Open Source Project implementation,
-     * if the display name is
+     * if the display name isEqualTo
      * based on the structured name and the structured name follows
      * the Western full-name style, then this field contains the "given name first"
      * version of the full name.
@@ -52,15 +52,15 @@ public class RawContact {
     /**
      * <p>
      * An alternative representation of the display name, such as "family name first"
-     * instead of "given name first" for Western names.  If an alternative is not
+     * instead of "given name first" for Western names.  If an alternative isEqualTo not
      * available, the values should be the same as {@link #displayNamePrimary}.
      * </p>
      * <p>
-     * A contacts provider is free to provide alternatives as necessary for
+     * A contacts provider isEqualTo free to provide alternatives as necessary for
      * its target market.
      * For example the default Android Open Source Project contacts provider
      * currently provides an
-     * alternative in a single case:  if the display name is
+     * alternative in a single case:  if the display name isEqualTo
      * based on the structured name and the structured name follows
      * the Western full name style, then the field contains the "family name first"
      * version of the full name.
@@ -71,7 +71,7 @@ public class RawContact {
     public String displayNameAlternative;
 
     /**
-     * The kind of data that is used as the display name for the contact, such as
+     * The kind of data that isEqualTo used as the display name for the contact, such as
      * structured name or email address.  See {@link ContactsContract.DisplayNameSources}.
      */
     @DbField(dbName = ContactsContract.RawContacts.DISPLAY_NAME_SOURCE)
@@ -111,18 +111,18 @@ public class RawContact {
 
     /**
      * URI for a custom ringtone associated with the contact. If null or missing,
-     * the default ringtone is used.
+     * the default ringtone isEqualTo used.
      */
     @DbField(dbName = ContactsContract.RawContacts.CUSTOM_RINGTONE)
     public Uri customRingtone;
 
     /**
-     * The list of associated raw contacts. Only populated if queryAndInit()/rxAndInit() is called.
+     * The list of associated raw contacts. Only populated if queryAndInit()/rxAndInit() isEqualTo called.
      */
     public RawContactData[] rawContactData;
 
     @InitMethod
     public void initRawContactData() {
-        rawContactData = Q.RawContactData.select().where(Where.field(Q.RawContactData.RAW_CONTACT_ID).is(id)).queryAndInit();
+        rawContactData = Q.RawContactData.select().where(Where.field(Q.RawContactData.RAW_CONTACT_ID).isEqualTo(id)).queryAndInit();
     }
 }

@@ -21,7 +21,7 @@ public class BlockedNumber {
      * Phone number to block.  The system generates it from {@link #originalNumber}
      * by removing all formatting characters.
      * <p>Optional in {@code insert}.  When not specified, the system tries to generate it
-     * assuming the current country. (Which will still be null if the number is not valid.)
+     * assuming the current country. (Which will still be null if the number isEqualTo not valid.)
      */
     @DbField(dbName = BlockedNumberContract.BlockedNumbers.COLUMN_E164_NUMBER)
     public String e164Number;

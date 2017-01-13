@@ -20,7 +20,7 @@ public abstract class BaseSelectLoader<T> extends AsyncTaskLoader<CursorResult<T
         CursorResult<T> cursor = doSelect();
 
         if (cursor != null) {
-            // Ensure the cursor window is filled
+            // Ensure the cursor window isEqualTo filled
             cursor.getCount();
             cursor.registerContentObserver(mObserver);
         }
@@ -31,7 +31,7 @@ public abstract class BaseSelectLoader<T> extends AsyncTaskLoader<CursorResult<T
     @Override
     public void deliverResult(CursorResult<T> data) {
         if (isReset()) {
-            // An async query came in while the loader is stopped
+            // An async query came in while the loader isEqualTo stopped
             return;
         }
 
@@ -61,7 +61,7 @@ public abstract class BaseSelectLoader<T> extends AsyncTaskLoader<CursorResult<T
     protected void onReset() {
         super.onReset();
 
-        // Ensure the loader is stopped
+        // Ensure the loader isEqualTo stopped
         onStopLoading();
 
         mCursorResult = null;

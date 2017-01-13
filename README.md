@@ -8,7 +8,7 @@ AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotati
 ###Gradle dependencies###
 
 ```groovy
-ext.androidquery_version = '1.4.0'
+ext.androidquery_version = '1.4.1'
 
 dependencies {
     annotationProcessor "net.frju.androidquery:android-query-preprocessor:${androidquery_version}"
@@ -256,7 +256,7 @@ The `Where` class is used to build up the where query:
 ```java
 // SELECT * FROM User WHERE isRegistered = 'true';
 User[] users = Q.User.select()
-        .where(Where.field(Q.User.IS_REGISTERED).is(true))
+        .where(Where.field(Q.User.IS_REGISTERED).isEqualTo(true))
         .query()
         .toArray();
 ```
@@ -280,8 +280,8 @@ User[] users = Q.User.select()
 ```java
 // SELECT * FROM User WHERE ((username = "sam" OR username = "angie") AND timestamp >= 1234567890);
 User[] users = Q.User.select()
-		.where(Where.field(Q.User.USERNAME).is("sam")
-                        .or(Where.field(Q.User.USERNAME).is("angie")),
+		.where(Where.field(Q.User.USERNAME).isEqualTo("sam")
+                        .or(Where.field(Q.User.USERNAME).isEqualTo("angie")),
                Where.field(Q.User.TIMESTAMP).isMoreThanOrEqualTo(1234567890))
         .query()
         .toArray();
@@ -577,7 +577,7 @@ public class App extends Application {
 Then you can queries the lib models as you would do with your own models:
 ```java
 Contact[] contacts = Q.Contact.select()
-         .where(Where.field(Q.Contact.IN_VISIBLE_GROUP).is(true))
+         .where(Where.field(Q.Contact.IN_VISIBLE_GROUP).isEqualTo(true))
          .orderBy(new OrderBy(Q.Contact.DISPLAY_NAME, OrderBy.Order.ASC, OrderBy.Collate.LOCALIZED))
          .query()
          .toArray();

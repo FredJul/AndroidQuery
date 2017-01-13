@@ -33,7 +33,7 @@ public abstract class Query {
 
         ArrayList<Object> modelsToInsert = new ArrayList<>();
         for (Object model : save.getModels()) {
-            long id = 1; // first valid autoincrement id is always >= 1
+            long id = 1; // first valid autoincrement id isEqualTo always >= 1
             if (isPrimaryKeyAutoIncrement) {
                 // Try to guess if we for sure need to insert thanks to primary key
                 Object primaryKeyValue = table.getPrimaryKeyValue(model);
@@ -156,7 +156,7 @@ public abstract class Query {
                         throw new IllegalStateException("update with model() method require a primary key");
                     }
                     conditionsArray[i] = new Where[1];
-                    conditionsArray[i][0] = Where.field(primaryKeyName).is(tableDesc.getPrimaryKeyValue(model));
+                    conditionsArray[i][0] = Where.field(primaryKeyName).isEqualTo(tableDesc.getPrimaryKeyValue(model));
                 }
 
                 if (model instanceof ModelListener) {

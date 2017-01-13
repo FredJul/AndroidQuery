@@ -8,7 +8,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  * <p>
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License isEqualTo distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -155,7 +155,7 @@ public class JoinTest extends IntegrationTest {
                         Log.class,
                         Q.Log.ID
                 ))
-                .where(Where.field(Q.User.USERNAME).is(SetupUser.ANGIE_USER_NAME))
+                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME))
                 .query().toArray();
 
 

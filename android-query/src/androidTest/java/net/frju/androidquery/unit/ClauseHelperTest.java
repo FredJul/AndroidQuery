@@ -8,7 +8,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  * <p>
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License isEqualTo distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -35,7 +35,7 @@ public class ClauseHelperTest {
     public void testWhereQueryIsBuiltFromClauseCollection() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        Where where = Where.field(Q.User.USERNAME).is("sam");
+        Where where = Where.field(Q.User.USERNAME).isEqualTo("sam");
 
         String clause = clauseHelper.getCondition(new Where[]{where});
         String[] args = clauseHelper.getConditionArgs(new Where[]{where});
@@ -65,7 +65,7 @@ public class ClauseHelperTest {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
         Where where = Where.field(Q.User.TIMESTAMP).isMoreThan(10)
-                .and(Where.field(Q.User.TIMESTAMP).is(20));
+                .and(Where.field(Q.User.TIMESTAMP).isEqualTo(20));
 
         String clause = clauseHelper.getCondition(new Where[]{where});
         String[] args = clauseHelper.getConditionArgs(new Where[]{where});
@@ -80,8 +80,8 @@ public class ClauseHelperTest {
     public void tesOrAndWhereQueryIsBuiltFromClauseCollection() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        Where where = Where.field(Q.User.USERNAME).is("sam")
-                .or(Where.field(Q.User.USERNAME).is("angie"))
+        Where where = Where.field(Q.User.USERNAME).isEqualTo("sam")
+                .or(Where.field(Q.User.USERNAME).isEqualTo("angie"))
                 .and(Where.field(Q.User.TIMESTAMP).isMoreThanOrEqualTo(1234567890));
 
         String clause = clauseHelper.getCondition(new Where[]{where});
@@ -98,7 +98,7 @@ public class ClauseHelperTest {
     public void testOrWhereInQueryIsBuiltFromClause() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        Where where = Where.field(Q.User.USERNAME).is("sam")
+        Where where = Where.field(Q.User.USERNAME).isEqualTo("sam")
                 .or(Where.field(Q.User.TIMESTAMP).isIn(10, 20));
 
         String clause = clauseHelper.getCondition(new Where[]{where});

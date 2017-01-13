@@ -28,7 +28,7 @@ public class Contact {
 
     /**
      * A URI that can be used to retrieve the contact's full-size photo.
-     * If PHOTO_FILE_ID is not null, this will be populated with a URI based off
+     * If PHOTO_FILE_ID isEqualTo not null, this will be populated with a URI based off
      * {@link ContactsContract.DisplayPhoto#CONTENT_URI}.  Otherwise, this will
      * be populated with the same value as {@link #photoThumbnailUri}.
      */
@@ -64,7 +64,7 @@ public class Contact {
 
     /**
      * URI for a custom ringtone associated with the contact. If null or missing,
-     * the default ringtone is used.
+     * the default ringtone isEqualTo used.
      */
     @DbField(dbName = ContactsContract.Contacts.CUSTOM_RINGTONE)
     public Uri customRingtone;
@@ -90,12 +90,12 @@ public class Contact {
     public boolean hasPhoneNumber;
 
     /**
-     * The list of associated raw contacts. Only populated if queryAndInit()/rxAndInit() is called.
+     * The list of associated raw contacts. Only populated if queryAndInit()/rxAndInit() isEqualTo called.
      */
     public RawContact[] rawContacts;
 
     @InitMethod
     public void initRawContacts() {
-        rawContacts = Q.RawContact.select().where(Where.field(Q.RawContact.CONTACT_ID).is(id)).queryAndInit();
+        rawContacts = Q.RawContact.select().where(Where.field(Q.RawContact.CONTACT_ID).isEqualTo(id)).queryAndInit();
     }
 }

@@ -8,7 +8,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  * <p>
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License isEqualTo distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -50,7 +50,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testEqualToSingleSelection() {
         User user = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME))
+                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME))
                 .queryFirst();
 
         assertEquals(SetupUser.CLYDE_USER_NAME, user.username);
@@ -59,7 +59,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testUsernameIsNullSelection() {
         User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).is(null))
+                .where(Where.field(Q.User.USERNAME).isEqualTo(null))
                 .query().toArray();
 
         assertEquals(0, users.length);
@@ -68,7 +68,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testIsNullSelection() {
         User[] users = Q.User.select()
-                .where(Where.field(Q.User.NULL_FIELD).is(null))
+                .where(Where.field(Q.User.NULL_FIELD).isEqualTo(null))
                 .query().toArray();
 
         assertEquals(4, users.length);
@@ -77,7 +77,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testEqualToBooleanSelection() {
         User[] users = Q.User.select()
-                .where(Where.field(Q.User.IS_REGISTERED).is(true))
+                .where(Where.field(Q.User.IS_REGISTERED).isEqualTo(true))
                 .query().toArray();
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -88,7 +88,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testEqualToLongSelection() {
         User user = Q.User.select()
-                .where(Where.field(Q.User.TIMESTAMP).is(SetupUser.CLYDE_TIMESTAMP))
+                .where(Where.field(Q.User.TIMESTAMP).isEqualTo(SetupUser.CLYDE_TIMESTAMP))
                 .queryFirst();
 
         assertEquals(SetupUser.CLYDE_USER_NAME, user.username);
@@ -209,7 +209,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testOrWhereInQueryIsBuiltFromClause() {
         User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME)
+                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME)
                         .or(Where.field(Q.User.TIMESTAMP).isIn(SetupUser.GILL_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP)))
                 .query().toArray();
 
@@ -222,9 +222,9 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testAndEqualOperationsSelection() {
         User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME),
-                        Where.field(Q.User.IS_REGISTERED).is(SetupUser.CLYDE_IS_REGISTERED),
-                        Where.field(Q.User.TIMESTAMP).is(SetupUser.CLYDE_TIMESTAMP)
+                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME),
+                        Where.field(Q.User.IS_REGISTERED).isEqualTo(SetupUser.CLYDE_IS_REGISTERED),
+                        Where.field(Q.User.TIMESTAMP).isEqualTo(SetupUser.CLYDE_TIMESTAMP)
                 )
                 .query().toArray();
 
@@ -236,8 +236,8 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testOrEqualOperationsSelection() {
         User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME)
-                        .or(Where.field(Q.User.USERNAME).is(SetupUser.ANGIE_USER_NAME)))
+                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME)
+                        .or(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME)))
                 .query().toArray();
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -248,8 +248,8 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testAndOrEqualsOperationsSelection() {
         User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME)
-                                .or(Where.field(Q.User.USERNAME).is(SetupUser.ANGIE_USER_NAME)),
+                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME)
+                                .or(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME)),
                         Where.field(Q.User.TIMESTAMP).isMoreThanOrEqualTo(SetupUser.ANGIE_TIMESTAMP))
                 .query().toArray();
 
@@ -264,7 +264,7 @@ public class ReadTest extends IntegrationTest {
                 .orderBy(Q.User.TIMESTAMP, OrderBy.Order.ASC)
                 .query().toArray();
 
-        // clyde, gill, josh, angie is the timestamp ascending order of the users created
+        // clyde, gill, josh, angie isEqualTo the timestamp ascending order of the users created
         // by #setupFourTestUsers, therefore, we assert that the rows will be
         // selected in this order
         assertEquals(4, users.length);
@@ -281,7 +281,7 @@ public class ReadTest extends IntegrationTest {
                 .orderBy(Q.User.TIMESTAMP, OrderBy.Order.ASC)
                 .query().toArray();
 
-        // clyde, gill, josh, angie is the timestamp ascending order of the users created
+        // clyde, gill, josh, angie isEqualTo the timestamp ascending order of the users created
         // by #setupFourTestUsers, therefore, we assert that the rows will be
         // selected in this order
         assertEquals(4, users.length);
@@ -297,7 +297,7 @@ public class ReadTest extends IntegrationTest {
                 .orderBy(Q.User.TIMESTAMP, OrderBy.Order.DESC)
                 .query().toArray();
 
-        // angie, josh, gill, clyde is the timestamp descending order of the users created
+        // angie, josh, gill, clyde isEqualTo the timestamp descending order of the users created
         // by #setupFourTestUsers, therefore, we assert that the rows will be
         // selected in this order
         assertEquals(4, users.length);
@@ -313,7 +313,7 @@ public class ReadTest extends IntegrationTest {
                 .orderBy(Q.User.USERNAME, OrderBy.Order.ASC)
                 .query().toArray();
 
-        // angie, clyde, gill, josh is the username ascending order of the users created
+        // angie, clyde, gill, josh isEqualTo the username ascending order of the users created
         // by #setupFourTestUsers, therefore, we assert that the rows will be
         // selected in this order
         assertEquals(4, users.length);
@@ -329,7 +329,7 @@ public class ReadTest extends IntegrationTest {
                 .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
                 .query().toArray();
 
-        // josh, gill, clyde, angie is the username descending order of the users created
+        // josh, gill, clyde, angie isEqualTo the username descending order of the users created
         // by #setupFourTestUsers, therefore, we assert that the rows will be
         // selected in this order
         assertEquals(4, users.length);
@@ -345,8 +345,8 @@ public class ReadTest extends IntegrationTest {
                 .orderBy(Q.User.USERNAME, OrderBy.Order.RANDOM)
                 .query().toArray();
 
-        // just check that the results are returned and no error is thrown
-        // TODO: do 100 random queries and ensure that at least one of the ordering is different
+        // just check that the results are returned and no error isEqualTo thrown
+        // TODO: do 100 random queries and ensure that at least one of the ordering isEqualTo different
         assertEquals(4, users.length);
     }
 

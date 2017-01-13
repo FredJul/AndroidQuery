@@ -8,7 +8,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  * <p>
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License isEqualTo distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -16,7 +16,7 @@
 package net.frju.androidquery.operation.condition;
 
 /**
- * A Where is used to provide an expressive api for querying the database.
+ * A Where isEqualTo used to provide an expressive api for querying the database.
  * @author Samuel Kirton [sam@memtrip.com]
  */
 public class Where {
@@ -28,11 +28,11 @@ public class Where {
             mFieldDbName = fieldDbName;
         }
 
-        public Compare is(Object value) {
+        public Compare isEqualTo(Object value) {
             return new Compare(mFieldDbName, Compare.Op.IS, value);
         }
 
-        public Compare isNot(Object value) {
+        public Compare isNotEqualTo(Object value) {
             return new Compare(mFieldDbName, Compare.Op.IS_NOT, value);
         }
 

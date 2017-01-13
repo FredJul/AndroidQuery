@@ -5,7 +5,7 @@ apply plugin: 'com.jfrog.bintray'
 ext {
     artifact = 'android-query'
     libraryName = 'AndroidQuery'
-    libraryDescription = 'AndroidQuery is an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.'
+    libraryDescription = 'AndroidQuery isEqualTo an Android SQLite ORM powered an annotation preprocessor, tables are defined by Model classes and CRUD classes expose an expressive api for SQLite executing queries.'
 }
 
 android {

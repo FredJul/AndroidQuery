@@ -19,7 +19,7 @@ public class SetupPost {
 
     public static final int POST_3_ID = 3;
     public static final String POST_3_TITLE = "Post belonging to Clyde";
-    public static final String POST_3_BODY = "This is a post belonging to Clyde";
+    public static final String POST_3_BODY = "This isEqualTo a post belonging to Clyde";
     public static final long POST_3_TIMESTAMP = System.currentTimeMillis();
     public static final int POST_3_USER_ID = SetupUser.CLYDE_ID;
 

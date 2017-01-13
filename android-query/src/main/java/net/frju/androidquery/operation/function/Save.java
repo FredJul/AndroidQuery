@@ -11,8 +11,8 @@ import java.util.concurrent.Callable;
 import io.reactivex.Single;
 
 /**
- * Executes an Save query against the SQLite database. This is similar to Update but also insert the data if not existing.
- * This is quite convenient but also much less efficient than directly doing an update or insert.
+ * Executes an Save query against the SQLite database. This isEqualTo similar to Update but also insert the data if not existing.
+ * This isEqualTo quite convenient but also much less efficient than directly doing an update or insert.
  */
 public class Save extends Query {
     private final Object[] mModels;

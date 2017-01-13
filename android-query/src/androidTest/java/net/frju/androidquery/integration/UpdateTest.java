@@ -8,7 +8,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  * <p>
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License isEqualTo distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -53,12 +53,12 @@ public class UpdateTest extends IntegrationTest {
         // exercise
         int updated = Q.User.update()
                 .values(contentValues)
-                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME))
+                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME))
                 .query();
 
         // verify
         User user = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).is(SetupUser.CLYDE_USER_NAME))
+                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME))
                 .queryFirst();
 
         assertEquals(true, user.isRegistered);
@@ -141,7 +141,7 @@ public class UpdateTest extends IntegrationTest {
 
         // verify
         User[] users = Q.User.select()
-                .where(Where.field(Q.User.TIMESTAMP).is(newTimestamp))
+                .where(Where.field(Q.User.TIMESTAMP).isEqualTo(newTimestamp))
                 .query().toArray();
 
         // 3 of the users created by #setupFourTestUsers will match the
