@@ -74,7 +74,7 @@ public class Contact {
      * its row id changed as a result of a sync or aggregation.
      */
     @DbField(dbName = ContactsContract.Contacts.LOOKUP_KEY)
-    public Uri lookupKey;
+    public String lookupKey;
 
     /**
      * Flag that reflects the {@link ContactsContract.Groups#GROUP_VISIBLE} state of any

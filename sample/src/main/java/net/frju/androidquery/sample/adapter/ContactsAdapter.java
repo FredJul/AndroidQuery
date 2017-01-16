@@ -4,7 +4,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import net.frju.androidquery.models.Contact;
 import net.frju.androidquery.operation.function.CursorResult;
@@ -25,7 +28,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
     @Override
     public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.comment_adapter, parent, false);
+                .inflate(R.layout.contact_adapter, parent, false);
 
         return new ContactViewHolder(view);
     }
@@ -43,8 +46,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.comment_adapter_author)
-        TextView author;
+        @BindView(R.id.contact_icon)
+        ImageView contactIcon;
+        @BindView(R.id.contact_name)
+        TextView contactName;
 
         public ContactViewHolder(View itemView) {
             super(itemView);
@@ -52,7 +57,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         }
 
         public void populate(Contact contact) {
-            author.setText(contact.displayName);
+            contactName.setText(contact.displayName);
+            Glide.with(contactIcon.getContext()).load(contact.photoThumbnailUri).into(contactIcon);
         }
     }
 }

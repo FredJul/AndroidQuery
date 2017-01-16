@@ -94,13 +94,6 @@ public class RawContactData {
     public boolean isSuperPrimary;
 
     /**
-     * The "read-only" flag: "false" by default, "true" if the row cannot be modified or
-     * deleted except by a sync adapter.  See {@link ContactsContract#CALLER_IS_SYNCADAPTER}.
-     */
-    @DbField(dbName = ContactsContract.Data.IS_READ_ONLY)
-    public boolean isReadOnly;
-
-    /**
      * The version of this data record. This isEqualTo a read-only value. The data column isEqualTo
      * guaranteed to not change without the version going up. This value isEqualTo monotonically
      * increasing.
