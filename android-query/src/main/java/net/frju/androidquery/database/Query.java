@@ -12,6 +12,7 @@ import net.frju.androidquery.operation.function.Insert;
 import net.frju.androidquery.operation.function.Save;
 import net.frju.androidquery.operation.function.Select;
 import net.frju.androidquery.operation.function.Update;
+import net.frju.androidquery.operation.keyword.Limit;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -81,7 +82,7 @@ public abstract class Query {
         return 0;
     }
 
-    protected static Cursor selectCursor(Select select, Class<?> classDef, DatabaseProvider databaseProvider) {
+    protected static Cursor selectCursor(Select select, Class<?> classDef, DatabaseProvider databaseProvider, boolean firstOnly) {
 
         DbModelDescriptor dbModelDescriptor = getTableDescription(classDef, databaseProvider);
 
@@ -93,17 +94,18 @@ public abstract class Query {
                 null,
                 null,
                 select.getOrderBy(),
-                select.getLimit()
+                // small optimisation for local SQLite database (use a LIMIT to avoid fetching everything)
+                firstOnly && databaseProvider instanceof BaseLocalDatabaseProvider ? new Limit(0, 1) : select.getLimit()
         );
     }
 
     protected static <T> CursorResult<T> select(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
-        Cursor cursor = selectCursor(select, classDef, databaseProvider);
+        Cursor cursor = selectCursor(select, classDef, databaseProvider, false);
         return new CursorResult<>(classDef, databaseProvider.getResolver(), cursor);
     }
 
     protected static <T> T[] selectAndInit(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
-        Cursor cursor = selectCursor(select, classDef, databaseProvider);
+        Cursor cursor = selectCursor(select, classDef, databaseProvider, false);
 
         Resolver resolver = databaseProvider.getResolver();
         T[] result = new CursorResult<>(classDef, resolver, cursor).toArray();
@@ -116,7 +118,7 @@ public abstract class Query {
     }
 
     protected static <T> T selectFirst(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
-        Cursor cursor = selectCursor(select, classDef, databaseProvider);
+        Cursor cursor = selectCursor(select, classDef, databaseProvider, true);
 
         T[] results = getTableDescription(classDef, databaseProvider).getArrayResult(cursor);
 
@@ -128,7 +130,7 @@ public abstract class Query {
     }
 
     protected static <T> T selectFirstAndInit(Select select, Class<T> classDef, DatabaseProvider databaseProvider) {
-        Cursor cursor = selectCursor(select, classDef, databaseProvider);
+        Cursor cursor = selectCursor(select, classDef, databaseProvider, true);
 
         T[] results = getTableDescription(classDef, databaseProvider).getArrayResult(cursor);
 

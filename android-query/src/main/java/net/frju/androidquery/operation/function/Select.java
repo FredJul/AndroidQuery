@@ -173,9 +173,8 @@ public class Select extends Query {
          * @return The row returned by the Select query
          */
         public T queryFirst() {
-            // For a single query, always put a limit for performance reasons
             return selectFirst(
-                    new Select(mWhere, mJoins, mOrderBy, new Limit(0, 1)),
+                    new Select(mWhere, mJoins, mOrderBy, mLimit),
                     mClassDef,
                     mDatabaseProvider
             );
@@ -199,9 +198,8 @@ public class Select extends Query {
          * @return The row returned by the Select query
          */
         public T queryFirstAndInit() {
-            // For a single query, always put a limit for performance reasons
             return selectFirstAndInit(
-                    new Select(mWhere, mJoins, mOrderBy, new Limit(0, 1)),
+                    new Select(mWhere, mJoins, mOrderBy, mLimit),
                     mClassDef,
                     mDatabaseProvider
             );
