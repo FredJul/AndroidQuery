@@ -8,7 +8,7 @@ public class SetupLog {
     public static final long LOG_1_TIMESTAMP = 123456789;
 
     public void tearDownTestLogs() {
-        Q.Log.delete().query();
+        Q.LOG.delete().query();
     }
 
     public void setupTestLogs() {
@@ -23,7 +23,7 @@ public class SetupLog {
                 )
         };
 
-        Q.Log.insert(logs).query();
+        Q.LOG.insert(logs).query();
     }
 
     public static Log createLog(int id, long timestamp) {

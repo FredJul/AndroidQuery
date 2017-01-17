@@ -35,7 +35,7 @@ public class ClauseHelperTest {
     public void testWhereQueryIsBuiltFromClauseCollection() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        Where where = Where.field(Q.User.USERNAME).isEqualTo("sam");
+        Where where = Where.field(Q.USER.USERNAME).isEqualTo("sam");
 
         String clause = clauseHelper.getCondition(new Where[]{where});
         String[] args = clauseHelper.getConditionArgs(new Where[]{where});
@@ -49,7 +49,7 @@ public class ClauseHelperTest {
     public void testInQueryIsBuiltFromClauseCollection() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        Where where = Where.field(Q.User.USERNAME).isIn("sam", "josh");
+        Where where = Where.field(Q.USER.USERNAME).isIn("sam", "josh");
 
         String clause = clauseHelper.getCondition(new Where[]{where});
         String[] args = clauseHelper.getConditionArgs(new Where[]{where});
@@ -64,8 +64,8 @@ public class ClauseHelperTest {
     public void testAndWhereQueryIsBuiltFromClauseCollection() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        Where where = Where.field(Q.User.TIMESTAMP).isMoreThan(10)
-                .and(Where.field(Q.User.TIMESTAMP).isEqualTo(20));
+        Where where = Where.field(Q.USER.TIMESTAMP).isMoreThan(10)
+                .and(Where.field(Q.USER.TIMESTAMP).isEqualTo(20));
 
         String clause = clauseHelper.getCondition(new Where[]{where});
         String[] args = clauseHelper.getConditionArgs(new Where[]{where});
@@ -80,9 +80,9 @@ public class ClauseHelperTest {
     public void tesOrAndWhereQueryIsBuiltFromClauseCollection() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        Where where = Where.field(Q.User.USERNAME).isEqualTo("sam")
-                .or(Where.field(Q.User.USERNAME).isEqualTo("angie"))
-                .and(Where.field(Q.User.TIMESTAMP).isMoreThanOrEqualTo(1234567890));
+        Where where = Where.field(Q.USER.USERNAME).isEqualTo("sam")
+                .or(Where.field(Q.USER.USERNAME).isEqualTo("angie"))
+                .and(Where.field(Q.USER.TIMESTAMP).isMoreThanOrEqualTo(1234567890));
 
         String clause = clauseHelper.getCondition(new Where[]{where});
         String[] args = clauseHelper.getConditionArgs(new Where[]{where});
@@ -98,8 +98,8 @@ public class ClauseHelperTest {
     public void testOrWhereInQueryIsBuiltFromClause() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        Where where = Where.field(Q.User.USERNAME).isEqualTo("sam")
-                .or(Where.field(Q.User.TIMESTAMP).isIn(10, 20));
+        Where where = Where.field(Q.USER.USERNAME).isEqualTo("sam")
+                .or(Where.field(Q.USER.TIMESTAMP).isIn(10, 20));
 
         String clause = clauseHelper.getCondition(new Where[]{where});
         String[] args = clauseHelper.getConditionArgs(new Where[]{where});
@@ -115,7 +115,7 @@ public class ClauseHelperTest {
     public void testOrderByAscBuiltFromClause() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        String orderBy = clauseHelper.getOrderBy(new OrderBy[]{new OrderBy(Q.User.USERNAME, OrderBy.Order.ASC)});
+        String orderBy = clauseHelper.getOrderBy(new OrderBy[]{new OrderBy(Q.USER.USERNAME, OrderBy.Order.ASC)});
 
         assertEquals("username ASC", orderBy);
     }
@@ -124,7 +124,7 @@ public class ClauseHelperTest {
     public void testOrderByDescBuiltFromClause() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        String orderBy = clauseHelper.getOrderBy(new OrderBy[]{new OrderBy(Q.User.USERNAME, OrderBy.Order.DESC)});
+        String orderBy = clauseHelper.getOrderBy(new OrderBy[]{new OrderBy(Q.USER.USERNAME, OrderBy.Order.DESC)});
 
         assertEquals("username DESC", orderBy);
     }

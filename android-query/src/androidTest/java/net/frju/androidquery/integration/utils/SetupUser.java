@@ -95,11 +95,11 @@ public class SetupUser {
                 ),
         };
 
-        Q.User.insert(users).query();
+        Q.USER.insert(users).query();
     }
 
     public void tearDownFourTestUsers() {
-        Q.User.delete().query();
+        Q.USER.delete().query();
     }
 
     public static User createUser(int id,

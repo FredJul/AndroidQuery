@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.frju.androidquery.integration;
+package net.frju.androidquery.models;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
@@ -56,7 +56,7 @@ public class InsertTest {
 
     @Test
     public void testRawContactsCount() {
-        long count = Q.RawContact.count().query();
+        long count = Q.RAW_CONTACT.count().query();
         assertTrue(count > 0);
     }
 }

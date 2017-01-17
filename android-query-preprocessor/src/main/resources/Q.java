@@ -42,7 +42,7 @@ public class Q {
             <#list tables as table>
             <#if table.getDatabaseProvider().toString() != "java.lang.Void">
                     mProviders.put(${table.getPackage()}.${table.getName()}.class, providersByName.get("${table.getDatabaseProvider().toString()}"));
-                    mProviders.put(${table.getName()}.class, providersByName.get("${table.getDatabaseProvider().toString()}")); // to be more error-tolerant
+                    mProviders.put(${formatConstant(table.getName())}.class, providersByName.get("${table.getDatabaseProvider().toString()}")); // to be more error-tolerant
             </#if>
             </#list>
         }
@@ -131,7 +131,7 @@ public class Q {
             ${table.getPackage()}.${table.getName()}
         </#assign>
 
-        public static class ${table.getName()} implements DbModelDescriptor {
+        public static class ${formatConstant(table.getName())} implements DbModelDescriptor {
 
             <#list table.getFields() as column>
             public static final String ${formatConstant(column.getName())} = "${column.getDbName()}";
@@ -143,7 +143,7 @@ public class Q {
                 @Override
                 protected BaseLocalDatabaseProvider getLocalSQLProvider() {
                     Q.init(getContext());
-                    return (BaseLocalDatabaseProvider) Q.getResolver().getDatabaseProviderForModel(${table.getName()}.class);
+                    return (BaseLocalDatabaseProvider) Q.getResolver().getDatabaseProviderForModel(${formatConstant(table.getName())}.class);
                 }
             }
             </#if>
@@ -330,7 +330,7 @@ public class Q {
             }
         }
 
-        private static ${table.getName()} s${table.getName()} = new ${table.getName()}();
+        private static ${formatConstant(table.getName())} s${table.getName()} = new ${formatConstant(table.getName())}();
 
     </#list>
 }

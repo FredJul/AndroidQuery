@@ -50,10 +50,10 @@ public class CreateTest extends IntegrationTest {
         user.timestamp = USER_TIMESTAMP;
 
         // exercise
-        Q.User.insert(user).query();
+        Q.USER.insert(user).query();
 
         // verify
-        User responseUser = Q.User.select().queryFirst();
+        User responseUser = Q.USER.select().queryFirst();
 
         assertTrue(user.username.equals(responseUser.username));
         assertTrue(user.timestamp == responseUser.timestamp);
@@ -100,15 +100,15 @@ public class CreateTest extends IntegrationTest {
         };
 
         // exercise
-        Q.User.insert(users).query();
+        Q.USER.insert(users).query();
 
         // verify
-        User angieUser = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isEqualTo(ANGIE_USERNAME))
+        User angieUser = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isEqualTo(ANGIE_USERNAME))
                 .queryFirst();
 
-        User samUser = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isEqualTo(SAM_USERNAME))
+        User samUser = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isEqualTo(SAM_USERNAME))
                 .queryFirst();
 
         assertEquals(ANGIE_USERNAME, angieUser.username);
@@ -147,9 +147,9 @@ public class CreateTest extends IntegrationTest {
             );
         }
 
-        Q.User.insert(users).query();
+        Q.USER.insert(users).query();
 
-        User[] usersInserted = Q.User.select().query().toArray();
+        User[] usersInserted = Q.USER.select().query().toArray();
 
         for (int i = 0; i < usersInserted.length; i++) {
             assertEquals(ANGIE_TIMESTAMP + i, usersInserted[i].timestamp);

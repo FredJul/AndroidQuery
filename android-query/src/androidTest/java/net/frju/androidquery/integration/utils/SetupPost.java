@@ -24,7 +24,7 @@ public class SetupPost {
     public static final int POST_3_USER_ID = SetupUser.CLYDE_ID;
 
     public void tearDownTestPosts() {
-        Q.Post.delete().query();
+        Q.POST.delete().query();
     }
 
     public void setupTestPosts() {
@@ -52,7 +52,7 @@ public class SetupPost {
                 )
         };
 
-        Q.Post.insert(posts).query();
+        Q.POST.insert(posts).query();
     }
 
     public static Post createPost(int id, String title,

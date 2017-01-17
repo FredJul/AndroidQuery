@@ -6,7 +6,7 @@ import net.frju.androidquery.integration.models.Data;
 public class SetupData {
 
     public void tearDownTestData() {
-        Q.Data.delete().query();
+        Q.DATA.delete().query();
     }
 
     public void setupTestData() {
@@ -22,7 +22,7 @@ public class SetupData {
                 ),
         };
 
-        Q.Data.insert(data).query();
+        Q.DATA.insert(data).query();
     }
 
     public static Data createData(String name) {

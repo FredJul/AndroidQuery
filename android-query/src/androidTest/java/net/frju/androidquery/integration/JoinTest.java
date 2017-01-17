@@ -52,8 +52,8 @@ public class JoinTest extends IntegrationTest {
 
     @Test
     public void testInnerJoin() {
-        User[] users = Q.User.select()
-                .join(innerJoin(User.class, Q.User.LOG_ID, Log.class, Q.Log.ID))
+        User[] users = Q.USER.select()
+                .join(innerJoin(User.class, Q.USER.LOG_ID, Log.class, Q.LOG.ID))
                 .query().toArray();
 
 
@@ -64,19 +64,19 @@ public class JoinTest extends IntegrationTest {
 
     @Test
     public void testNestedInnerJoin() {
-        Post[] posts = Q.Post.select()
+        Post[] posts = Q.POST.select()
                 .join(
                         innerJoin(
                                 Post.class,
-                                Q.Post.USER_ID,
+                                Q.POST.USER_ID,
                                 User.class,
-                                Q.User.ID
+                                Q.USER.ID
                         ),
                         innerJoin(
                                 User.class,
-                                Q.User.LOG_ID,
+                                Q.USER.LOG_ID,
                                 Log.class,
-                                Q.Log.ID
+                                Q.LOG.ID
                         )
                 )
                 .query().toArray();
@@ -89,13 +89,13 @@ public class JoinTest extends IntegrationTest {
 
     @Test
     public void testJoinWithOrderBy() {
-        Post[] posts = Q.Post.select()
+        Post[] posts = Q.POST.select()
                 .join(
                         innerJoin(
                                 Post.class,
-                                Q.Post.USER_ID,
+                                Q.POST.USER_ID,
                                 User.class,
-                                Q.User.ID
+                                Q.USER.ID
                         )
                 )
                 .orderBy("Post.id", OrderBy.Order.DESC)
@@ -109,13 +109,13 @@ public class JoinTest extends IntegrationTest {
 
     @Test
     public void testJoinWithLimit() {
-        Post[] posts = Q.Post.select()
+        Post[] posts = Q.POST.select()
                 .join(
                         innerJoin(
                                 Post.class,
-                                Q.Post.USER_ID,
+                                Q.POST.USER_ID,
                                 User.class,
-                                Q.User.ID
+                                Q.USER.ID
                         )
                 )
                 .limit(0, 2)
@@ -148,14 +148,14 @@ public class JoinTest extends IntegrationTest {
 
     @Test
     public void testJoinWithCondition() {
-        User[] users = Q.User.select()
+        User[] users = Q.USER.select()
                 .join(innerJoin(
                         User.class,
-                        Q.User.LOG_ID,
+                        Q.USER.LOG_ID,
                         Log.class,
-                        Q.Log.ID
+                        Q.LOG.ID
                 ))
-                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME))
+                .where(Where.field(Q.USER.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME))
                 .query().toArray();
 
 

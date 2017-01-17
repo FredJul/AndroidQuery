@@ -40,7 +40,7 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testAllUsersAreSelected() {
-        User[] users = Q.User.select().query().toArray();
+        User[] users = Q.USER.select().query().toArray();
 
         // 4 of the users created by #setupFourTestUsers will match the
         // exercise clause, therefore, we assert that 4 rows will be selected
@@ -49,8 +49,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testEqualToSingleSelection() {
-        User user = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME))
+        User user = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME))
                 .queryFirst();
 
         assertEquals(SetupUser.CLYDE_USER_NAME, user.username);
@@ -58,8 +58,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testUsernameIsNullSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isEqualTo(null))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isEqualTo(null))
                 .query().toArray();
 
         assertEquals(0, users.length);
@@ -67,8 +67,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testIsNullSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.NULL_FIELD).isEqualTo(null))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.NULL_FIELD).isEqualTo(null))
                 .query().toArray();
 
         assertEquals(4, users.length);
@@ -76,8 +76,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testEqualToBooleanSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.IS_REGISTERED).isEqualTo(true))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.IS_REGISTERED).isEqualTo(true))
                 .query().toArray();
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -87,8 +87,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testEqualToLongSelection() {
-        User user = Q.User.select()
-                .where(Where.field(Q.User.TIMESTAMP).isEqualTo(SetupUser.CLYDE_TIMESTAMP))
+        User user = Q.USER.select()
+                .where(Where.field(Q.USER.TIMESTAMP).isEqualTo(SetupUser.CLYDE_TIMESTAMP))
                 .queryFirst();
 
         assertEquals(SetupUser.CLYDE_USER_NAME, user.username);
@@ -98,8 +98,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testMoreThanSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.TIMESTAMP).isMoreThan(SetupUser.CLYDE_TIMESTAMP))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.TIMESTAMP).isMoreThan(SetupUser.CLYDE_TIMESTAMP))
                 .query().toArray();
 
         // 3 of the users created by #setupFourTestUsers will match the
@@ -109,8 +109,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testMoreThanOrEqualToSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.TIMESTAMP).isMoreThanOrEqualTo(SetupUser.CLYDE_TIMESTAMP))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.TIMESTAMP).isMoreThanOrEqualTo(SetupUser.CLYDE_TIMESTAMP))
                 .query().toArray();
 
         // All 4 of the users created by #setupFourTestUsers will match the
@@ -120,8 +120,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testLessThanSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.TIMESTAMP).isLessThan(SetupUser.ANGIE_TIMESTAMP))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.TIMESTAMP).isLessThan(SetupUser.ANGIE_TIMESTAMP))
                 .query().toArray();
 
         // 3 of the users created by #setupFourTestUsers will match the
@@ -131,8 +131,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testLessThanOrEqualToSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.TIMESTAMP).isLessThanOrEqualTo(SetupUser.ANGIE_TIMESTAMP))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.TIMESTAMP).isLessThanOrEqualTo(SetupUser.ANGIE_TIMESTAMP))
                 .query().toArray();
 
         // 4 of the users created by #setupFourTestUsers will match the
@@ -142,8 +142,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testLikeStartingWithSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isLike("jo%"))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isLike("jo%"))
                 .query().toArray();
 
         // 1 of the users created by #setupFourTestUsers will match the
@@ -153,8 +153,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testLikeEndingWithSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isLike("%e"))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isLike("%e"))
                 .query().toArray();
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -164,8 +164,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testLikeContainingSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isLike("%lyd%"))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isLike("%lyd%"))
                 .query().toArray();
 
         // 1 of the users created by #setupFourTestUsers will match the
@@ -175,8 +175,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testBetweenSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.RATING).isNotBetween(10, 50))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.RATING).isNotBetween(10, 50))
                 .query().toArray();
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -186,8 +186,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testInStringSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isIn(SetupUser.CLYDE_USER_NAME, SetupUser.ANGIE_USER_NAME))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isIn(SetupUser.CLYDE_USER_NAME, SetupUser.ANGIE_USER_NAME))
                 .query().toArray();
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -197,8 +197,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testInLongSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.TIMESTAMP).isIn(SetupUser.CLYDE_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP, SetupUser.GILL_TIMESTAMP))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.TIMESTAMP).isIn(SetupUser.CLYDE_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP, SetupUser.GILL_TIMESTAMP))
                 .query().toArray();
 
         // 3 of the users created by #setupFourTestUsers will match the
@@ -208,9 +208,9 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testOrWhereInQueryIsBuiltFromClause() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME)
-                        .or(Where.field(Q.User.TIMESTAMP).isIn(SetupUser.GILL_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP)))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME)
+                        .or(Where.field(Q.USER.TIMESTAMP).isIn(SetupUser.GILL_TIMESTAMP, SetupUser.ANGIE_TIMESTAMP)))
                 .query().toArray();
 
 
@@ -221,10 +221,10 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testAndEqualOperationsSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME),
-                        Where.field(Q.User.IS_REGISTERED).isEqualTo(SetupUser.CLYDE_IS_REGISTERED),
-                        Where.field(Q.User.TIMESTAMP).isEqualTo(SetupUser.CLYDE_TIMESTAMP)
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME),
+                        Where.field(Q.USER.IS_REGISTERED).isEqualTo(SetupUser.CLYDE_IS_REGISTERED),
+                        Where.field(Q.USER.TIMESTAMP).isEqualTo(SetupUser.CLYDE_TIMESTAMP)
                 )
                 .query().toArray();
 
@@ -235,9 +235,9 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testOrEqualOperationsSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME)
-                        .or(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME)))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME)
+                        .or(Where.field(Q.USER.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME)))
                 .query().toArray();
 
         // 2 of the users created by #setupFourTestUsers will match the
@@ -247,10 +247,10 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testAndOrEqualsOperationsSelection() {
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME)
-                                .or(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME)),
-                        Where.field(Q.User.TIMESTAMP).isMoreThanOrEqualTo(SetupUser.ANGIE_TIMESTAMP))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME)
+                                .or(Where.field(Q.USER.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME)),
+                        Where.field(Q.USER.TIMESTAMP).isMoreThanOrEqualTo(SetupUser.ANGIE_TIMESTAMP))
                 .query().toArray();
 
         // 1 of the users created by #setupFourTestUsers will match the
@@ -260,8 +260,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testNumericOrderByAscSelection() {
-        User[] users = Q.User.select()
-                .orderBy(Q.User.TIMESTAMP, OrderBy.Order.ASC)
+        User[] users = Q.USER.select()
+                .orderBy(Q.USER.TIMESTAMP, OrderBy.Order.ASC)
                 .query().toArray();
 
         // clyde, gill, josh, angie isEqualTo the timestamp ascending order of the users created
@@ -276,9 +276,9 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testNumericDoubleOrderByAscSelection() {
-        User[] users = Q.User.select()
-                .orderBy(Q.User.COUNT, OrderBy.Order.ASC)
-                .orderBy(Q.User.TIMESTAMP, OrderBy.Order.ASC)
+        User[] users = Q.USER.select()
+                .orderBy(Q.USER.COUNT, OrderBy.Order.ASC)
+                .orderBy(Q.USER.TIMESTAMP, OrderBy.Order.ASC)
                 .query().toArray();
 
         // clyde, gill, josh, angie isEqualTo the timestamp ascending order of the users created
@@ -293,8 +293,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testNumericOrderByDescSelection() {
-        User[] users = Q.User.select()
-                .orderBy(Q.User.TIMESTAMP, OrderBy.Order.DESC)
+        User[] users = Q.USER.select()
+                .orderBy(Q.USER.TIMESTAMP, OrderBy.Order.DESC)
                 .query().toArray();
 
         // angie, josh, gill, clyde isEqualTo the timestamp descending order of the users created
@@ -309,8 +309,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testAlphaOrderByAscSelection() {
-        User[] users = Q.User.select()
-                .orderBy(Q.User.USERNAME, OrderBy.Order.ASC)
+        User[] users = Q.USER.select()
+                .orderBy(Q.USER.USERNAME, OrderBy.Order.ASC)
                 .query().toArray();
 
         // angie, clyde, gill, josh isEqualTo the username ascending order of the users created
@@ -325,8 +325,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testAlphaOrderByDescSelection() {
-        User[] users = Q.User.select()
-                .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
+        User[] users = Q.USER.select()
+                .orderBy(Q.USER.USERNAME, OrderBy.Order.DESC)
                 .query().toArray();
 
         // josh, gill, clyde, angie isEqualTo the username descending order of the users created
@@ -341,8 +341,8 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testOrderByRandom() {
-        User[] users = Q.User.select()
-                .orderBy(Q.User.USERNAME, OrderBy.Order.RANDOM)
+        User[] users = Q.USER.select()
+                .orderBy(Q.USER.USERNAME, OrderBy.Order.RANDOM)
                 .query().toArray();
 
         // just check that the results are returned and no error isEqualTo thrown
@@ -352,9 +352,9 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testLimitLowerBoundSelection() {
-        User[] users = Q.User.select()
+        User[] users = Q.USER.select()
                 .limit(0, 2)
-                .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
+                .orderBy(Q.USER.USERNAME, OrderBy.Order.DESC)
                 .query().toArray();
 
         assertEquals(2, users.length);
@@ -364,9 +364,9 @@ public class ReadTest extends IntegrationTest {
 
     @Test
     public void testLimitUpperBoundSelection() {
-        User[] users = Q.User.select()
+        User[] users = Q.USER.select()
                 .limit(2, 4)
-                .orderBy(Q.User.USERNAME, OrderBy.Order.DESC)
+                .orderBy(Q.USER.USERNAME, OrderBy.Order.DESC)
                 .query().toArray();
 
         assertEquals(2, users.length);

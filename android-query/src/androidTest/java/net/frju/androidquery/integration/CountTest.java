@@ -38,14 +38,14 @@ public class CountTest extends IntegrationTest {
 
     @Test
     public void testAllUsersAreCounted() {
-        long count = Q.User.count().query();
+        long count = Q.USER.count().query();
         assertEquals(4, count);
     }
 
     @Test
     public void testEqualToCount() {
-        long count = Q.User.count()
-                .where(Where.field(Q.User.TIMESTAMP).isEqualTo(SetupUser.CLYDE_TIMESTAMP))
+        long count = Q.USER.count()
+                .where(Where.field(Q.USER.TIMESTAMP).isEqualTo(SetupUser.CLYDE_TIMESTAMP))
                 .query();
 
         // 1 of the users created by #setupFourTestUsers will match the
@@ -55,8 +55,8 @@ public class CountTest extends IntegrationTest {
 
     @Test
     public void testMoreThanCount() {
-        long count = Q.User.count()
-                .where(Where.field(Q.User.TIMESTAMP).isMoreThan(SetupUser.CLYDE_TIMESTAMP))
+        long count = Q.USER.count()
+                .where(Where.field(Q.USER.TIMESTAMP).isMoreThan(SetupUser.CLYDE_TIMESTAMP))
                 .query();
 
         // 3 of the users created by #setupFourTestUsers will match the

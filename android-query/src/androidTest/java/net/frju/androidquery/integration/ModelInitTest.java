@@ -44,7 +44,7 @@ public class ModelInitTest extends IntegrationTest {
 
     @Test
     public void testUsersInit() {
-        User[] users = Q.User.select().queryAndInit();
+        User[] users = Q.USER.select().queryAndInit();
 
         assertEquals(4, users.length);
         assertEquals(users[0].posts.length, 2);

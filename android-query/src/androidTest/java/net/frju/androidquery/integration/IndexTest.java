@@ -49,7 +49,7 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testPostIndexesAreCreated() {
-        Cursor cursor = Q.Post.raw("PRAGMA INDEX_LIST('Post');")
+        Cursor cursor = Q.POST.raw("PRAGMA INDEX_LIST('Post');")
                 .query();
 
         List<String> indexes = getIndexes(cursor);
@@ -59,7 +59,7 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testNoUserIndexesAreCreated() {
-        Cursor cursor = Q.User.raw("PRAGMA INDEX_LIST('User');")
+        Cursor cursor = Q.USER.raw("PRAGMA INDEX_LIST('User');")
                 .query();
 
         List<String> indexes = getIndexes(cursor);
@@ -69,7 +69,7 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testAutoIncrementPrimaryKey() {
-        Data[] data = Q.Data.select().query().toArray();
+        Data[] data = Q.DATA.select().query().toArray();
 
         assertEquals(3, data.length);
         assertNotEquals(0, data[0].id);
@@ -79,7 +79,7 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testNoAutoIncrementPrimaryKey() {
-        Log[] log = Q.Log.select().query().toArray();
+        Log[] log = Q.LOG.select().query().toArray();
         assertEquals(2, log.length);
     }
 

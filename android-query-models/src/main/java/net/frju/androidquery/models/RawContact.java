@@ -123,6 +123,6 @@ public class RawContact {
 
     @InitMethod
     public void initRawContactData() {
-        rawContactData = Q.RawContactData.select().where(Where.field(Q.RawContactData.RAW_CONTACT_ID).isEqualTo(id)).queryAndInit();
+        rawContactData = Q.RAW_CONTACT_DATA.select().where(Where.field(Q.RAW_CONTACT_DATA.RAW_CONTACT_ID).isEqualTo(id)).queryAndInit();
     }
 }

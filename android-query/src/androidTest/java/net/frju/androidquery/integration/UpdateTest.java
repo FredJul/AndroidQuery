@@ -47,18 +47,18 @@ public class UpdateTest extends IntegrationTest {
         long timestamp = System.currentTimeMillis();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Q.User.IS_REGISTERED, true);
-        contentValues.put(Q.User.TIMESTAMP, timestamp);
+        contentValues.put(Q.USER.IS_REGISTERED, true);
+        contentValues.put(Q.USER.TIMESTAMP, timestamp);
 
         // exercise
-        int updated = Q.User.update()
+        int updated = Q.USER.update()
                 .values(contentValues)
-                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME))
+                .where(Where.field(Q.USER.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME))
                 .query();
 
         // verify
-        User user = Q.User.select()
-                .where(Where.field(Q.User.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME))
+        User user = Q.USER.select()
+                .where(Where.field(Q.USER.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME))
                 .queryFirst();
 
         assertEquals(true, user.isRegistered);
@@ -72,18 +72,18 @@ public class UpdateTest extends IntegrationTest {
         // setup
         long timestamp = System.currentTimeMillis();
 
-        List<User> users = Q.User.select().query().toList();
+        List<User> users = Q.USER.select().query().toList();
         for (User user : users) {
             user.timestamp = timestamp;
         }
 
         // exercise
-        int updated = Q.User.update()
+        int updated = Q.USER.update()
                 .model(users)
                 .query();
 
         // verify
-        users = Q.User.select().query().toList();
+        users = Q.USER.select().query().toList();
         assertEquals(4, users.size());
 
         for (User user : users) {
@@ -100,17 +100,17 @@ public class UpdateTest extends IntegrationTest {
         String newUsername = "CHANGED";
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Q.User.IS_REGISTERED, true);
-        contentValues.put(Q.User.TIMESTAMP, timestamp);
-        contentValues.put(Q.User.USERNAME, newUsername);
+        contentValues.put(Q.USER.IS_REGISTERED, true);
+        contentValues.put(Q.USER.TIMESTAMP, timestamp);
+        contentValues.put(Q.USER.USERNAME, newUsername);
 
         // exercise
-        int updated = Q.User.update()
+        int updated = Q.USER.update()
                 .values(contentValues)
                 .query();
 
         // verify
-        User[] users = Q.User.select()
+        User[] users = Q.USER.select()
                 .query().toArray();
 
         for (User user : users) {
@@ -129,19 +129,19 @@ public class UpdateTest extends IntegrationTest {
         String newUsername = "CHANGED";
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(Q.User.IS_REGISTERED, true);
-        contentValues.put(Q.User.TIMESTAMP, newTimestamp);
-        contentValues.put(Q.User.USERNAME, newUsername);
+        contentValues.put(Q.USER.IS_REGISTERED, true);
+        contentValues.put(Q.USER.TIMESTAMP, newTimestamp);
+        contentValues.put(Q.USER.USERNAME, newUsername);
 
         // exercise
-        int updated = Q.User.update()
+        int updated = Q.USER.update()
                 .values(contentValues)
-                .where(Where.field(Q.User.TIMESTAMP).isMoreThan(SetupUser.CLYDE_TIMESTAMP))
+                .where(Where.field(Q.USER.TIMESTAMP).isMoreThan(SetupUser.CLYDE_TIMESTAMP))
                 .query();
 
         // verify
-        User[] users = Q.User.select()
-                .where(Where.field(Q.User.TIMESTAMP).isEqualTo(newTimestamp))
+        User[] users = Q.USER.select()
+                .where(Where.field(Q.USER.TIMESTAMP).isEqualTo(newTimestamp))
                 .query().toArray();
 
         // 3 of the users created by #setupFourTestUsers will match the

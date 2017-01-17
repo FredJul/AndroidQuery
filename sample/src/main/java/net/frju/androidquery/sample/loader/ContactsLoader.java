@@ -17,9 +17,9 @@ public class ContactsLoader extends BaseSelectLoader<Contact> {
 
     @Override
     public CursorResult<Contact> doSelect() {
-        return Q.Contact.select()
-                .where(Where.field(Q.Contact.IN_VISIBLE_GROUP).isEqualTo(true))
-                .orderBy(new OrderBy(Q.Contact.DISPLAY_NAME, OrderBy.Order.ASC, OrderBy.Collate.LOCALIZED))
+        return Q.CONTACT.select()
+                .where(Where.field(Q.CONTACT.IN_VISIBLE_GROUP).isEqualTo(true))
+                .orderBy(new OrderBy(Q.CONTACT.DISPLAY_NAME, OrderBy.Order.ASC, OrderBy.Collate.LOCALIZED))
                 .query();
     }
 }

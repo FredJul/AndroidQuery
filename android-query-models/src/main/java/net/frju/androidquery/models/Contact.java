@@ -96,6 +96,6 @@ public class Contact {
 
     @InitMethod
     public void initRawContacts() {
-        rawContacts = Q.RawContact.select().where(Where.field(Q.RawContact.CONTACT_ID).isEqualTo(id)).queryAndInit();
+        rawContacts = Q.RAW_CONTACT.select().where(Where.field(Q.RAW_CONTACT.CONTACT_ID).isEqualTo(id)).queryAndInit();
     }
 }
