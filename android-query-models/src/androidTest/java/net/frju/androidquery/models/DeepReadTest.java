@@ -19,6 +19,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import net.frju.androidquery.models.gen.Q;
+import net.frju.androidquery.models.gen.RAW_CONTACT;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class DeepReadTest {
 
     @Test
     public void testDeepReadContact() {
-        long count = Q.RAW_CONTACT.select().queryAndInit().length;
+        long count = RAW_CONTACT.select().queryAndInit().length;
         assertTrue(count > 0);
     }
 }

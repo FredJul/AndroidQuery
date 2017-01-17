@@ -15,7 +15,7 @@
  */
 package net.frju.androidquery.integration;
 
-import net.frju.androidquery.gen.Q;
+import net.frju.androidquery.gen.USER;
 import net.frju.androidquery.integration.models.User;
 
 import org.junit.Before;
@@ -44,7 +44,7 @@ public class ModelInitTest extends IntegrationTest {
 
     @Test
     public void testUsersInit() {
-        User[] users = Q.USER.select().queryAndInit();
+        User[] users = USER.select().queryAndInit();
 
         assertEquals(4, users.length);
         assertEquals(users[0].posts.length, 2);

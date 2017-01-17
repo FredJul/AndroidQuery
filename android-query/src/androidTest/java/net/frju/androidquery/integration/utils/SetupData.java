@@ -1,12 +1,12 @@
 package net.frju.androidquery.integration.utils;
 
-import net.frju.androidquery.gen.Q;
+import net.frju.androidquery.gen.DATA;
 import net.frju.androidquery.integration.models.Data;
 
 public class SetupData {
 
     public void tearDownTestData() {
-        Q.DATA.delete().query();
+        DATA.delete().query();
     }
 
     public void setupTestData() {
@@ -22,7 +22,7 @@ public class SetupData {
                 ),
         };
 
-        Q.DATA.insert(data).query();
+        DATA.insert(data).query();
     }
 
     public static Data createData(String name) {

@@ -15,7 +15,7 @@
  */
 package net.frju.androidquery.integration.utils;
 
-import net.frju.androidquery.gen.Q;
+import net.frju.androidquery.gen.USER;
 import net.frju.androidquery.integration.models.User;
 
 /**
@@ -95,11 +95,11 @@ public class SetupUser {
                 ),
         };
 
-        Q.USER.insert(users).query();
+        USER.insert(users).query();
     }
 
     public void tearDownFourTestUsers() {
-        Q.USER.delete().query();
+        USER.delete().query();
     }
 
     public static User createUser(int id,

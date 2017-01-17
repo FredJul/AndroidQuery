@@ -4,7 +4,7 @@ import net.frju.androidquery.annotation.DbField;
 import net.frju.androidquery.annotation.DbModel;
 import net.frju.androidquery.annotation.ForeignKey;
 import net.frju.androidquery.annotation.InitMethod;
-import net.frju.androidquery.gen.Q;
+import net.frju.androidquery.gen.POST;
 import net.frju.androidquery.operation.condition.Where;
 
 @DbModel(
@@ -44,6 +44,6 @@ public class User {
 
     @InitMethod
     public void initPosts() {
-        posts = Q.POST.select().where(Where.field(Q.POST.USER_ID).isEqualTo(id)).queryAndInit();
+        posts = POST.select().where(Where.field(POST.USER_ID).isEqualTo(id)).queryAndInit();
     }
 }

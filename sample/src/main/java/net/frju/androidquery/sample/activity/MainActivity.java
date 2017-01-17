@@ -13,7 +13,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import net.frju.androidquery.gen.Q;
+import net.frju.androidquery.gen.COMMENT;
+import net.frju.androidquery.gen.USER;
 import net.frju.androidquery.models.Contact;
 import net.frju.androidquery.operation.function.CursorResult;
 import net.frju.androidquery.operation.keyword.OrderBy;
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        getContentResolver().registerContentObserver(Q.COMMENT.getContentUri(), true, new ContentObserver(new Handler()) {
+        getContentResolver().registerContentObserver(COMMENT.getContentUri(), true, new ContentObserver(new Handler()) {
             @Override
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkUserExists() {
-        Q.USER.count()
+        USER.count()
                 .rx2()
                 .subscribe(new Consumer<Long>() {
                     @Override
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         user.id = 1;
         user.username = "Sam";
 
-        mCompositeDisposable.add(Q.USER.insert(user)
+        mCompositeDisposable.add(USER.insert(user)
                 .rx2()
                 .subscribe(new Consumer<Integer>() {
                     @Override
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void countComments() {
-        mCompositeDisposable.add(Q.COMMENT.count()
+        mCompositeDisposable.add(COMMENT.count()
                 .rx2()
                 .subscribe(new Consumer<Long>() {
                     @Override
@@ -169,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         comment.timestamp = System.currentTimeMillis();
         comment.userId = 1;
 
-        mCompositeDisposable.add(Q.COMMENT.insert(comment)
+        mCompositeDisposable.add(COMMENT.insert(comment)
                 .rx2()
                 .subscribe(new Consumer<Integer>() {
                     @Override
@@ -182,9 +183,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshComments() {
-        mCompositeDisposable.add(Q.COMMENT.select()
-                .join(innerJoin(Comment.class, Q.COMMENT.USER_ID, User.class, Q.USER.ID))
-                .orderBy(Comment.class.getSimpleName() + '.' + Q.COMMENT.TIMESTAMP, OrderBy.Order.DESC)
+        mCompositeDisposable.add(COMMENT.select()
+                .join(innerJoin(Comment.class, COMMENT.USER_ID, User.class, USER.ID))
+                .orderBy(Comment.class.getSimpleName() + '.' + COMMENT.TIMESTAMP, OrderBy.Order.DESC)
                 .rx2()
                 .subscribe(new Consumer<CursorResult<Comment>>() {
                     @Override

@@ -30,10 +30,10 @@ public class GetColumnsSqlArrayMethod implements TemplateMethodModelEx {
     }
 
     /**
-     * Build a create dbModel statement based on the provided tableName and members
+     * Build a createQMap dbModel statement based on the provided tableName and members
      *
-     * @param    dbModel    The dbModel that the statement will create
-     * @return A SQL statement that will create a dbModel
+     * @param    dbModel    The dbModel that the statement will createQMap
+     * @return A SQL statement that will createQMap a dbModel
      */
     private String buildColumnSqlStringArray(DbModel dbModel, List<DbModel> dbModels) {
         StringBuilder statementBuilder = new StringBuilder();

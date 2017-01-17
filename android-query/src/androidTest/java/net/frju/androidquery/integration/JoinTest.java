@@ -15,7 +15,9 @@
  */
 package net.frju.androidquery.integration;
 
-import net.frju.androidquery.gen.Q;
+import net.frju.androidquery.gen.LOG;
+import net.frju.androidquery.gen.POST;
+import net.frju.androidquery.gen.USER;
 import net.frju.androidquery.integration.models.Log;
 import net.frju.androidquery.integration.models.Post;
 import net.frju.androidquery.integration.models.User;
@@ -52,8 +54,8 @@ public class JoinTest extends IntegrationTest {
 
     @Test
     public void testInnerJoin() {
-        User[] users = Q.USER.select()
-                .join(innerJoin(User.class, Q.USER.LOG_ID, Log.class, Q.LOG.ID))
+        User[] users = USER.select()
+                .join(innerJoin(User.class, USER.LOG_ID, Log.class, LOG.ID))
                 .query().toArray();
 
 
@@ -64,19 +66,19 @@ public class JoinTest extends IntegrationTest {
 
     @Test
     public void testNestedInnerJoin() {
-        Post[] posts = Q.POST.select()
+        Post[] posts = POST.select()
                 .join(
                         innerJoin(
                                 Post.class,
-                                Q.POST.USER_ID,
+                                POST.USER_ID,
                                 User.class,
-                                Q.USER.ID
+                                USER.ID
                         ),
                         innerJoin(
                                 User.class,
-                                Q.USER.LOG_ID,
+                                USER.LOG_ID,
                                 Log.class,
-                                Q.LOG.ID
+                                LOG.ID
                         )
                 )
                 .query().toArray();
@@ -89,13 +91,13 @@ public class JoinTest extends IntegrationTest {
 
     @Test
     public void testJoinWithOrderBy() {
-        Post[] posts = Q.POST.select()
+        Post[] posts = POST.select()
                 .join(
                         innerJoin(
                                 Post.class,
-                                Q.POST.USER_ID,
+                                POST.USER_ID,
                                 User.class,
-                                Q.USER.ID
+                                USER.ID
                         )
                 )
                 .orderBy("Post.id", OrderBy.Order.DESC)
@@ -109,13 +111,13 @@ public class JoinTest extends IntegrationTest {
 
     @Test
     public void testJoinWithLimit() {
-        Post[] posts = Q.POST.select()
+        Post[] posts = POST.select()
                 .join(
                         innerJoin(
                                 Post.class,
-                                Q.POST.USER_ID,
+                                POST.USER_ID,
                                 User.class,
-                                Q.USER.ID
+                                USER.ID
                         )
                 )
                 .limit(0, 2)
@@ -148,14 +150,14 @@ public class JoinTest extends IntegrationTest {
 
     @Test
     public void testJoinWithCondition() {
-        User[] users = Q.USER.select()
+        User[] users = USER.select()
                 .join(innerJoin(
                         User.class,
-                        Q.USER.LOG_ID,
+                        USER.LOG_ID,
                         Log.class,
-                        Q.LOG.ID
+                        LOG.ID
                 ))
-                .where(Where.field(Q.USER.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME))
+                .where(Where.field(USER.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME))
                 .query().toArray();
 
 

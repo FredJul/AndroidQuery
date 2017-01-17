@@ -19,6 +19,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import net.frju.androidquery.models.gen.Q;
+import net.frju.androidquery.models.gen.RAW_CONTACT;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class InsertTest {
 
     @Test
     public void testRawContactsCount() {
-        long count = Q.RAW_CONTACT.count().query();
+        long count = RAW_CONTACT.count().query();
         assertTrue(count > 0);
     }
 }

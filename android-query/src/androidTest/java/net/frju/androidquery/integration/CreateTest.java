@@ -15,7 +15,7 @@
  */
 package net.frju.androidquery.integration;
 
-import net.frju.androidquery.gen.Q;
+import net.frju.androidquery.gen.USER;
 import net.frju.androidquery.integration.models.User;
 import net.frju.androidquery.integration.utils.SetupUser;
 import net.frju.androidquery.operation.condition.Where;
@@ -50,10 +50,10 @@ public class CreateTest extends IntegrationTest {
         user.timestamp = USER_TIMESTAMP;
 
         // exercise
-        Q.USER.insert(user).query();
+        USER.insert(user).query();
 
         // verify
-        User responseUser = Q.USER.select().queryFirst();
+        User responseUser = USER.select().queryFirst();
 
         assertTrue(user.username.equals(responseUser.username));
         assertTrue(user.timestamp == responseUser.timestamp);
@@ -100,15 +100,15 @@ public class CreateTest extends IntegrationTest {
         };
 
         // exercise
-        Q.USER.insert(users).query();
+        USER.insert(users).query();
 
         // verify
-        User angieUser = Q.USER.select()
-                .where(Where.field(Q.USER.USERNAME).isEqualTo(ANGIE_USERNAME))
+        User angieUser = USER.select()
+                .where(Where.field(USER.USERNAME).isEqualTo(ANGIE_USERNAME))
                 .queryFirst();
 
-        User samUser = Q.USER.select()
-                .where(Where.field(Q.USER.USERNAME).isEqualTo(SAM_USERNAME))
+        User samUser = USER.select()
+                .where(Where.field(USER.USERNAME).isEqualTo(SAM_USERNAME))
                 .queryFirst();
 
         assertEquals(ANGIE_USERNAME, angieUser.username);
@@ -147,9 +147,9 @@ public class CreateTest extends IntegrationTest {
             );
         }
 
-        Q.USER.insert(users).query();
+        USER.insert(users).query();
 
-        User[] usersInserted = Q.USER.select().query().toArray();
+        User[] usersInserted = USER.select().query().toArray();
 
         for (int i = 0; i < usersInserted.length; i++) {
             assertEquals(ANGIE_TIMESTAMP + i, usersInserted[i].timestamp);

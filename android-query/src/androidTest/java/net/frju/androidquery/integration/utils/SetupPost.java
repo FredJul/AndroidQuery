@@ -1,6 +1,6 @@
 package net.frju.androidquery.integration.utils;
 
-import net.frju.androidquery.gen.Q;
+import net.frju.androidquery.gen.POST;
 import net.frju.androidquery.integration.models.Post;
 
 public class SetupPost {
@@ -24,7 +24,7 @@ public class SetupPost {
     public static final int POST_3_USER_ID = SetupUser.CLYDE_ID;
 
     public void tearDownTestPosts() {
-        Q.POST.delete().query();
+        POST.delete().query();
     }
 
     public void setupTestPosts() {
@@ -52,7 +52,7 @@ public class SetupPost {
                 )
         };
 
-        Q.POST.insert(posts).query();
+        POST.insert(posts).query();
     }
 
     public static Post createPost(int id, String title,

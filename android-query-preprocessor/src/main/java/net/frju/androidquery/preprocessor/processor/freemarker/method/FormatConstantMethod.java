@@ -22,7 +22,7 @@ public class FormatConstantMethod implements TemplateMethodModelEx {
 
     }
 
-    private static String formatConstant(String value) {
+    public static String formatConstant(String value) {
         StringBuilder sb = new StringBuilder();
 
         char[] items = value.toCharArray();

@@ -17,7 +17,10 @@ package net.frju.androidquery.integration;
 
 import android.database.Cursor;
 
-import net.frju.androidquery.gen.Q;
+import net.frju.androidquery.gen.DATA;
+import net.frju.androidquery.gen.LOG;
+import net.frju.androidquery.gen.POST;
+import net.frju.androidquery.gen.USER;
 import net.frju.androidquery.integration.models.Data;
 import net.frju.androidquery.integration.models.Log;
 
@@ -49,7 +52,7 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testPostIndexesAreCreated() {
-        Cursor cursor = Q.POST.raw("PRAGMA INDEX_LIST('Post');")
+        Cursor cursor = POST.raw("PRAGMA INDEX_LIST('Post');")
                 .query();
 
         List<String> indexes = getIndexes(cursor);
@@ -59,7 +62,7 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testNoUserIndexesAreCreated() {
-        Cursor cursor = Q.USER.raw("PRAGMA INDEX_LIST('User');")
+        Cursor cursor = USER.raw("PRAGMA INDEX_LIST('User');")
                 .query();
 
         List<String> indexes = getIndexes(cursor);
@@ -69,7 +72,7 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testAutoIncrementPrimaryKey() {
-        Data[] data = Q.DATA.select().query().toArray();
+        Data[] data = DATA.select().query().toArray();
 
         assertEquals(3, data.length);
         assertNotEquals(0, data[0].id);
@@ -79,7 +82,7 @@ public class IndexTest extends IntegrationTest {
 
     @Test
     public void testNoAutoIncrementPrimaryKey() {
-        Log[] log = Q.LOG.select().query().toArray();
+        Log[] log = LOG.select().query().toArray();
         assertEquals(2, log.length);
     }
 

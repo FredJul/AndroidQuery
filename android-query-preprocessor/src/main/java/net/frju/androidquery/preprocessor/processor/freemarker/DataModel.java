@@ -1,6 +1,7 @@
 package net.frju.androidquery.preprocessor.processor.freemarker;
 
 import net.frju.androidquery.preprocessor.processor.data.Data;
+import net.frju.androidquery.preprocessor.processor.data.DbModel;
 import net.frju.androidquery.preprocessor.processor.freemarker.method.AssembleCreateTableMethod;
 import net.frju.androidquery.preprocessor.processor.freemarker.method.FormatConstantMethod;
 import net.frju.androidquery.preprocessor.processor.freemarker.method.GetColumnSetterMethod;
@@ -21,8 +22,9 @@ public class DataModel {
     private static final String PACKAGE_NAME = "package_name";
     private static final String DATABASE_PROVIDERS = "providers";
     private static final String TABLES = "tables";
+    private static final String TABLE = "table";
 
-    public static Map<String, Object> create(String packageName, Data data) {
+    public static Map<String, Object> createQMap(String packageName, Data data) {
         Map<String, Object> map = new HashMap<>();
 
         map.put(PACKAGE_NAME, packageName);
@@ -40,6 +42,12 @@ public class DataModel {
         map.putAll(JoinSettersMethod.getMethodMap(data));
         map.putAll(JoinReferencesMethod.getMethodMap());
 
+        return map;
+    }
+
+    public static Map<String, Object> createModelDescriptorMap(String packageName, DbModel table, Data data) {
+        Map<String, Object> map = createQMap(packageName, data);
+        map.put(TABLE, table);
         return map;
     }
 }

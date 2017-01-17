@@ -12,6 +12,7 @@ import net.frju.androidquery.preprocessor.processor.data.parse.ParseAnnotations;
 import net.frju.androidquery.preprocessor.processor.data.validator.PrimaryKeyMustBeUnique;
 import net.frju.androidquery.preprocessor.processor.data.validator.TableNamesMustBeUniqueValidator;
 import net.frju.androidquery.preprocessor.processor.freemarker.DataModel;
+import net.frju.androidquery.preprocessor.processor.freemarker.method.FormatConstantMethod;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -33,8 +34,10 @@ import javax.tools.JavaFileObject;
 
 @AutoService(javax.annotation.processing.Processor.class)
 public class Processor extends AbstractProcessor {
-    private static final String GENERATED_FILE_PATH = "Q.java";
-    private static final String GENERATED_FILE_NAME = "Q";
+
+    private static final String MAIN_CLASS_TEMPLATE_NAME = "Q.java";
+    private static final String MODEL_DESCRIPTOR_TEMPLATE_NAME = "ModelDescriptor.java";
+    private static final String MAIN_CLASS_NAME = "Q";
 
     private FreeMarker mFreeMarker;
     private String mGenFilePackage = "net.frju.androidquery.gen";
@@ -70,8 +73,15 @@ public class Processor extends AbstractProcessor {
             }
 
             try {
-                String body = mFreeMarker.getMappedFileBodyFromTemplate(GENERATED_FILE_PATH, DataModel.create(mGenFilePackage, data));
-                createFile(mGenFilePackage, GENERATED_FILE_NAME, body);
+                // Create Q file
+                String body = mFreeMarker.getMappedFileBodyFromTemplate(MAIN_CLASS_TEMPLATE_NAME, DataModel.createQMap(mGenFilePackage, data));
+                createFile(mGenFilePackage, MAIN_CLASS_NAME, body);
+
+                // Create each table file
+                for (net.frju.androidquery.preprocessor.processor.data.DbModel table : data.getTables()) {
+                    body = mFreeMarker.getMappedFileBodyFromTemplate(MODEL_DESCRIPTOR_TEMPLATE_NAME, DataModel.createModelDescriptorMap(mGenFilePackage, table, data));
+                    createFile(mGenFilePackage, FormatConstantMethod.formatConstant(table.getName()), body);
+                }
             } catch (IOException | FormatterException e) {
                 Context.getInstance().getMessager().printMessage(
                         Diagnostic.Kind.ERROR,
@@ -101,7 +111,7 @@ public class Processor extends AbstractProcessor {
             validator.validate();
 
         if (mFreeMarker == null)
-            throw new ValidatorException("FATAL ERROR: Could not create an instance of FreeMarker");
+            throw new ValidatorException("FATAL ERROR: Could not createQMap an instance of FreeMarker");
     }
 
     private Validator[] getValidators(Data data) {

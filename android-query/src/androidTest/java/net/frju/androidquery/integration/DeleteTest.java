@@ -15,7 +15,7 @@
  */
 package net.frju.androidquery.integration;
 
-import net.frju.androidquery.gen.Q;
+import net.frju.androidquery.gen.USER;
 import net.frju.androidquery.integration.models.User;
 import net.frju.androidquery.integration.utils.SetupUser;
 import net.frju.androidquery.operation.condition.Where;
@@ -39,10 +39,10 @@ public class DeleteTest extends IntegrationTest {
 
     @Test
     public void testAllUsersAreDeleted() {
-        int deletedRows = Q.USER.delete().query();
+        int deletedRows = USER.delete().query();
 
         // verify
-        User[] users = Q.USER.select().query().toArray();
+        User[] users = USER.select().query().toArray();
 
         // All of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 0 rows will be selected
@@ -52,12 +52,12 @@ public class DeleteTest extends IntegrationTest {
 
     @Test
     public void testSingleUserIsDeleted() {
-        int deletedRows = Q.USER.delete()
-                .where(Where.field(Q.USER.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME))
+        int deletedRows = USER.delete()
+                .where(Where.field(USER.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME))
                 .query();
 
         // verify
-        User[] users = Q.USER.select().query().toArray();
+        User[] users = USER.select().query().toArray();
 
         // 1 of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 3 rows will be selected
@@ -67,12 +67,12 @@ public class DeleteTest extends IntegrationTest {
 
     @Test
     public void testUsersAreDeleted() {
-        int deletedRows = Q.USER.delete()
-                .where(Where.field(Q.USER.USERNAME).isIn(SetupUser.ANGIE_USER_NAME, SetupUser.CLYDE_USER_NAME, SetupUser.GILL_USER_NAME))
+        int deletedRows = USER.delete()
+                .where(Where.field(USER.USERNAME).isIn(SetupUser.ANGIE_USER_NAME, SetupUser.CLYDE_USER_NAME, SetupUser.GILL_USER_NAME))
                 .query();
 
         // verify
-        User[] users = Q.USER.select().query().toArray();
+        User[] users = USER.select().query().toArray();
 
         // 3 of the 4 users created by #setupFourTestUsers will be deleted by the
         // exercise clause, therefore, we assert that 1 rows will be selected

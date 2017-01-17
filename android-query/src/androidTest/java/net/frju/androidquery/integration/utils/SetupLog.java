@@ -1,6 +1,6 @@
 package net.frju.androidquery.integration.utils;
 
-import net.frju.androidquery.gen.Q;
+import net.frju.androidquery.gen.LOG;
 import net.frju.androidquery.integration.models.Log;
 
 public class SetupLog {
@@ -8,7 +8,7 @@ public class SetupLog {
     public static final long LOG_1_TIMESTAMP = 123456789;
 
     public void tearDownTestLogs() {
-        Q.LOG.delete().query();
+        LOG.delete().query();
     }
 
     public void setupTestLogs() {
@@ -23,7 +23,7 @@ public class SetupLog {
                 )
         };
 
-        Q.LOG.insert(logs).query();
+        LOG.insert(logs).query();
     }
 
     public static Log createLog(int id, long timestamp) {
