@@ -6,6 +6,8 @@ import net.frju.androidquery.preprocessor.processor.data.TypeConverter;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
 
 class ParseTypeConverterAnnotation {
 
@@ -25,12 +27,24 @@ class ParseTypeConverterAnnotation {
 
     private static String assembleDbClassName(Element element) {
         net.frju.androidquery.annotation.TypeConverter tableAnnotation = element.getAnnotation(net.frju.androidquery.annotation.TypeConverter.class);
-        return tableAnnotation.dbClass().getName();
+        TypeMirror type = null;
+        try {
+            tableAnnotation.dbClass();
+        } catch (MirroredTypeException mte) {
+            type = mte.getTypeMirror();
+        }
+        return type.toString();
     }
 
     private static String assembleModelClassName(Element element) {
         net.frju.androidquery.annotation.TypeConverter tableAnnotation = element.getAnnotation(net.frju.androidquery.annotation.TypeConverter.class);
-        return tableAnnotation.modelClass().getName();
+        TypeMirror type = null;
+        try {
+            tableAnnotation.modelClass();
+        } catch (MirroredTypeException mte) {
+            type = mte.getTypeMirror();
+        }
+        return type.toString();
     }
 
     private static String assemblePackage(Element element) {

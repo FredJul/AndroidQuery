@@ -29,15 +29,26 @@ public class RawContactData {
         RELATION(ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE),
         SIP(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE);
 
-        private final String text;
+        private final String type;
 
-        MimeType(final String text) {
-            this.text = text;
+        MimeType(final String type) {
+            this.type = type;
         }
 
         @Override
         public String toString() {
-            return text;
+            return type;
+        }
+
+        public static MimeType fromString(String type) {
+            if (type != null) {
+                for (MimeType item : MimeType.values()) {
+                    if (type.equals(item.type)) {
+                        return item;
+                    }
+                }
+            }
+            return null;
         }
     }
 
@@ -54,9 +65,17 @@ public class RawContactData {
             this.type = text;
         }
 
-        @Override
-        public String toString() {
-            return String.valueOf(type);
+        public int toInt() {
+            return type;
+        }
+
+        public static NicknameType fromInt(int type) {
+            for (NicknameType item : NicknameType.values()) {
+                if (type == item.type) {
+                    return item;
+                }
+            }
+            return null;
         }
     }
 
@@ -77,7 +96,7 @@ public class RawContactData {
      * The MIME type of the item represented by this row. One of the {@link MimeType}.toString() types.
      */
     @DbField(dbName = ContactsContract.Data.MIMETYPE)
-    public String mimeType;
+    public MimeType mimeType;
 
     /**
      * Whether this isEqualTo the primary entry of its kind for the raw contact it belongs to.
