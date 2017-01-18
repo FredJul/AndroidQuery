@@ -136,16 +136,18 @@ public class Processor extends AbstractProcessor {
         writer.close();
 
         // Workaround for some AndroidStudio display errors where he is searching for debug folder by default
-        if (jfo.getName().contains("/apt/release/")) {
-            try {
-                String debugFileName = jfo.getName().replace("/apt/release/", "/apt/debug/");
-                new File(debugFileName).getParentFile().mkdirs();
-                Writer debugFileWriter = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream(debugFileName), "utf-8"));
-                debugFileWriter.write(formattedSource);
-                debugFileWriter.close();
-            } catch (Exception e) {
-                // ignore it
+        for (String apt : new String[]{"apt", "kapt"}) { // to work for both Java apt and Kotlin kapt
+            if (jfo.getName().contains("/" + apt + "/release/")) {
+                try {
+                    String debugFileName = jfo.getName().replace("/" + apt + "/release/", "/" + apt + "/debug/");
+                    new File(debugFileName).getParentFile().mkdirs();
+                    Writer debugFileWriter = new BufferedWriter(new OutputStreamWriter(
+                            new FileOutputStream(debugFileName), "utf-8"));
+                    debugFileWriter.write(formattedSource);
+                    debugFileWriter.close();
+                } catch (Exception e) {
+                    // ignore it
+                }
             }
         }
     }
