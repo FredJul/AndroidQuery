@@ -192,7 +192,7 @@ mCompositeDisposable.add(USER.select()
         .flatMap(new Function<User, Single<CursorResult<Comment>>>() {
             @Override
             public Single<CursorResult<Comment>> apply(User user) throws Exception {
-                return COMMENT.select().where(Condition.where(COMMENT.USER_ID, Where.Op.IS, user.id)).rx2();
+                return COMMENT.select().where(Where.field(COMMENT.USER_ID).isEqualTo(user.id)).rx2();
             }
         })
         .subscribe(new Consumer<CursorResult<Comment>>() {
