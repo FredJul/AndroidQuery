@@ -10,7 +10,7 @@ ext {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         minSdkVersion 11
@@ -30,7 +30,7 @@ android {
 
 dependencies {
     compile project(':android-query-common')
-    compile 'com.android.support:support-annotations:25.1.0'
+    compile 'com.android.support:support-annotations:25.1.1'
 
     provided 'io.reactivex:rxjava:1.2.3'
     provided 'io.reactivex:rxandroid:1.2.1'

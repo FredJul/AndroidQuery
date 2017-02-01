@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "net.frju.androidquery.sample"
@@ -31,6 +31,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
-    compile 'com.android.support:recyclerview-v7:25.1.0'
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:recyclerview-v7:25.1.1'
+    compile 'com.android.support:appcompat-v7:25.1.1'
 }
