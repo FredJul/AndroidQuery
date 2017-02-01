@@ -238,7 +238,7 @@ int count = USER.count().query();
 
 ```java
 // Raw queries;
-Cursor cursor = USER.raw("...RAW SQL QUERY HERE...").query;
+Cursor cursor = USER.raw("UPDATE User SET isRegistered = 'true', timestamp = '123456789'").query;
 if (cursor != null) {
     // ...
     cursor.close();
@@ -564,7 +564,8 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        net.frju.androidquery.models.gen.Q.init(this);
+        net.frju.androidquery.models.gen.Q.init(this); // for Android default models
+        Q.init(this); // only if you also have your own models
     }
 }
 ```
