@@ -77,6 +77,9 @@ public class Where {
         }
     }
 
+    protected Where() {
+    }
+
     public static Field field(String fieldDbName) {
         return new Field(fieldDbName);
     }
