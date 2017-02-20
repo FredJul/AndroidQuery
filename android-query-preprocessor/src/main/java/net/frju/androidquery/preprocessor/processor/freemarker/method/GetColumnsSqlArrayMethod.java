@@ -70,7 +70,7 @@ public class GetColumnsSqlArrayMethod implements TemplateMethodModelEx {
             StringModel stringModel = (StringModel) tableNameValue;
             dbModel = (DbModel) stringModel.getAdaptedObject(DbModel.class);
         } else {
-            throw new IllegalStateException("The assembleCreateTable argument must be type of " +
+            throw new IllegalStateException("The getColumnsSqlArray first argument must be type of " +
                     "net.frju.androidquery.preprocessor.processor.data.DbModel");
         }
 
