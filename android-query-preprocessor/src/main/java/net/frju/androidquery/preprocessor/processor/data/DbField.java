@@ -11,6 +11,7 @@ public class DbField {
     private String mSetterName;
     private boolean mIsIndex;
     private boolean mIsUnique;
+    private int mUniqueGroup;
     private boolean mPrimaryKey;
     private boolean mHasAutoIncrement;
     private boolean mIsPublicField;
@@ -77,6 +78,14 @@ public class DbField {
 
     public void setIsUnique(boolean newVal) {
         mIsUnique = newVal;
+    }
+
+    public int uniqueGroup() {
+        return mUniqueGroup;
+    }
+
+    public void setUniqueGroup(int newVal) {
+        mUniqueGroup = newVal;
     }
 
     public boolean hasPrimaryKey() {

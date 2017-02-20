@@ -14,6 +14,20 @@ public class StringUtils {
     private static final String SQL_REAL = "real";
     private static final String SQL_BLOB = "blob";
 
+    public static String join(List<String> list, String conjunction) {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (String item : list) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(conjunction);
+            }
+            sb.append(item);
+        }
+        return sb.toString();
+    }
+
     public static String firstToUpperCase(String value) {
         return Character.toUpperCase(value.charAt(0)) + value.substring(1);
     }
@@ -43,7 +57,7 @@ public class StringUtils {
                 if (dbField.hasAutoIncrement()) {
                     statementBuilder.append(" AUTOINCREMENT");
                 }
-            } else if (dbField.isUnique()) {
+            } else if (dbField.isUnique() && dbField.uniqueGroup() == -1) {
                 statementBuilder.append(" UNIQUE");
             }
 

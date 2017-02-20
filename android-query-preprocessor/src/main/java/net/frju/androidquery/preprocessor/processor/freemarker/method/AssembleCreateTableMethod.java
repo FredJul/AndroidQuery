@@ -6,6 +6,7 @@ import net.frju.androidquery.preprocessor.processor.data.DbModel;
 import net.frju.androidquery.preprocessor.processor.data.ForeignKey;
 import net.frju.androidquery.preprocessor.processor.utils.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,8 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
 
     /**
      * Build a create dbModel statement based on the provided tableName and members
-     * @param    dbModel    The dbModel that the statement will create
+     *
+     * @param dbModel The dbModel that the statement will create
      * @return A SQL statement that will create a dbModel
      */
     private String buildCreateTableStatement(DbModel dbModel, List<DbModel> dbModels) {
@@ -42,6 +44,8 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
         statementBuilder.append(dbModel.getDbName());
         statementBuilder.append(" (");
 
+        HashMap<Integer, ArrayList<String>> uniqueGroups = new HashMap<>();
+
         for (int i = 0; i < dbModel.getFields().size(); i++) {
             DbField dbField = dbModel.getFields().get(i);
 
@@ -50,6 +54,22 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
                 statementBuilder.append(columnSql);
                 statementBuilder.append(",");
             }
+
+            if (dbField.uniqueGroup() != -1) {
+                if (uniqueGroups.containsKey(dbField.uniqueGroup())) {
+                    uniqueGroups.get(dbField.uniqueGroup()).add(dbField.getDbName());
+                } else {
+                    ArrayList<String> list = new ArrayList<>();
+                    list.add(dbField.getDbName());
+                    uniqueGroups.put(dbField.uniqueGroup(), list);
+                }
+            }
+        }
+
+        for (int uniqueGroup : uniqueGroups.keySet()) {
+            statementBuilder.append("UNIQUE(")
+                    .append(StringUtils.join(uniqueGroups.get(uniqueGroup), ","))
+                    .append(") ON CONFLICT IGNORE,");
         }
 
         for (ForeignKey foreignKey : dbModel.getForeignKeys()) {
@@ -77,7 +97,7 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
 
         DbModel dbModel;
         if (tableNameValue instanceof StringModel) {
-            StringModel stringModel = (StringModel)tableNameValue;
+            StringModel stringModel = (StringModel) tableNameValue;
             dbModel = (DbModel) stringModel.getAdaptedObject(DbModel.class);
         } else {
             throw new IllegalStateException("The assembleCreateTable argument must be type of " +

@@ -17,9 +17,9 @@ import net.frju.androidquery.annotation.ForeignKey;
 public class Post {
     @DbField(index = true)
     public long id;
-    @DbField
+    @DbField(unique = true, uniqueGroup = 1)
     public String title;
-    @DbField
+    @DbField(unique = true, uniqueGroup = 1)
     public String body;
     @DbField
     public long timestamp;

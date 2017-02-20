@@ -20,6 +20,7 @@ class ParseFieldAnnotation {
         dbField.setSetterName(assembleSetterName(element));
         dbField.setIsIndex(assembleIsIndex(element));
         dbField.setIsUnique(assembleIsUnique(element));
+        dbField.setUniqueGroup(assembleUniqueGroup(element));
         dbField.setHasPrimaryKey(assemblePrimaryKey(element));
         dbField.setHasAutoIncrement(assembleAutoIncrement(element));
         dbField.setType(type);
@@ -61,12 +62,17 @@ class ParseFieldAnnotation {
 
     private static boolean assembleIsIndex(Element element) {
         net.frju.androidquery.annotation.DbField dbField = element.getAnnotation(net.frju.androidquery.annotation.DbField.class);
-        return dbField != null && dbField.index();
+        return dbField.index();
     }
 
     private static boolean assembleIsUnique(Element element) {
         net.frju.androidquery.annotation.DbField dbField = element.getAnnotation(net.frju.androidquery.annotation.DbField.class);
-        return dbField != null && dbField.unique();
+        return dbField.unique();
+    }
+
+    private static int assembleUniqueGroup(Element element) {
+        net.frju.androidquery.annotation.DbField dbField = element.getAnnotation(net.frju.androidquery.annotation.DbField.class);
+        return dbField.uniqueGroup();
     }
 
     private static boolean assemblePrimaryKey(Element element) {

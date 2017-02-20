@@ -57,7 +57,7 @@ public class IndexTest extends IntegrationTest {
 
         List<String> indexes = getIndexes(cursor);
 
-        assertEquals(1, indexes.size());
+        assertEquals(2, indexes.size()); // 2 because there is one index and one unique constraints
     }
 
     @Test
