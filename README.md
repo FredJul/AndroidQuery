@@ -8,7 +8,7 @@ AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotati
 ###Gradle dependencies###
 
 ```groovy
-ext.androidquery_version = '1.5.0'
+ext.androidquery_version = '1.5.1'
 
 dependencies {
     annotationProcessor "net.frju.androidquery:android-query-preprocessor:${androidquery_version}"
@@ -127,9 +127,17 @@ public class UriConverter extends BaseTypeConverter<String, Uri> {
 }
 ```
 
+###Supported constraints###
+
+Here are the supported constraints:
+- primary key (only on one field)
+- unique (both on one field or several thanks to the uniqueGroup attribute)
+- foreign key
+
 #Queries#
 
 ###Functions###
+
 The `insert()`, `select()`, `update()`, `save()`, `delete()`, `count()` and `raw()` methods are used to query the database models. The `save()` method will either insert the data if not in database or will update it, since this can be slower you should use that method only if you don't know if the data has been already inserted.
 
 If you want synchronous query, you can directly call `query()`/`queryFirst()` methods or the RxJava methods (`rx()`/`rxFirst()`, `rx2()`/`rx2First()`).
@@ -246,6 +254,7 @@ if (cursor != null) {
 ```
 
 ###Where clauses###
+
 The `Where` class is used to build up the where query:
 
 ```java
@@ -283,6 +292,7 @@ User[] users = USER.select()
 ```
 
 ###Order and limit results###
+
 The `OrderBy` and `Limit` classes are used to manipulate the results of the `select()` method
 
 ```java
@@ -419,7 +429,8 @@ private final ContentObserver mContentObserver = new ContentObserver(new Handler
         }
     });
 
-// Register to changes (for example on your activity's onCreate())
+// Listen to all changes (for example on your activity's onCreate())
+// You can also call USER.getContentUri(model) to listen to only one model
 getContentResolver().registerContentObserver(USER.getContentUri(), true, mContentObserver);
 
 // Unregister when not needed anymore (potentially in your activity's onDestroy())
