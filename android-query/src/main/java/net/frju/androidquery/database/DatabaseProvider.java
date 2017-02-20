@@ -20,6 +20,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.join.Join;
@@ -33,7 +34,7 @@ public abstract class DatabaseProvider {
     protected final Context mContext;
     protected final ClauseHelper mClauseHelper;
 
-    protected DatabaseProvider(Context context) {
+    protected DatabaseProvider(@NonNull Context context) {
         mContext = context;
         mClauseHelper = new ClauseHelper();
     }
@@ -48,32 +49,38 @@ public abstract class DatabaseProvider {
 
     abstract public
     @NonNull
-    Uri getUri(@NonNull Class model);
+    Uri getUri(@NonNull Class model, @Nullable String uriSuffix);
 
     abstract public
     @NonNull
-    Uri getUri(@NonNull String modelDbName);
+    Uri getUri(@NonNull String modelDbName, @Nullable String uriSuffix);
 
-    abstract protected long insert(String tableName, ContentValues valuesArray);
+    abstract protected long insert(@NonNull String tableName, @NonNull ContentValues valuesArray);
 
-    abstract protected int bulkInsert(String tableName, ContentValues[] valuesArray);
+    abstract protected int bulkInsert(@NonNull String tableName, @NonNull ContentValues[] valuesArray);
 
-    abstract protected int bulkUpdate(String tableName, ContentValues[] valuesArray, Where[][] conditionsArray);
+    abstract protected int bulkUpdate(@NonNull String tableName, @Nullable String uriSuffix, @NonNull ContentValues[] valuesArray, @NonNull Where[][] conditionsArray);
 
-    abstract protected Cursor query(String tableName, String[] columns, Where[] where, Join[] joins,
-                                    String groupBy, String having, OrderBy[] orderBy, Limit limit);
+    abstract protected Cursor query(@NonNull String tableName, @NonNull String[] columns, @Nullable Where[] where, @Nullable Join[] joins,
+                                    @Nullable String groupBy, @Nullable String having, @Nullable OrderBy[] orderBy, @Nullable Limit limit);
 
-    abstract protected int delete(String tableName, Where[] where);
+    abstract protected int delete(@NonNull String tableName, @Nullable String uriSuffix, @Nullable Where[] where);
 
-    abstract protected long count(String tableName, Where[] where);
+    abstract protected long count(@NonNull String tableName, @Nullable Where[] where);
 
-    abstract protected Cursor rawQuery(String sql);
+    abstract protected
+    @Nullable
+    Cursor rawQuery(@NonNull String sql);
 
-    static String firstToUpperCase(String value) {
+    static
+    @NonNull
+    String firstToUpperCase(@NonNull String value) {
         return Character.toUpperCase(value.charAt(0)) + value.substring(1);
     }
 
-    static String firstToLowerCase(String value) {
+    static
+    @NonNull
+    String firstToLowerCase(@NonNull String value) {
         return Character.toLowerCase(value.charAt(0)) + value.substring(1);
     }
 }

@@ -2,6 +2,7 @@ package ${package_name};
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import net.frju.androidquery.database.*;
 
 import java.util.ArrayList;
@@ -11,14 +12,14 @@ public class Q {
 
     private static DefaultResolver sResolver;
 
-    public static void init(Context context) {
+    public static void init(@NonNull Context context) {
         if (sResolver == null) {
             sResolver = new DefaultResolver();
             sResolver.init(context);
         }
     }
 
-    public static DefaultResolver getResolver() {
+    public static @NonNull DefaultResolver getResolver() {
         return sResolver;
     }
 
@@ -84,7 +85,7 @@ public class Q {
         }
 
         @Override
-        public @NonNull Class<?>[] getModelsForProvider(Class<? extends DatabaseProvider> providerClass) {
+        public @NonNull Class<?>[] getModelsForProvider(@Nullable Class<? extends DatabaseProvider> providerClass) {
             ArrayList<Class<?>> result = new ArrayList<>();
 
             <#list tables as table>
@@ -101,7 +102,7 @@ public class Q {
         }
 
         @Override
-        public DatabaseProvider getDatabaseProviderForModel(Class<?> model) {
+        public @Nullable DatabaseProvider getDatabaseProviderForModel(@Nullable Class<?> model) {
             return mProviders.get(model);
         }
     }

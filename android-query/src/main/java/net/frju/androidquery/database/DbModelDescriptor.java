@@ -18,6 +18,7 @@ package net.frju.androidquery.database;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -32,11 +33,19 @@ public interface DbModelDescriptor {
     @NonNull
     String[] getColumnsSqlArray();
 
+    @Nullable
     String getPrimaryKeyDbName();
+
+    @NonNull
     String[] getIndexNames();
+
+    @Nullable
     String getCreateIndexQuery();
+
+    @NonNull
     String[] getColumnNames();
 
+    @NonNull
     String[] getColumnNamesWithTablePrefix();
 
     void setIdToModel(@NonNull Object model, long id);
@@ -44,11 +53,14 @@ public interface DbModelDescriptor {
     @NonNull
     ContentValues getContentValues(@NonNull Object model);
 
+    @Nullable
     Object getPrimaryKeyValue(@NonNull Object model);
 
     boolean isPrimaryKeyAutoIncrement();
 
-    <T> T getSingleResult(Cursor cursor);
+    @Nullable
+    <T> T getSingleResult(@Nullable Cursor cursor);
 
-    <T> T[] getArrayResult(Cursor cursor);
+    @NonNull
+    <T> T[] getArrayResult(@Nullable Cursor cursor);
 }

@@ -23,6 +23,7 @@ import android.database.SQLException;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import net.frju.androidquery.operation.condition.Where;
 import net.frju.androidquery.operation.join.Join;
@@ -36,26 +37,34 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
 
     protected final ContentResolver mContentResolver;
 
-    public BaseContentDatabaseProvider(Context context) {
+    public BaseContentDatabaseProvider(@NonNull Context context) {
         super(context);
         mContentResolver = context.getContentResolver();
     }
 
     public
     @NonNull
-    Uri getUri(@NonNull Class model) {
+    Uri getUri(@NonNull Class model, @Nullable String uriSuffix) {
         String tableDbName = getResolver().getDbModelDescriptor(model).getTableDbName();
-        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableDbName)).build();
+        if (uriSuffix == null) {
+            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableDbName)).build();
+        } else {
+            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableDbName)).appendPath(uriSuffix).build();
+        }
     }
 
     public
     @NonNull
-    Uri getUri(@NonNull String modelDbName) {
-        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(modelDbName)).build();
+    Uri getUri(@NonNull String modelDbName, @Nullable String uriSuffix) {
+        if (uriSuffix == null) {
+            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(modelDbName)).build();
+        } else {
+            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(modelDbName)).appendPath(uriSuffix).build();
+        }
     }
 
-    protected long insert(String tableName, ContentValues values) {
-        Uri resultUri = mContentResolver.insert(getUri(tableName), values);
+    protected long insert(@NonNull String tableName, @NonNull ContentValues values) {
+        Uri resultUri = mContentResolver.insert(getUri(tableName, null), values);
 
         try {
             return Long.valueOf(resultUri.getLastPathSegment());
@@ -64,16 +73,15 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         }
     }
 
-    protected int bulkInsert(String tableName, ContentValues[] valuesArray) {
-        return mContentResolver.bulkInsert(getUri(tableName), valuesArray);
+    protected int bulkInsert(@NonNull String tableName, @NonNull ContentValues[] valuesArray) {
+        return mContentResolver.bulkInsert(getUri(tableName, null), valuesArray);
     }
 
-    protected int bulkUpdate(String tableName, ContentValues[] valuesArray, Where[][] conditionsArray) {
+    protected int bulkUpdate(@NonNull String tableName, @Nullable String uriSuffix, @NonNull ContentValues[] valuesArray, @NonNull Where[][] conditionsArray) {
         int nbUpdate = 0;
 
         for (int i = 0; i < valuesArray.length; i++) {
-            //TODO do not always use the table Uri
-            nbUpdate += mContentResolver.update(getUri(tableName),
+            nbUpdate += mContentResolver.update(getUri(tableName, uriSuffix),
                     valuesArray[i],
                     mClauseHelper.getCondition(conditionsArray[i]),
                     mClauseHelper.getConditionArgs(conditionsArray[i])
@@ -83,8 +91,10 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         return nbUpdate;
     }
 
-    protected Cursor query(String tableName, String[] columns, Where[] where, Join[] joins,
-                           String groupBy, String having, OrderBy[] orderBy, Limit limit) {
+    protected
+    @Nullable
+    Cursor query(@NonNull String tableName, @NonNull String[] columns, @Nullable Where[] where, @Nullable Join[] joins,
+                 @Nullable String groupBy, @Nullable String having, @Nullable OrderBy[] orderBy, @Nullable Limit limit) {
 
         if (joins != null && joins.length > 0) {
             throw new SQLException("Join where not supported by ContentProvider");
@@ -96,7 +106,7 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
             throw new SQLException("Limit where not supported by ContentProvider");
         } else {
             return mContentResolver.query(
-                    getUri(tableName),
+                    getUri(tableName, null),
                     columns,
                     mClauseHelper.getCondition(where),
                     mClauseHelper.getConditionArgs(where),
@@ -105,21 +115,21 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         }
     }
 
-    protected int delete(String tableName, Where[] where) {
+    protected int delete(@NonNull String tableName, @Nullable String uriSuffix, @Nullable Where[] where) {
         return mContentResolver.delete(
-                getUri(tableName),
+                getUri(tableName, uriSuffix),
                 mClauseHelper.getCondition(where),
                 mClauseHelper.getConditionArgs(where)
         );
     }
 
-    protected long count(String tableName, Where[] where) {
+    protected long count(@NonNull String tableName, @Nullable Where[] where) {
         Cursor c = null;
 
         // First try with the SQL method
         try {
             c = mContentResolver.query(
-                    getUri(tableName),
+                    getUri(tableName, null),
                     new String[]{"COUNT(*)"},
                     mClauseHelper.getCondition(where),
                     mClauseHelper.getConditionArgs(where),
@@ -132,7 +142,7 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
             // Maybe the content provider isEqualTo not backed by an SQL database after all, let's try with the _count field
             try {
                 c = mContentResolver.query(
-                        getUri(tableName),
+                        getUri(tableName, null),
                         new String[]{BaseColumns._COUNT},
                         mClauseHelper.getCondition(where),
                         mClauseHelper.getConditionArgs(where),
@@ -151,7 +161,9 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         }
     }
 
-    protected Cursor rawQuery(String sql) {
+    protected
+    @Nullable
+    Cursor rawQuery(@NonNull String sql) {
         throw new SQLException("Raw queries not supported by ContentProvider");
     }
 }

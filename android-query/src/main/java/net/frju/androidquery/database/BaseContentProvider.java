@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.List;
@@ -34,9 +35,13 @@ public abstract class BaseContentProvider extends ContentProvider {
         return true;
     }
 
-    protected abstract BaseLocalDatabaseProvider getLocalSQLProvider();
+    protected abstract
+    @NonNull
+    BaseLocalDatabaseProvider getLocalSQLProvider();
 
-    protected static String[] getTableRealNameAndSelection(Uri uri, String selection) {
+    protected static
+    @NonNull
+    String[] getTableRealNameAndSelection(@NonNull Uri uri, @Nullable String selection) {
         String tableName;
         String lastSegment = uri.getLastPathSegment();
         try {
@@ -58,7 +63,9 @@ public abstract class BaseContentProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public
+    @Nullable
+    Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         String[] nameAndSelection = getTableRealNameAndSelection(uri, selection);
 
         Cursor cursor = mDatabase.query(nameAndSelection[0], projection, nameAndSelection[1], selectionArgs, null, null,
@@ -91,7 +98,9 @@ public abstract class BaseContentProvider extends ContentProvider {
     }
 
     @Override
-    public Uri insert(@NonNull Uri uri, ContentValues values) {
+    public
+    @NonNull
+    Uri insert(@NonNull Uri uri, @NonNull ContentValues values) {
         long newId = mDatabase.insert(uri.getLastPathSegment(), null, values);
 
         if (newId > -1) {
@@ -103,7 +112,7 @@ public abstract class BaseContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, @NonNull ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
         String[] nameAndSelection = getTableRealNameAndSelection(uri, selection);
 
         int count = mDatabase.update(nameAndSelection[0], values, nameAndSelection[1], selectionArgs);
@@ -115,7 +124,7 @@ public abstract class BaseContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         String[] nameAndSelection = getTableRealNameAndSelection(uri, selection);
 
         int nbDeleted = mDatabase.delete(nameAndSelection[0], nameAndSelection[1], selectionArgs);

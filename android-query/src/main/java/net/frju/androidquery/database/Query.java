@@ -2,6 +2,9 @@ package net.frju.androidquery.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import net.frju.androidquery.operation.condition.Where;
@@ -147,10 +150,16 @@ public abstract class Query {
         if (models != null) {
             DbModelDescriptor tableDesc = getTableDescription(classDef, databaseProvider);
             String primaryKeyName = tableDesc.getPrimaryKeyDbName();
+            String uriSuffix = null;
             ContentValues[] valuesArray = new ContentValues[models.length];
             Where[][] conditionsArray = new Where[models.length][];
+
             for (int i = 0; i < models.length; i++) {
                 Object model = models[i];
+
+                if (models.length == 1) {
+                    uriSuffix = Uri.encode(tableDesc.getPrimaryKeyValue(model).toString());
+                }
 
                 conditionsArray[i] = update.getConditions();
                 if (conditionsArray[i] == null) {
@@ -167,14 +176,17 @@ public abstract class Query {
 
                 valuesArray[i] = tableDesc.getContentValues(model);
             }
+
             return databaseProvider.bulkUpdate(
                     tableDesc.getTableDbName(),
+                    uriSuffix,
                     valuesArray,
                     conditionsArray
             );
         } else {
             return databaseProvider.bulkUpdate(
                     getTableDescription(classDef, databaseProvider).getTableDbName(),
+                    null,
                     new ContentValues[]{update.getContentValues()},
                     new Where[][]{update.getConditions()}
             );
@@ -194,6 +206,7 @@ public abstract class Query {
         if (models != null) {
             DbModelDescriptor tableDesc = getTableDescription(classDef, databaseProvider);
             String primaryKeyName = tableDesc.getPrimaryKeyDbName();
+            String uriSuffix = null;
             if (TextUtils.isEmpty(primaryKeyName)) {
                 throw new IllegalStateException("delete with model() method require a primary key");
             }
@@ -201,6 +214,10 @@ public abstract class Query {
             Object[] keys = new String[delete.getModels().length];
             for (int i = 0; i < models.length; i++) {
                 keys[i] = tableDesc.getPrimaryKeyValue(models[i]);
+
+                if (models.length == 1) {
+                    uriSuffix = Uri.encode(keys[i].toString());
+                }
 
                 if (models[i] instanceof ModelListener) {
                     ((ModelListener) models[i]).onPreDelete();
@@ -211,21 +228,27 @@ public abstract class Query {
 
             return databaseProvider.delete(
                     tableDesc.getTableDbName(),
+                    uriSuffix,
                     new Where[]{where}
             );
         } else {
             return databaseProvider.delete(
                     getTableDescription(classDef, databaseProvider).getTableDbName(),
+                    null,
                     delete.getConditions()
             );
         }
     }
 
-    protected static Cursor rawQuery(String query, DatabaseProvider databaseProvider) {
+    protected static
+    @Nullable
+    Cursor rawQuery(@NonNull String query, @NonNull DatabaseProvider databaseProvider) {
         return databaseProvider.rawQuery(query);
     }
 
-    protected static <T> rx.Single<T> wrapRx(final Callable<T> func) {
+    protected static
+    @NonNull
+    <T> rx.Single<T> wrapRx(@NonNull final Callable<T> func) {
         return rx.Single.create(
                 new rx.Single.OnSubscribe<T>() {
                     @Override
@@ -241,7 +264,9 @@ public abstract class Query {
                 .observeOn(rx.android.schedulers.AndroidSchedulers.mainThread());
     }
 
-    protected static <T> Single<T> wrapRx2(final Callable<T> func) {
+    protected static
+    @NonNull
+    <T> Single<T> wrapRx2(@NonNull final Callable<T> func) {
         return Single.create(
                 new SingleOnSubscribe<T>() {
                     @Override

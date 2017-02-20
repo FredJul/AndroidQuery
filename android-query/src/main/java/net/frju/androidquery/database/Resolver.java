@@ -16,6 +16,7 @@
 package net.frju.androidquery.database;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * @author Samuel Kirton [sam@memtrip.com]
@@ -28,9 +29,10 @@ public interface Resolver {
     DbModelDescriptor getDbModelDescriptor(@NonNull Class<?> classDef);
 
     @NonNull
-    Class<?>[] getModelsForProvider(Class<? extends DatabaseProvider> providerClass);
+    Class<?>[] getModelsForProvider(@Nullable Class<? extends DatabaseProvider> providerClass);
 
-    DatabaseProvider getDatabaseProviderForModel(Class<?> model);
+    @Nullable
+    DatabaseProvider getDatabaseProviderForModel(@Nullable Class<?> model);
 
     void initModelWithInitMethods(@NonNull Object model);
 }

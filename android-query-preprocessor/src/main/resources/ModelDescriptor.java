@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import net.frju.androidquery.database.*;
 import net.frju.androidquery.operation.function.*;
 
@@ -36,7 +37,7 @@ public class ${formatConstant(table.getName())} implements DbModelDescriptor {
     public static class ContentProvider extends BaseContentProvider {
 
         @Override
-        protected BaseLocalDatabaseProvider getLocalSQLProvider() {
+        protected @NonNull BaseLocalDatabaseProvider getLocalSQLProvider() {
             Q.init(getContext());
             return (BaseLocalDatabaseProvider) Q.getResolver().getDatabaseProviderForModel(${formatConstant(table.getName())}.class);
         }
@@ -59,12 +60,12 @@ public class ${formatConstant(table.getName())} implements DbModelDescriptor {
     }
 
     @Override
-    public String getPrimaryKeyDbName() {
+    public @Nullable String getPrimaryKeyDbName() {
         return "${table.getPrimaryKeyDbName()}";
     }
 
     @Override
-    public String[] getIndexNames() {
+    public @NonNull String[] getIndexNames() {
         return new String[]{
         <#list table.getMutableFields(tables) as column>
             <#if column.isIndex()>
@@ -75,7 +76,7 @@ public class ${formatConstant(table.getName())} implements DbModelDescriptor {
     }
 
     @Override
-    public String getCreateIndexQuery() {
+    public @Nullable String getCreateIndexQuery() {
         StringBuilder sb = new StringBuilder();
 
         <#list table.getMutableFields(tables) as column>
@@ -88,7 +89,7 @@ public class ${formatConstant(table.getName())} implements DbModelDescriptor {
     }
 
     @Override
-    public ${packagedTableName} getSingleResult(Cursor cursor) {
+    public @Nullable ${packagedTableName} getSingleResult(@Nullable Cursor cursor) {
         if (cursor != null){
             ${packagedTableName} ${table.getName()?lower_case} = new ${packagedTableName}();
 
@@ -117,7 +118,7 @@ public class ${formatConstant(table.getName())} implements DbModelDescriptor {
     }
 
     @Override
-    public ${packagedTableName}[] getArrayResult(Cursor cursor) {
+    public @NonNull ${packagedTableName}[] getArrayResult(@Nullable Cursor cursor) {
         if (cursor != null){
             ${packagedTableName}[]result = new ${packagedTableName}[cursor.getCount()];
 
@@ -136,17 +137,17 @@ public class ${formatConstant(table.getName())} implements DbModelDescriptor {
     }
 
     @Override
-    public String[] getColumnNames() {
+    public @NonNull String[] getColumnNames() {
         return new String[]{${getColumnNames?remove_ending(",")}};
     }
 
     @Override
-    public String[] getColumnNamesWithTablePrefix() {
+    public @NonNull String[] getColumnNamesWithTablePrefix() {
         return new String[]{${getColumnNamesWithTablePrefix?remove_ending(",")}};
     }
 
     @Override
-    public Object getPrimaryKeyValue(@NonNull Object model) {
+    public @Nullable Object getPrimaryKeyValue(@NonNull Object model) {
         ${packagedTableName} ${table.getName()?lower_case} = (${packagedTableName})model;
 
         return ${getPrimaryKeyValue(table.getName()?lower_case, table)};
@@ -181,8 +182,14 @@ public class ${formatConstant(table.getName())} implements DbModelDescriptor {
     }
 
     public static @NonNull Uri getContentUri() {
-        return Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class).getUri(${packagedTableName}.class);
+        return Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class).getUri(${packagedTableName}.class, null);
     }
+
+    <#if table.hasPrimaryKey()>
+    public static @NonNull Uri getContentUri(@Nullable ${packagedTableName} model) {
+        return Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class).getUri(${packagedTableName}.class, Uri.encode(${getPrimaryKeyValue("model", table)}.toString()));
+    }
+    </#if>
 
     public static @NonNull Count.Builder<${packagedTableName}> count() {
         return Count.getBuilder(${packagedTableName}.class, Q.getResolver().getDatabaseProviderForModel(${packagedTableName}.class));
@@ -220,7 +227,7 @@ public class ${formatConstant(table.getName())} implements DbModelDescriptor {
     }
     </#if>
 
-    public static @NonNull CursorResult<${packagedTableName}> fromCursor(Cursor cursor) {
+    public static @NonNull CursorResult<${packagedTableName}> fromCursor(@Nullable Cursor cursor) {
         return new CursorResult<>(${packagedTableName}.class, Q.getResolver(), cursor);
     }
 }

@@ -26,6 +26,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import net.frju.androidquery.operation.condition.Where;
@@ -52,7 +53,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         int newVersion;
     }
 
-    public BaseLocalDatabaseProvider(Context context) {
+    public BaseLocalDatabaseProvider(@NonNull Context context) {
         super(context);
 
         Class<?> modelClassDef[] = getResolver().getModelsForProvider(this.getClass());
@@ -134,22 +135,32 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
 
     public
     @NonNull
-    Uri getUri(@NonNull Class model) {
+    Uri getUri(@NonNull Class model, @Nullable String uriSuffix) {
         String tableName = getResolver().getDbModelDescriptor(model).getTableDbName();
-        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableName)).build();
+        if (uriSuffix == null) {
+            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableName)).build();
+        } else {
+            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableName)).appendPath(uriSuffix).build();
+        }
     }
 
     public
     @NonNull
-    Uri getUri(@NonNull String modelDbName) {
-        return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(modelDbName)).build();
+    Uri getUri(@NonNull String modelDbName, @Nullable String uriSuffix) {
+        if (uriSuffix == null) {
+            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(modelDbName)).build();
+        } else {
+            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(modelDbName)).appendPath(uriSuffix).build();
+        }
     }
 
-    protected abstract String getDbName();
+    protected abstract
+    @NonNull
+    String getDbName();
 
     protected abstract int getDbVersion();
 
-    protected void onCreate(SQLiteDatabase db) {
+    protected void onCreate(@NonNull SQLiteDatabase db) {
         for (String schema : mSchemaArray) {
             db.execSQL(schema);
         }
@@ -164,13 +175,13 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
     protected void onPostCreate() {
     }
 
-    protected void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    protected void onDowngrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
     protected void onPostDowngrade(int oldVersion, int newVersion) {
     }
 
-    protected void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    protected void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
         if (newVersion > oldVersion) {
 
             db.beginTransaction();
@@ -218,17 +229,17 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
     protected void onPostUpgrade(int oldVersion, int newVersion) {
     }
 
-    protected long insert(String tableName, ContentValues values) {
+    protected long insert(@NonNull String tableName, @NonNull ContentValues values) {
         long newId = mDatabase.insert(tableName, null, values);
 
         if (newId != -1) {
-            mContext.getContentResolver().notifyChange(getUri(tableName), null);
+            mContext.getContentResolver().notifyChange(getUri(tableName, null), null);
         }
 
         return newId;
     }
 
-    protected int bulkInsert(String tableName, ContentValues[] valuesArray) {
+    protected int bulkInsert(@NonNull String tableName, @NonNull ContentValues[] valuesArray) {
         int nbInsert = 0;
         mDatabase.beginTransaction();
 
@@ -245,13 +256,13 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         }
 
         if (nbInsert > 0) {
-            mContext.getContentResolver().notifyChange(getUri(tableName), null);
+            mContext.getContentResolver().notifyChange(getUri(tableName, null), null);
         }
 
         return nbInsert;
     }
 
-    protected int bulkUpdate(String tableName, ContentValues[] valuesArray, Where[][] conditionsArray) {
+    protected int bulkUpdate(@NonNull String tableName, @Nullable String uriSuffix, @NonNull ContentValues[] valuesArray, @NonNull Where[][] conditionsArray) {
         int nbUpdate = 0;
         mDatabase.beginTransaction();
 
@@ -271,15 +282,16 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         }
 
         if (nbUpdate > 0) {
-            //TODO do not always use the table Uri
-            mContext.getContentResolver().notifyChange(getUri(tableName), null);
+            mContext.getContentResolver().notifyChange(getUri(tableName, uriSuffix), null);
         }
 
         return nbUpdate;
     }
 
-    protected Cursor query(String tableName, String[] columns, Where[] where, Join[] joins,
-                           String groupBy, String having, OrderBy[] orderBy, Limit limit) {
+    protected
+    @Nullable
+    Cursor query(@NonNull String tableName, @NonNull String[] columns, @Nullable Where[] where, @Nullable Join[] joins,
+                 @Nullable String groupBy, @Nullable String having, @Nullable OrderBy[] orderBy, @Nullable Limit limit) {
 
         if (joins != null && joins.length > 0) {
             try {
@@ -310,14 +322,14 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
             );
 
             if (cursor != null) {
-                cursor.setNotificationUri(mContext.getContentResolver(), getUri(tableName));
+                cursor.setNotificationUri(mContext.getContentResolver(), getUri(tableName, null));
             }
 
             return cursor;
         }
     }
 
-    protected int delete(String tableName, Where[] where) {
+    protected int delete(@NonNull String tableName, @Nullable String uriSuffix, @Nullable Where[] where) {
         String whereClause = mClauseHelper.getCondition(where);
         int nbDeleted = mDatabase.delete(
                 tableName,
@@ -326,14 +338,13 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         );
 
         if (nbDeleted > 0 || TextUtils.isEmpty(whereClause)) {
-            //TODO do not always use the table Uri
-            mContext.getContentResolver().notifyChange(getUri(tableName), null);
+            mContext.getContentResolver().notifyChange(getUri(tableName, uriSuffix), null);
         }
 
         return nbDeleted;
     }
 
-    protected long count(String tableName, Where[] where) {
+    protected long count(@NonNull String tableName, @Nullable Where[] where) {
         return DatabaseUtils.queryNumEntries(
                 mDatabase,
                 tableName,
@@ -342,10 +353,13 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         );
     }
 
-    protected Cursor rawQuery(String sql) {
+    protected
+    @Nullable
+    Cursor rawQuery(@NonNull String sql) {
         return mDatabase.rawQuery(sql, null);
     }
 
+    @NonNull
     SQLiteDatabase getDatabase() {
         return mDatabase;
     }

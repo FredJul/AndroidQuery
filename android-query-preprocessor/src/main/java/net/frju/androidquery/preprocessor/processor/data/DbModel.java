@@ -101,6 +101,10 @@ public class DbModel {
         return "";
     }
 
+    public boolean hasPrimaryKey() {
+        return getPrimaryKeyName().length() != 0;
+    }
+
     public List<ForeignKey> getForeignKeys() {
         return mForeignKeys;
     }
