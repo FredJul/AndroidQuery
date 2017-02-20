@@ -1,12 +1,12 @@
 /**
  * Copyright 2013-present memtrip LTD.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License isEqualTo distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@
 package net.frju.androidquery.operation.function;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import net.frju.androidquery.database.DatabaseProvider;
 import net.frju.androidquery.database.Query;
@@ -170,9 +171,11 @@ public class Select extends Query {
 
         /**
          * Executes a Select query that expects a single result
-         * @return The row returned by the Select query
+         * @return The row returned by the Select query or null
          */
-        public T queryFirst() {
+        public
+        @Nullable
+        T queryFirst() {
             return selectFirst(
                     new Select(mWhere, mJoins, mOrderBy, mLimit),
                     mClassDef,
@@ -184,7 +187,9 @@ public class Select extends Query {
          * Executes a Select query with all initialization done (including sub queries)
          * @return The rows returned by the Select query
          */
-        public T[] queryAndInit() {
+        public
+        @NonNull
+        T[] queryAndInit() {
             return selectAndInit(
                     new Select(mWhere, mJoins, mOrderBy, mLimit),
                     mClassDef,
@@ -195,9 +200,11 @@ public class Select extends Query {
         /**
          * Executes a Select query that expects a single result with all initialization done (including sub queries)
          *
-         * @return The row returned by the Select query
+         * @return The row returned by the Select query or null
          */
-        public T queryFirstAndInit() {
+        public
+        @Nullable
+        T queryFirstAndInit() {
             return selectFirstAndInit(
                     new Select(mWhere, mJoins, mOrderBy, mLimit),
                     mClassDef,
