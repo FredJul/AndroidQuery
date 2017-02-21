@@ -1,7 +1,17 @@
 AndroidQuery
 ======================
 
-AndroidQuery is an Android SQLite and ContentProvider ORM powered by an annotation preprocessor. It support both Java and Kotlin and focus on easy of use without sacrificing performances.
+AndroidQuery is an Java/Kotlin Android ORM for SQLite and ContentProvider.
+
+While you can use other good ORMs like DbFlow/Freezer/sqlitemagic/whatever/... for your local databases, the goal of AndroidQuery is to work with several solutions/language/framework without forcing you to use one of them.
+For example you have:
+- ContentProvider support (including some defaults models for easily accessing Android data like contacts)
+- Android Loaders support (both normal and support-v4) and ContentObserver support, even without ContentProvider
+- RxJava support (both version 1 and 2)
+- Raw queries and custom field type support
+- Kotlin support
+
+It is also very lightweight and efficient (code generation via annotation processing).
 
 #Setup#
 
@@ -662,4 +672,5 @@ Contact[] contacts = CONTACT.select()
 - Better default database updater (which also adds new constraints)
 - Improve javadoc and add annotations like @NotNull
 - Support for more types by default (ArrayList<String>, Bitmap, byte, Byte, Byte[], Set/Map, ...)
+- Support for avg, sum, min, max, ...
 - Add more android models
