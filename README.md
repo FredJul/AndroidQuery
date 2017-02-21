@@ -136,11 +136,10 @@ Here are the supported constraints:
 
 #Queries#
 
-###Functions###
+By convenience all examples of this section will be done synchronously. For asynchronous queries, please refer to the corresponding section. 
 
-The `insert()`, `select()`, `update()`, `save()`, `delete()`, `count()` and `raw()` methods are used to query the database models. The `save()` method will either insert the data if not in database or will update it, since this can be slower you should use that method only if you don't know if the data has been already inserted.
+###Select###
 
-If you want synchronous query, you can directly call `query()`/`queryFirst()` methods or the RxJava methods (`rx()`/`rxFirst()`, `rx2()`/`rx2First()`).
 For a `select()` query you will get back a `CursorResult` object, which needs to be closed after use. You can use a try-with-resources statement for that:
 
 ```java
@@ -156,62 +155,21 @@ try(CursorResult<User> users = USER.select().query()) {
 }
 ```
 
-You can also directly retrieve an array or a list from the `CursorResult` object.
+You can also limit/order the results, or directly retrieve an array or a list from the `CursorResult` object:
 
 ```java
-User[] usersArray = USER.select().query().toArray();
-List<User> usersList = USER.select().query().toList();
+// SELECT * FROM user ORDER BY username DESC LIMIT 10
+User[] users = USER.select()
+        .limit(10) // you can limit or order the result
+        .orderBy(USER.USERNAME, OrderBy.Order.DESC)
+        .query()
+        .toArray(); // toList() also available, but a bit less efficient
 ```
 
 However be careful: this is less efficient than directly using the `CursorResult` object since it needs to read and copy everything in memory.
 Calling `toArray()` or `toList()` methods will automatically close the `CursorResult` object for you.
 
-For an asynchronous query (to not block the UI), you can notably use the `rx2()` method which returns an RxJava2 Observable.
-It is recommended to put all the returned `Disposable` into a `CompositeDisposable` and clear it inside the activity `onDestroy()`:
-
-```java
-    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
-
-    private void doQuery() {
-        mCompositeDisposable.add(USER.select()
-                .rx2()
-                .subscribe(new Consumer<CursorResult<User>>() {
-                    @Override
-                    public void accept(CursorResult<User> users) throws Exception {
-            		    // do something with the users on UI thread
-                    }
-                }));
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mCompositeDisposable.clear();
-    }
-```
-
-By default RxJava queries are always executed on `Schedulers.io()` and the result given on `AndroidSchedulers.mainThread()` unless you call the methods `subscribeOn()` and `observeOn()`.
-
-You can of course chain the queries thanks to RxJava:
-
-```java
-mCompositeDisposable.add(USER.select()
-        .rx2First()
-        .flatMap(new Function<User, Single<CursorResult<Comment>>>() {
-            @Override
-            public Single<CursorResult<Comment>> apply(User user) throws Exception {
-                return COMMENT.select().where(Where.field(COMMENT.USER_ID).isEqualTo(user.id)).rx2();
-            }
-        })
-        .subscribe(new Consumer<CursorResult<Comment>>() {
-            @Override
-            public void accept(CursorResult<Comment> comments) throws Exception {
-                // do something with the comments of first users on UI thread
-            }
-        }));
-```
-
-Other kind of queries are available:
+###Insert###
 
 ```java
 User user = new User();
@@ -222,6 +180,8 @@ user.setTimestamp(System.currentTimeMillis());
 // INSERT INTO User (username, isRegistered, timestamp) VALUES ('12345678',true,632348968244);
 USER.insert(user).query();
 ```
+
+###Update###
 
 ```java
 ContentValues contentValues = new ContentValues();
@@ -234,15 +194,30 @@ int rowsUpdated = USER.update()
         .query();
 ```
 
+###Insert###
+
+```java
+USER.save(user).query();
+```
+
+The `save()` method will either insert the data if not in database or will update it, since this can be slower you should use that method only if you don't know if the data has been already inserted.
+You need to define a primary key in your model to be able to use the `save()` method.
+
+###Delete###
+
 ```java
 // DELETE FROM User;
-int rowsDeleted = USER.delete().query();
+int rowsDeleted = USER.delete().query(); // delete all users, can add a where() if necessary
 ```
+
+###Count###
 
 ```java
 // SELECT Count(*) FROM User;
 int count = USER.count().query();
 ```
+
+###Raw Query###
 
 ```java
 // Raw queries;
@@ -287,19 +262,6 @@ User[] users = USER.select()
 		.where(Where.field(USER.USERNAME).isEqualTo("sam")
                         .or(Where.field(USER.USERNAME).isEqualTo("angie")),
                Where.field(USER.TIMESTAMP).isMoreThanOrEqualTo(1234567890))
-        .query()
-        .toArray();
-```
-
-###Order and limit results###
-
-The `OrderBy` and `Limit` classes are used to manipulate the results of the `select()` method
-
-```java
-// SELECT * FROM user ORDER BY username DESC LIMIT 10
-User[] users = USER.select()
-        .limit(10)
-        .orderBy(USER.USERNAME, OrderBy.Order.DESC)
         .query()
         .toArray();
 ```
@@ -369,6 +331,80 @@ Comment[] comments = COMMENT.select()
         
 User user = comments[0].getUser(); // The nested User object is populated by the join
 ```
+
+#Asynchronous queries#
+
+For an asynchronous query (to not block the UI), you can notably use RxJava (v1 or v2) or Kotlin Anko library.
+
+<table style="width:100%; border-collapse: collapse;" >
+  <tr>
+    <th>Java with RxJava2</th>
+    <th>Kotlin with Anko</th>
+  </tr>
+  <tr style="background: none">
+    <td style="padding:0; margin:0; border:none; width:50%;">
+    
+    It is recommended to put all the returned Disposable into a CompositeDisposable and clear it inside the activity onDestroy():
+    
+      <pre lang="java"><code class="language-java">
+    private final CompositeDisposable mCompositeDisposable
+                                        = new CompositeDisposable();
+
+    private void doQuery() {
+        mCompositeDisposable.add(USER.select()
+                .rx2First() // we get the first user only
+                .flatMap(new Function<User, Single<CursorResult<Comment>>>() {
+                    @Override
+                    public Single<CursorResult<Comment>> apply(User user)
+                                    throws Exception {
+                        return COMMENT.select()
+                            .where(Where.field(COMMENT.USER_ID)
+                            .isEqualTo(user.id))
+                            .rx2();
+                    }
+                })
+                .subscribe(new Consumer<CursorResult<Comment>>() {
+                    @Override
+                    public void accept(CursorResult<Comment> comments)
+                                    throws Exception {
+                        // do something with the comments of first user
+                        // you are in UI thread here
+                    }
+                }));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCompositeDisposable.clear();
+    }
+      </code></pre>
+      
+      By default RxJava queries are always executed on Schedulers.io() and the result given on AndroidSchedulers.mainThread() unless you call the methods subscribeOn() and observeOn().
+
+    </td>
+    <td style="padding:0; margin:0; border:none; width:50%;">
+      <pre lang="kotlin"><code class="language-kotlin">
+
+       doAsync {
+            val firstUser = USER.select()
+                    .queryFirst()
+                        
+            val comments = COMMENT.select()
+                    .where(Where.field(COMMENT.USER_ID)
+                    .isEqualTo(firstUser.id))
+                    .query()
+                        
+            uiThread {
+                // do something with the comments of first user
+                // you are in UI thread here
+            }
+        }
+        
+      </code></pre>
+    </td>
+  </tr>
+</table>
 
 #Listening data changes#
 
