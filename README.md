@@ -393,9 +393,9 @@ private final CompositeDisposable mCompositeDisposable
 private void doQuery() {
     mCompositeDisposable.add(USER.select()
         .rx2First() // we get the first user only
-        .flatMap(new Function<User, Single<CursorResult<Comment>>>() {
+        .flatMap(new Function&lt;User, Single&lt;CursorResult&lt;Comment>>>() {
             @Override
-            public Single<CursorResult<Comment>> apply(User user)
+            public Single&lt;CursorResult&lt;Comment>> apply(User user)
                     throws Exception {
                 return COMMENT.select()
                     .where(Where.field(COMMENT.USER_ID)
@@ -403,9 +403,9 @@ private void doQuery() {
                     .rx2();
             }
         })
-        .subscribe(new Consumer<CursorResult<Comment>>() {
+        .subscribe(new Consumer&lt;CursorResult&lt;Comment>>() {
             @Override
-            public void accept(CursorResult<Comment> comments)
+            public void accept(CursorResult&lt;Comment> comments)
                     throws Exception {
                 // do something with the comments of first user
                 // you are in UI thread here
