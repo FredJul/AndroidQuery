@@ -28,6 +28,14 @@ public class Where {
             mFieldDbName = fieldDbName;
         }
 
+        public Compare isTrue() {
+            return new Compare(mFieldDbName, Compare.Op.IS, true);
+        }
+
+        public Compare isFalse() {
+            return new Compare(mFieldDbName, Compare.Op.IS, false);
+        }
+
         public Compare isEqualTo(Object value) {
             return new Compare(mFieldDbName, Compare.Op.IS, value);
         }
@@ -36,12 +44,12 @@ public class Where {
             return new Compare(mFieldDbName, Compare.Op.IS_NOT, value);
         }
 
-        public Compare isMoreThan(Object value) {
-            return new Compare(mFieldDbName, Compare.Op.MORE_THAN, value);
+        public Compare isGreaterThan(Object value) {
+            return new Compare(mFieldDbName, Compare.Op.GREATER_THAN, value);
         }
 
-        public Compare isMoreThanOrEqualTo(Object value) {
-            return new Compare(mFieldDbName, Compare.Op.MORE_THAN_OR_EQUAL, value);
+        public Compare isGreaterThanOrEqualTo(Object value) {
+            return new Compare(mFieldDbName, Compare.Op.GREATER_THAN_OR_EQUAL, value);
         }
 
         public Compare isLessThan(Object value) {

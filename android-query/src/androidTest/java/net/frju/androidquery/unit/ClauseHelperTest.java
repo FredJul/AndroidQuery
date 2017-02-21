@@ -64,7 +64,7 @@ public class ClauseHelperTest {
     public void testAndWhereQueryIsBuiltFromClauseCollection() {
         ClauseHelper clauseHelper = new ClauseHelperStub();
 
-        Where where = Where.field(USER.TIMESTAMP).isMoreThan(10)
+        Where where = Where.field(USER.TIMESTAMP).isGreaterThan(10)
                 .and(Where.field(USER.TIMESTAMP).isEqualTo(20));
 
         String clause = clauseHelper.getCondition(new Where[]{where});
@@ -82,7 +82,7 @@ public class ClauseHelperTest {
 
         Where where = Where.field(USER.USERNAME).isEqualTo("sam")
                 .or(Where.field(USER.USERNAME).isEqualTo("angie"))
-                .and(Where.field(USER.TIMESTAMP).isMoreThanOrEqualTo(1234567890));
+                .and(Where.field(USER.TIMESTAMP).isGreaterThanOrEqualTo(1234567890));
 
         String clause = clauseHelper.getCondition(new Where[]{where});
         String[] args = clauseHelper.getConditionArgs(new Where[]{where});

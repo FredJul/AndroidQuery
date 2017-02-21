@@ -56,7 +56,7 @@ public class CountTest extends IntegrationTest {
     @Test
     public void testMoreThanCount() {
         long count = USER.count()
-                .where(Where.field(USER.TIMESTAMP).isMoreThan(SetupUser.CLYDE_TIMESTAMP))
+                .where(Where.field(USER.TIMESTAMP).isGreaterThan(SetupUser.CLYDE_TIMESTAMP))
                 .query();
 
         // 3 of the users created by #setupFourTestUsers will match the

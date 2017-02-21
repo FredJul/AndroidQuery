@@ -99,7 +99,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testMoreThanSelection() {
         User[] users = USER.select()
-                .where(Where.field(USER.TIMESTAMP).isMoreThan(SetupUser.CLYDE_TIMESTAMP))
+                .where(Where.field(USER.TIMESTAMP).isGreaterThan(SetupUser.CLYDE_TIMESTAMP))
                 .query().toArray();
 
         // 3 of the users created by #setupFourTestUsers will match the
@@ -110,7 +110,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testMoreThanOrEqualToSelection() {
         User[] users = USER.select()
-                .where(Where.field(USER.TIMESTAMP).isMoreThanOrEqualTo(SetupUser.CLYDE_TIMESTAMP))
+                .where(Where.field(USER.TIMESTAMP).isGreaterThanOrEqualTo(SetupUser.CLYDE_TIMESTAMP))
                 .query().toArray();
 
         // All 4 of the users created by #setupFourTestUsers will match the
@@ -250,7 +250,7 @@ public class ReadTest extends IntegrationTest {
         User[] users = USER.select()
                 .where(Where.field(USER.USERNAME).isEqualTo(SetupUser.CLYDE_USER_NAME)
                                 .or(Where.field(USER.USERNAME).isEqualTo(SetupUser.ANGIE_USER_NAME)),
-                        Where.field(USER.TIMESTAMP).isMoreThanOrEqualTo(SetupUser.ANGIE_TIMESTAMP))
+                        Where.field(USER.TIMESTAMP).isGreaterThanOrEqualTo(SetupUser.ANGIE_TIMESTAMP))
                 .query().toArray();
 
         // 1 of the users created by #setupFourTestUsers will match the

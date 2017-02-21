@@ -136,7 +136,7 @@ public class UpdateTest extends IntegrationTest {
         // exercise
         int updated = USER.update()
                 .values(contentValues)
-                .where(Where.field(USER.TIMESTAMP).isMoreThan(SetupUser.CLYDE_TIMESTAMP))
+                .where(Where.field(USER.TIMESTAMP).isGreaterThan(SetupUser.CLYDE_TIMESTAMP))
                 .query();
 
         // verify
