@@ -224,7 +224,7 @@ int rowsUpdated = USER.update()
         .query();
 ```
 
-###Insert###
+###Save###
 
 ```java
 USER.save(user).query();
