@@ -91,21 +91,50 @@ public class LocalDatabaseProvider extends BaseLocalDatabaseProvider {
 
 Then models are defined by POJOs that are annotated with `@DbModel`. Model fields are annotated with `@DbField`.
 
-```java
+<table style="width:100%; border-collapse: collapse;" >
+  <tr>
+    <th>Java</th>
+    <th>Kotlin</th>
+  </tr>
+  <tr style="background: none">
+    <td style="padding:0; margin:0; border:none; width:50%;">
+      <pre lang="java"><code class="language-java">
 @DbModel(databaseProvider = LocalDatabaseProvider.class)
 public class User {
-    @DbField(index = true, dbName = "_id", primaryKey = true, autoIncrement = true)
+
+    @DbField(index = true, dbName = "_id",
+            primaryKey = true, autoIncrement = true)
     public int id;
+    
     @DbField
     public String username;
+    
     @DbField
     public long timestamp;
+    
     @DbField
     public boolean isRegistered;
+    
     @DbField
     public byte[] profilePicture;
 }
-```
+      </code></pre>
+    </td>
+    <td style="padding:0; margin:0; border:none; width:50%;">
+      <pre lang="java"><code class="language-java">
+@DbModel(databaseProvider = LocalDatabaseProvider::class)
+class Feed { // data class not supported
+
+    @DbField(primaryKey = true, autoIncrement = true)
+    var id = 0
+    
+    @DbField(unique = true)
+    var username: String? = null
+}
+      </code></pre>
+    </td>
+  </tr>
+</table>
 
 ###Use custom types###
 
@@ -131,6 +160,7 @@ public class UriConverter extends BaseTypeConverter<String, Uri> {
 
 Here are the supported constraints:
 - primary key (only on one field)
+- autoincrement
 - unique (both on one field or several thanks to the uniqueGroup attribute)
 - foreign key
 
@@ -347,60 +377,59 @@ For an asynchronous query (to not block the UI), you can notably use RxJava (v1 
     It is recommended to put all the returned Disposable into a CompositeDisposable and clear it inside the activity onDestroy():
     
       <pre lang="java"><code class="language-java">
-    private final CompositeDisposable mCompositeDisposable
-                                        = new CompositeDisposable();
+private final CompositeDisposable mCompositeDisposable
+                = new CompositeDisposable();
 
-    private void doQuery() {
-        mCompositeDisposable.add(USER.select()
-                .rx2First() // we get the first user only
-                .flatMap(new Function<User, Single<CursorResult<Comment>>>() {
-                    @Override
-                    public Single<CursorResult<Comment>> apply(User user)
-                                    throws Exception {
-                        return COMMENT.select()
-                            .where(Where.field(COMMENT.USER_ID)
-                            .isEqualTo(user.id))
-                            .rx2();
-                    }
-                })
-                .subscribe(new Consumer<CursorResult<Comment>>() {
-                    @Override
-                    public void accept(CursorResult<Comment> comments)
-                                    throws Exception {
-                        // do something with the comments of first user
-                        // you are in UI thread here
-                    }
-                }));
-    }
+private void doQuery() {
+    mCompositeDisposable.add(USER.select()
+        .rx2First() // we get the first user only
+        .flatMap(new Function<User, Single<CursorResult<Comment>>>() {
+            @Override
+            public Single<CursorResult<Comment>> apply(User user)
+                    throws Exception {
+                return COMMENT.select()
+                    .where(Where.field(COMMENT.USER_ID)
+                    .isEqualTo(user.id))
+                    .rx2();
+            }
+        })
+        .subscribe(new Consumer<CursorResult<Comment>>() {
+            @Override
+            public void accept(CursorResult<Comment> comments)
+                    throws Exception {
+                // do something with the comments of first user
+                // you are in UI thread here
+            }
+        }));
+}
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mCompositeDisposable.clear();
-    }
+@Override
+protected void onDestroy() {
+    super.onDestroy();
+    mCompositeDisposable.clear();
+}
       </code></pre>
       
-      By default RxJava queries are always executed on Schedulers.io() and the result given on AndroidSchedulers.mainThread() unless you call the methods subscribeOn() and observeOn().
+By default RxJava queries are always executed on Schedulers.io() and the result given on AndroidSchedulers.mainThread() unless you call the methods subscribeOn() and observeOn().
 
     </td>
     <td style="padding:0; margin:0; border:none; width:50%;">
       <pre lang="kotlin"><code class="language-kotlin">
 
-       doAsync {
-            val firstUser = USER.select()
-                    .queryFirst()
-                        
-            val comments = COMMENT.select()
-                    .where(Where.field(COMMENT.USER_ID)
-                    .isEqualTo(firstUser.id))
-                    .query()
-                        
-            uiThread {
-                // do something with the comments of first user
-                // you are in UI thread here
-            }
-        }
-        
+doAsync {
+    val firstUser = USER.select()
+        .queryFirst()
+
+    val comments = COMMENT.select()
+        .where(Where.field(COMMENT.USER_ID)
+        .isEqualTo(firstUser.id))
+        .query()
+
+    uiThread {
+        // do something with the comments of first user
+        // you are in UI thread here
+    }
+}
       </code></pre>
     </td>
   </tr>
