@@ -720,6 +720,7 @@ Contact[] contacts = CONTACT.select()
 
 #TODO#
 - Generate a default local database provider inside Q and allow to directly put an URI in @DbModel without having to create a ContentDatabaseProvider
+- Better migration support (like @Migration(1) function?)
 - Support for transactions
 - Support for more constraints
 - Support for Trigger

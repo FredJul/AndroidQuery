@@ -41,7 +41,9 @@ public abstract class Query {
             if (isPrimaryKeyAutoIncrement) {
                 // Try to guess if we for sure need to insert thanks to primary key
                 Object primaryKeyValue = table.getPrimaryKeyValue(model);
-                id = Long.parseLong(primaryKeyValue.toString()); // should be a short, int or long
+                if (primaryKeyValue != null) {
+                    id = Long.parseLong(primaryKeyValue.toString()); // should be a short, int or long
+                }
             }
 
             //noinspection unchecked
@@ -158,7 +160,10 @@ public abstract class Query {
                 Object model = models[i];
 
                 if (models.length == 1) {
-                    uriSuffix = Uri.encode(tableDesc.getPrimaryKeyValue(model).toString());
+                    Object primaryKeyValue = tableDesc.getPrimaryKeyValue(model);
+                    if (primaryKeyValue != null) {
+                        uriSuffix = Uri.encode(primaryKeyValue.toString());
+                    }
                 }
 
                 conditionsArray[i] = update.getConditions();
@@ -215,7 +220,7 @@ public abstract class Query {
             for (int i = 0; i < models.length; i++) {
                 keys[i] = tableDesc.getPrimaryKeyValue(models[i]);
 
-                if (models.length == 1) {
+                if (models.length == 1 && keys[i] != null) {
                     uriSuffix = Uri.encode(keys[i].toString());
                 }
 
