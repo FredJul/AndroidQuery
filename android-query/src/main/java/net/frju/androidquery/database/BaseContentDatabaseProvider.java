@@ -47,9 +47,9 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
     Uri getUri(@NonNull Class model, @Nullable String uriSuffix) {
         String tableDbName = getResolver().getDbModelDescriptor(model).getTableDbName();
         if (uriSuffix == null) {
-            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableDbName)).build();
+            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendEncodedPath(firstToLowerCase(tableDbName)).build();
         } else {
-            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(tableDbName)).appendPath(uriSuffix).build();
+            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendEncodedPath(firstToLowerCase(tableDbName)).appendPath(uriSuffix).build();
         }
     }
 
@@ -57,9 +57,9 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
     @NonNull
     Uri getUri(@NonNull String modelDbName, @Nullable String uriSuffix) {
         if (uriSuffix == null) {
-            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(modelDbName)).build();
+            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendEncodedPath(firstToLowerCase(modelDbName)).build();
         } else {
-            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendPath(firstToLowerCase(modelDbName)).appendPath(uriSuffix).build();
+            return new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(getAuthority()).appendEncodedPath(firstToLowerCase(modelDbName)).appendPath(uriSuffix).build();
         }
     }
 
