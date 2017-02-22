@@ -13,6 +13,39 @@ For example you have:
 
 It is also very lightweight and efficient (code generation via annotation processing).
 
+---
+
+Table of Contents
+=================
+
+* [Setup](#setup)
+ * [Gradle dependencies](#gradle-dependencies)
+ * [Initialize the ORM](#initialize-the-orm)
+ * [Define your local database and models](#define-your-local-database-and-models)
+ * [Use custom types](#use-custom-types)
+ * [Supported constraints](#supported-constraints)
+* [Queries](#queries)
+ * [Select](#select)
+ * [Insert](#insert)
+ * [Update](#update)
+ * [Save](#save)
+ * [Delete](#delete)
+ * [Count](#count)
+ * [Raw Query](#raw-query)
+ * [Where clauses](#where-clauses)
+* [Relations between models](#relations-between-models)
+ * [Variable initializer](#variable-initializer)
+ * [Local database and joins](#local-database-and-joins)
+* [Asynchronous queries](#asynchronous-queries)
+* [Listening data changes](#listening-data-changes)
+ * [Database operation hooks](#database-operation-hooks)
+* [Expose your models to an external application](#expose-your-models-to-an-external-application)
+* [Access to some external data](#access-to-some-external-data)
+* [Default Android models](#default-android-models)
+* [TODO](#todo)
+
+---
+
 #Setup#
 
 ###Gradle dependencies###
@@ -174,6 +207,8 @@ Here are the supported constraints:
 - unique (both on one field or several thanks to the uniqueGroup attribute)
 - foreign key
 
+---
+
 #Queries#
 
 By convenience all examples of this section will be done synchronously. For asynchronous queries, please refer to the corresponding section. 
@@ -306,6 +341,8 @@ User[] users = USER.select()
         .toArray();
 ```
 
+---
+
 #Relations between models#
 
 Sometimes you want to automatically populate data of a model from another one (ie. get all posts of a user). There is actually two ways of doing so.
@@ -371,6 +408,8 @@ Comment[] comments = COMMENT.select()
         
 User user = comments[0].getUser(); // The nested User object is populated by the join
 ```
+
+---
 
 #Asynchronous queries#
 
@@ -444,6 +483,8 @@ doAsync {
     </td>
   </tr>
 </table>
+
+---
 
 #Listening data changes#
 
@@ -561,6 +602,8 @@ public class User implements ModelListener {
 
 Again, be careful: you will not be notified if you modify the data with raw queries.
 
+---
+
 #Expose your models to an external application#
 
 Your data can also be accessed by an external application through a ContentProvider.
@@ -595,6 +638,8 @@ If several model share the same `DatabaseProvider`, they will all be available w
 
 From the external application, you will be able to access to the data either by manual `ContentProvider` queries, or either by setting up AndroidQuery in that project as well (see below).
 
+---
+
 #Access to some external data#
 
 You can as well declare some models which are actually stored into another application.
@@ -628,6 +673,8 @@ public class User {
 ```
 
 Then you can query that model in the same way. However, please note that raw queries and joins are not available for external model.
+
+---
 
 #Default Android models#
 
@@ -664,6 +711,8 @@ Contact[] contacts = CONTACT.select()
          .query()
          .toArray();
 ```
+
+---
 
 #TODO#
 - Support for transactions
