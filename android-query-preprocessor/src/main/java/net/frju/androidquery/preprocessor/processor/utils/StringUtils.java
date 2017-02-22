@@ -57,6 +57,8 @@ public class StringUtils {
                 if (dbField.hasAutoIncrement()) {
                     statementBuilder.append(" AUTOINCREMENT");
                 }
+            } else if (dbField.isNotNull()) {
+                statementBuilder.append(" NOT NULL");
             } else if (dbField.isUnique() && dbField.uniqueGroup() == -1) {
                 statementBuilder.append(" UNIQUE");
             }

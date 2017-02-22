@@ -208,6 +208,7 @@ Here are the supported constraints:
 - primary key (only on one field)
 - autoincrement
 - unique (both on one field or several thanks to the uniqueGroup attribute)
+- not null
 - foreign key
 
 ---
@@ -718,6 +719,7 @@ Contact[] contacts = CONTACT.select()
 ---
 
 #TODO#
+- Generate a default local database provider inside Q and allow to directly put an URI in @DbModel without having to create a ContentDatabaseProvider
 - Support for transactions
 - Support for more constraints
 - Support for Trigger

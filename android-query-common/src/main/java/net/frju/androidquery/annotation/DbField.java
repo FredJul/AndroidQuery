@@ -34,6 +34,8 @@ public @interface DbField {
 
     boolean unique() default false;
 
+    boolean notNull() default false;
+
     int uniqueGroup() default -1;
 
     String dbName() default "";
