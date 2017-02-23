@@ -2,7 +2,9 @@ package net.frju.androidquery.models;
 
 import android.content.ContentResolver;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 
 import net.frju.androidquery.annotation.DbField;
 import net.frju.androidquery.annotation.DbModel;
@@ -55,12 +57,14 @@ public class Image {
     /**
      * The width of the image/video in pixels.
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @DbField(dbName = MediaStore.Images.Media.WIDTH)
     public int width;
 
     /**
      * The height of the image/video in pixels.
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @DbField(dbName = MediaStore.Images.Media.HEIGHT)
     public int height;
 
@@ -83,7 +87,7 @@ public class Image {
     public double longitude;
 
     /**
-     * The date & time that the image was taken in units
+     * The date and time that the image was taken in units
      * of milliseconds since jan 1, 1970.
      */
     @DbField(dbName = MediaStore.Images.Media.DATE_TAKEN)
