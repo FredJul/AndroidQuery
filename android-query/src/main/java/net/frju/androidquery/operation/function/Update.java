@@ -34,11 +34,16 @@ import io.reactivex.Single;
  */
 public class Update extends Query {
     private Object[] mModels;
+    private final ConflictResolution mConflictResolution;
     private ContentValues mContentValues;
     private Where[] mWheres;
 
     public Object[] getModels() {
         return mModels;
+    }
+
+    public ConflictResolution getConflictResolution() {
+        return mConflictResolution;
     }
 
     public ContentValues getContentValues() {
@@ -49,11 +54,13 @@ public class Update extends Query {
         return mWheres;
     }
 
-    private Update(Object... models) {
+    private Update(ConflictResolution conflictResolution, Object... models) {
+        mConflictResolution = conflictResolution;
         mModels = models;
     }
 
-    private Update(ContentValues contentValues, Where[] wheres) {
+    private Update(ConflictResolution conflictResolution, ContentValues contentValues, Where[] wheres) {
+        mConflictResolution = conflictResolution;
         mContentValues = contentValues;
         mWheres = wheres;
     }
@@ -66,6 +73,7 @@ public class Update extends Query {
 
     public static class Builder<T> {
         private T[] mModels;
+        private ConflictResolution mConflictResolution = ConflictResolution.CONFLICT_IGNORE;
         private ContentValues mValues;
         private Where[] mWhere;
         private final Class<T> mClassDef;
@@ -102,6 +110,17 @@ public class Update extends Query {
         }
 
         /**
+         * Specify a Compare where for the Select query
+         *
+         * @param conflictResolution the resolution algorithm. By default it's CONFLICT_IGNORE.
+         * @return Call Builder#query or the rx methods to run the query
+         */
+        public Update.Builder<T> withConflictResolution(ConflictResolution conflictResolution) {
+            mConflictResolution = conflictResolution;
+            return this;
+        }
+
+        /**
          * Specify the values for the Update query
          *
          * @param models The models that are being updated
@@ -129,18 +148,18 @@ public class Update extends Query {
 
         /**
          * Executes an Update query
-         * @return The rows affected by the Update query
+         * @return The number of rows affected by the Update query
          */
         public int query() {
             if (mModels != null) {
                 return update(
-                        new Update(mModels),
+                        new Update(mConflictResolution, mModels),
                         mClassDef,
                         mDatabaseProvider
                 );
             } else {
                 return update(
-                        new Update(mValues, mWhere),
+                        new Update(mConflictResolution, mValues, mWhere),
                         mClassDef,
                         mDatabaseProvider
                 );

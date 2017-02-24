@@ -16,12 +16,18 @@ import io.reactivex.Single;
  */
 public class Save extends Query {
     private final Object[] mModels;
+    private final ConflictResolution mConflictResolution;
 
     public Object[] getModels() {
         return mModels;
     }
 
-    private Save(Object... models) {
+    public ConflictResolution getConflictResolution() {
+        return mConflictResolution;
+    }
+
+    private Save(ConflictResolution conflictResolution, Object... models) {
+        mConflictResolution = conflictResolution;
         mModels = models;
     }
 
@@ -41,6 +47,7 @@ public class Save extends Query {
 
     public static class Builder<T> {
         private final T[] mModels;
+        private ConflictResolution mConflictResolution = ConflictResolution.CONFLICT_IGNORE;
         private final DatabaseProvider mDatabaseProvider;
 
         @SafeVarargs
@@ -50,11 +57,23 @@ public class Save extends Query {
         }
 
         /**
+         * Specify a Compare where for the Select query
+         *
+         * @param conflictResolution the resolution algorithm. By default it's CONFLICT_IGNORE.
+         * @return Call Builder#query or the rx methods to run the query
+         */
+        public Save.Builder<T> withConflictResolution(ConflictResolution conflictResolution) {
+            mConflictResolution = conflictResolution;
+            return this;
+        }
+
+        /**
          * Executes an Save query
+         * @return the number of inserted or updated items
          */
         public int query() {
             return save(
-                    new Save(mModels),
+                    new Save(mConflictResolution, mModels),
                     mModels != null && mModels.length > 0 ? mModels[0].getClass() : Object.class,
                     mDatabaseProvider
             );

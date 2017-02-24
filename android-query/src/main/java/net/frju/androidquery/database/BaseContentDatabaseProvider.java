@@ -42,6 +42,7 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         mContentResolver = context.getContentResolver();
     }
 
+    @Override
     public
     @NonNull
     Uri getUri(@NonNull Class model, @Nullable String uriSuffix) {
@@ -53,6 +54,7 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         }
     }
 
+    @Override
     public
     @NonNull
     Uri getUri(@NonNull String modelDbName, @Nullable String uriSuffix) {
@@ -63,7 +65,8 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         }
     }
 
-    protected long insert(@NonNull String tableName, @NonNull ContentValues values) {
+    @Override
+    protected long insert(@NonNull String tableName, @NonNull ContentValues values, @NonNull Query.ConflictResolution conflictResolution) {
         Uri resultUri = mContentResolver.insert(getUri(tableName, null), values);
 
         try {
@@ -73,11 +76,13 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         }
     }
 
-    protected int bulkInsert(@NonNull String tableName, @NonNull ContentValues[] valuesArray) {
+    @Override
+    protected int bulkInsert(@NonNull String tableName, @NonNull ContentValues[] valuesArray, @NonNull Query.ConflictResolution conflictResolution) {
         return mContentResolver.bulkInsert(getUri(tableName, null), valuesArray);
     }
 
-    protected int bulkUpdate(@NonNull String tableName, @Nullable String uriSuffix, @NonNull ContentValues[] valuesArray, @NonNull Where[][] conditionsArray) {
+    @Override
+    protected int bulkUpdate(@NonNull String tableName, @Nullable String uriSuffix, @NonNull ContentValues[] valuesArray, @NonNull Where[][] conditionsArray, @NonNull Query.ConflictResolution conflictResolution) {
         int nbUpdate = 0;
 
         for (int i = 0; i < valuesArray.length; i++) {
@@ -91,6 +96,7 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         return nbUpdate;
     }
 
+    @Override
     protected
     @Nullable
     Cursor query(@NonNull String tableName, @NonNull String[] columns, @Nullable Where[] where, @Nullable Join[] joins,
@@ -115,6 +121,7 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         }
     }
 
+    @Override
     protected int delete(@NonNull String tableName, @Nullable String uriSuffix, @Nullable Where[] where) {
         return mContentResolver.delete(
                 getUri(tableName, uriSuffix),
@@ -123,6 +130,7 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         );
     }
 
+    @Override
     protected long count(@NonNull String tableName, @Nullable Where[] where) {
         Cursor c = null;
 
@@ -161,6 +169,7 @@ public abstract class BaseContentDatabaseProvider extends DatabaseProvider {
         }
     }
 
+    @Override
     protected
     @Nullable
     Cursor rawQuery(@NonNull String sql) {

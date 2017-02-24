@@ -69,7 +69,7 @@ public class AssembleCreateTableMethod implements TemplateMethodModelEx {
         for (int uniqueGroup : uniqueGroups.keySet()) {
             statementBuilder.append("UNIQUE(")
                     .append(StringUtils.join(uniqueGroups.get(uniqueGroup), ","))
-                    .append(") ON CONFLICT IGNORE,");
+                    .append("),");
         }
 
         for (ForeignKey foreignKey : dbModel.getForeignKeys()) {

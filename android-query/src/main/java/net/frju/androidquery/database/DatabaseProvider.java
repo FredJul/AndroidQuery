@@ -55,11 +55,11 @@ public abstract class DatabaseProvider {
     @NonNull
     Uri getUri(@NonNull String modelDbName, @Nullable String uriSuffix);
 
-    abstract protected long insert(@NonNull String tableName, @NonNull ContentValues valuesArray);
+    abstract protected long insert(@NonNull String tableName, @NonNull ContentValues valuesArray, @NonNull Query.ConflictResolution conflictResolution);
 
-    abstract protected int bulkInsert(@NonNull String tableName, @NonNull ContentValues[] valuesArray);
+    abstract protected int bulkInsert(@NonNull String tableName, @NonNull ContentValues[] valuesArray, @NonNull Query.ConflictResolution conflictResolution);
 
-    abstract protected int bulkUpdate(@NonNull String tableName, @Nullable String uriSuffix, @NonNull ContentValues[] valuesArray, @NonNull Where[][] conditionsArray);
+    abstract protected int bulkUpdate(@NonNull String tableName, @Nullable String uriSuffix, @NonNull ContentValues[] valuesArray, @NonNull Where[][] conditionsArray, @NonNull Query.ConflictResolution conflictResolution);
 
     abstract protected Cursor query(@NonNull String tableName, @NonNull String[] columns, @Nullable Where[] where, @Nullable Join[] joins,
                                     @Nullable String groupBy, @Nullable String having, @Nullable OrderBy[] orderBy, @Nullable Limit limit);

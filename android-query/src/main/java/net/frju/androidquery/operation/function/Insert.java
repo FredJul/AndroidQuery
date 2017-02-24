@@ -31,12 +31,18 @@ import io.reactivex.Single;
  */
 public class Insert extends Query {
     private final Object[] mModels;
+    private final ConflictResolution mConflictResolution;
 
     public Object[] getModels() {
         return mModels;
     }
 
-    private Insert(Object... models) {
+    public ConflictResolution getConflictResolution() {
+        return mConflictResolution;
+    }
+
+    private Insert(ConflictResolution conflictResolution, Object... models) {
+        mConflictResolution = conflictResolution;
         mModels = models;
     }
 
@@ -56,6 +62,7 @@ public class Insert extends Query {
 
     public static class Builder<T> {
         private final T[] mModels;
+        private ConflictResolution mConflictResolution = ConflictResolution.CONFLICT_IGNORE;
         private final DatabaseProvider mDatabaseProvider;
 
         @SafeVarargs
@@ -65,11 +72,23 @@ public class Insert extends Query {
         }
 
         /**
+         * Specify a Compare where for the Select query
+         *
+         * @param conflictResolution the resolution algorithm. By default it's CONFLICT_IGNORE.
+         * @return Call Builder#query or the rx methods to run the query
+         */
+        public Insert.Builder<T> withConflictResolution(ConflictResolution conflictResolution) {
+            mConflictResolution = conflictResolution;
+            return this;
+        }
+
+        /**
          * Executes an Insert query
+         * @return the number of inserted items
          */
         public int query() {
             return insert(
-                    new Insert(mModels),
+                    new Insert(mConflictResolution, mModels),
                     mModels != null && mModels.length > 0 ? mModels[0].getClass() : Object.class,
                     mDatabaseProvider
             );

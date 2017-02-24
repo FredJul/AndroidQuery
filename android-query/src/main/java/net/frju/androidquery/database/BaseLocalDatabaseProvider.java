@@ -133,6 +133,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         return getClass().getPackage().getName();
     }
 
+    @Override
     public
     @NonNull
     Uri getUri(@NonNull Class model, @Nullable String uriSuffix) {
@@ -144,6 +145,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         }
     }
 
+    @Override
     public
     @NonNull
     Uri getUri(@NonNull String modelDbName, @Nullable String uriSuffix) {
@@ -229,8 +231,9 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
     protected void onPostUpgrade(int oldVersion, int newVersion) {
     }
 
-    protected long insert(@NonNull String tableName, @NonNull ContentValues values) {
-        long newId = mDatabase.insert(tableName, null, values);
+    @Override
+    protected long insert(@NonNull String tableName, @NonNull ContentValues values, @NonNull Query.ConflictResolution conflictResolution) {
+        long newId = mDatabase.insertWithOnConflict(tableName, null, values, convertEnum(conflictResolution));
 
         if (newId != -1) {
             mContext.getContentResolver().notifyChange(getUri(tableName, null), null);
@@ -239,13 +242,14 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         return newId;
     }
 
-    protected int bulkInsert(@NonNull String tableName, @NonNull ContentValues[] valuesArray) {
+    @Override
+    protected int bulkInsert(@NonNull String tableName, @NonNull ContentValues[] valuesArray, @NonNull Query.ConflictResolution conflictResolution) {
         int nbInsert = 0;
         mDatabase.beginTransaction();
 
         try {
             for (ContentValues values : valuesArray) {
-                if (mDatabase.insert(tableName, null, values) != -1) {
+                if (mDatabase.insertWithOnConflict(tableName, null, values, convertEnum(conflictResolution)) != -1) {
                     nbInsert++;
                 }
             }
@@ -262,17 +266,19 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         return nbInsert;
     }
 
-    protected int bulkUpdate(@NonNull String tableName, @Nullable String uriSuffix, @NonNull ContentValues[] valuesArray, @NonNull Where[][] conditionsArray) {
+    @Override
+    protected int bulkUpdate(@NonNull String tableName, @Nullable String uriSuffix, @NonNull ContentValues[] valuesArray, @NonNull Where[][] conditionsArray, @NonNull Query.ConflictResolution conflictResolution) {
         int nbUpdate = 0;
         mDatabase.beginTransaction();
 
         try {
             for (int i = 0; i < valuesArray.length; i++) {
-                nbUpdate += mDatabase.update(
+                nbUpdate += mDatabase.updateWithOnConflict(
                         tableName,
                         valuesArray[i],
                         mClauseHelper.getCondition(conditionsArray[i]),
-                        mClauseHelper.getConditionArgs(conditionsArray[i])
+                        mClauseHelper.getConditionArgs(conditionsArray[i]),
+                        convertEnum(conflictResolution)
                 );
             }
 
@@ -288,6 +294,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         return nbUpdate;
     }
 
+    @Override
     protected
     @Nullable
     Cursor query(@NonNull String tableName, @NonNull String[] columns, @Nullable Where[] where, @Nullable Join[] joins,
@@ -329,6 +336,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         }
     }
 
+    @Override
     protected int delete(@NonNull String tableName, @Nullable String uriSuffix, @Nullable Where[] where) {
         String whereClause = mClauseHelper.getCondition(where);
         int nbDeleted = mDatabase.delete(
@@ -344,6 +352,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         return nbDeleted;
     }
 
+    @Override
     protected long count(@NonNull String tableName, @Nullable Where[] where) {
         return DatabaseUtils.queryNumEntries(
                 mDatabase,
@@ -353,6 +362,7 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
         );
     }
 
+    @Override
     protected
     @Nullable
     Cursor rawQuery(@NonNull String sql) {
@@ -362,5 +372,21 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
     @NonNull
     SQLiteDatabase getDatabase() {
         return mDatabase;
+    }
+
+    private int convertEnum(Query.ConflictResolution conflictResolution) {
+        switch (conflictResolution) {
+            case CONFLICT_ABORT:
+                return SQLiteDatabase.CONFLICT_ABORT;
+            case CONFLICT_FAIL:
+                return SQLiteDatabase.CONFLICT_FAIL;
+            case CONFLICT_REPLACE:
+                return SQLiteDatabase.CONFLICT_REPLACE;
+            case CONFLICT_ROLLBACK:
+                return SQLiteDatabase.CONFLICT_ROLLBACK;
+            default:
+            case CONFLICT_IGNORE:
+                return SQLiteDatabase.CONFLICT_IGNORE;
+        }
     }
 }
