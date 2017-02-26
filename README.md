@@ -54,7 +54,7 @@ Table of Contents
 ###Gradle dependencies###
 
 ```groovy
-ext.androidquery_version = '1.5.2'
+ext.androidquery_version = '1.5.3'
 
 dependencies {
     annotationProcessor "net.frju.androidquery:android-query-preprocessor:${androidquery_version}"
@@ -240,7 +240,7 @@ You can also limit/order the results, or directly retrieve an array or a list fr
 // SELECT * FROM user ORDER BY username DESC LIMIT 10
 User[] users = USER.select()
         .limit(10) // you can limit or order the result
-        .orderBy(USER.USERNAME, OrderBy.Order.DESC)
+        .orderByDesc(USER.USERNAME)
         .query()
         .toArray(); // toList() also available, but a bit less efficient
 ```
@@ -406,7 +406,7 @@ public class User {
 
 Comment[] comments = COMMENT.select()
         .join(innerJoin(Comment.class, COMMENT.USER_ID, User.class, USER.ID))
-        .orderBy(Comment.class.getSimpleName() + '.' + COMMENT.TIMESTAMP, OrderBy.Order.DESC)
+        .orderByDesc(Comment.class.getSimpleName() + '.' + COMMENT.TIMESTAMP)
         .query()
         .toArray();
         
@@ -711,7 +711,7 @@ Then you can queries the lib models as you would do with your own models:
 ```java
 Contact[] contacts = CONTACT.select()
          .where(Where.field(CONTACT.IN_VISIBLE_GROUP).isEqualTo(true))
-         .orderBy(new OrderBy(CONTACT.DISPLAY_NAME, OrderBy.Order.ASC, OrderBy.Collate.LOCALIZED))
+         .orderByAsc(CONTACT.DISPLAY_NAME, OrderBy.Collate.LOCALIZED)
          .query()
          .toArray();
 ```
