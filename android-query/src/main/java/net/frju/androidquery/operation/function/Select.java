@@ -100,20 +100,55 @@ public class Select extends Query {
         }
 
         /**
-         * Specify an Order By clause for the Select query
+         * Order the result by this column ascendant values
          * @param column The column to use with the Order By clause
-         * @param order The direction of the Order By clause
          * @return Call Builder#query or the rx methods to run the query
          */
         public
         @NonNull
-        Builder<T> orderBy(@NonNull String column, @NonNull OrderBy.Order order) {
-            if (mOrderBy == null) {
-                mOrderBy = new OrderBy[]{new OrderBy(column, order)};
-            } else {
-                mOrderBy = Arrays.copyOf(mOrderBy, mOrderBy.length + 1);
-                mOrderBy[mOrderBy.length - 1] = new OrderBy(column, order);
-            }
+        Builder<T> orderByAsc(@NonNull String column) {
+            addOrderBy(new OrderBy(column, OrderBy.Order.ASC));
+            return this;
+        }
+
+        /**
+         * Order the result by this column descendant values
+         *
+         * @param column The column to use with the Order By clause
+         * @return Call Builder#query or the rx methods to run the query
+         */
+        public
+        @NonNull
+        Builder<T> orderByDesc(@NonNull String column) {
+            addOrderBy(new OrderBy(column, OrderBy.Order.DESC));
+            return this;
+        }
+
+        /**
+         * Order the result by this column ascendant values
+         *
+         * @param column  The column to use with the Order By clause
+         * @param collate The used collate method to order the results
+         * @return Call Builder#query or the rx methods to run the query
+         */
+        public
+        @NonNull
+        Builder<T> orderByAsc(@NonNull String column, @NonNull OrderBy.Collate collate) {
+            addOrderBy(new OrderBy(column, OrderBy.Order.ASC, collate));
+            return this;
+        }
+
+        /**
+         * Order the result by this column descendant values
+         *
+         * @param column  The column to use with the Order By clause
+         * @param collate The used collate method to order the results
+         * @return Call Builder#query or the rx methods to run the query
+         */
+        public
+        @NonNull
+        Builder<T> orderByDesc(@NonNull String column, @NonNull OrderBy.Collate collate) {
+            addOrderBy(new OrderBy(column, OrderBy.Order.DESC, collate));
             return this;
         }
 
@@ -336,6 +371,15 @@ public class Select extends Query {
                     return queryFirstAndInit();
                 }
             });
+        }
+
+        private void addOrderBy(OrderBy orderBy) {
+            if (mOrderBy == null) {
+                mOrderBy = new OrderBy[]{orderBy};
+            } else {
+                mOrderBy = Arrays.copyOf(mOrderBy, mOrderBy.length + 1);
+                mOrderBy[mOrderBy.length - 1] = orderBy;
+            }
         }
     }
 }

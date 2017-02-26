@@ -25,7 +25,6 @@ import net.frju.androidquery.integration.utils.SetupLog;
 import net.frju.androidquery.integration.utils.SetupPost;
 import net.frju.androidquery.integration.utils.SetupUser;
 import net.frju.androidquery.operation.condition.Where;
-import net.frju.androidquery.operation.keyword.OrderBy;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -100,7 +99,7 @@ public class JoinTest extends IntegrationTest {
                                 USER.ID
                         )
                 )
-                .orderBy("Post.id", OrderBy.Order.DESC)
+                .orderByDesc("Post.id")
                 .query().toArray();
 
         assertEquals(3, posts.length);

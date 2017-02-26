@@ -17,7 +17,6 @@ import net.frju.androidquery.gen.COMMENT;
 import net.frju.androidquery.gen.USER;
 import net.frju.androidquery.models.Contact;
 import net.frju.androidquery.operation.function.CursorResult;
-import net.frju.androidquery.operation.keyword.OrderBy;
 import net.frju.androidquery.sample.R;
 import net.frju.androidquery.sample.adapter.CommentAdapter;
 import net.frju.androidquery.sample.adapter.ContactsAdapter;
@@ -185,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
     private void refreshComments() {
         mCompositeDisposable.add(COMMENT.select()
                 .join(innerJoin(Comment.class, COMMENT.USER_ID, User.class, USER.ID))
-                .orderBy(Comment.class.getSimpleName() + '.' + COMMENT.TIMESTAMP, OrderBy.Order.DESC)
+                .orderByDesc(Comment.class.getSimpleName() + '.' + COMMENT.TIMESTAMP)
                 .rx2()
                 .subscribe(new Consumer<CursorResult<Comment>>() {
                     @Override

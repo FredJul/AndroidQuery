@@ -261,7 +261,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testNumericOrderByAscSelection() {
         User[] users = USER.select()
-                .orderBy(USER.TIMESTAMP, OrderBy.Order.ASC)
+                .orderByAsc(USER.TIMESTAMP)
                 .query().toArray();
 
         // clyde, gill, josh, angie isEqualTo the timestamp ascending order of the users created
@@ -277,8 +277,8 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testNumericDoubleOrderByAscSelection() {
         User[] users = USER.select()
-                .orderBy(USER.COUNT, OrderBy.Order.ASC)
-                .orderBy(USER.TIMESTAMP, OrderBy.Order.ASC)
+                .orderByAsc(USER.COUNT)
+                .orderByAsc(USER.TIMESTAMP)
                 .query().toArray();
 
         // clyde, gill, josh, angie isEqualTo the timestamp ascending order of the users created
@@ -294,7 +294,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testNumericOrderByDescSelection() {
         User[] users = USER.select()
-                .orderBy(USER.TIMESTAMP, OrderBy.Order.DESC)
+                .orderByDesc(USER.TIMESTAMP)
                 .query().toArray();
 
         // angie, josh, gill, clyde isEqualTo the timestamp descending order of the users created
@@ -310,7 +310,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testAlphaOrderByAscSelection() {
         User[] users = USER.select()
-                .orderBy(USER.USERNAME, OrderBy.Order.ASC)
+                .orderByAsc(USER.USERNAME)
                 .query().toArray();
 
         // angie, clyde, gill, josh isEqualTo the username ascending order of the users created
@@ -326,7 +326,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testAlphaOrderByDescSelection() {
         User[] users = USER.select()
-                .orderBy(USER.USERNAME, OrderBy.Order.DESC)
+                .orderByDesc(USER.USERNAME)
                 .query().toArray();
 
         // josh, gill, clyde, angie isEqualTo the username descending order of the users created
@@ -342,7 +342,7 @@ public class ReadTest extends IntegrationTest {
     @Test
     public void testOrderByRandom() {
         User[] users = USER.select()
-                .orderBy(USER.USERNAME, OrderBy.Order.RANDOM)
+                .orderBy(new OrderBy(USER.USERNAME, OrderBy.Order.RANDOM))
                 .query().toArray();
 
         // just check that the results are returned and no error isEqualTo thrown
@@ -354,7 +354,7 @@ public class ReadTest extends IntegrationTest {
     public void testLimitLowerBoundSelection() {
         User[] users = USER.select()
                 .limit(0, 2)
-                .orderBy(USER.USERNAME, OrderBy.Order.DESC)
+                .orderByDesc(USER.USERNAME)
                 .query().toArray();
 
         assertEquals(2, users.length);
@@ -366,7 +366,7 @@ public class ReadTest extends IntegrationTest {
     public void testLimitUpperBoundSelection() {
         User[] users = USER.select()
                 .limit(2, 4)
-                .orderBy(USER.USERNAME, OrderBy.Order.DESC)
+                .orderByDesc(USER.USERNAME)
                 .query().toArray();
 
         assertEquals(2, users.length);
