@@ -300,6 +300,8 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
     Cursor query(@NonNull String tableName, @NonNull String[] columns, @Nullable Where[] where, @Nullable Join[] joins,
                  @Nullable String groupBy, @Nullable String having, @Nullable OrderBy[] orderBy, @Nullable Limit limit) {
 
+        Cursor cursor;
+
         if (joins != null && joins.length > 0) {
             try {
                 String joinQuery = mClauseHelper.buildJoinQuery(
@@ -312,12 +314,12 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
                         getResolver()
                 );
 
-                return mDatabase.rawQuery(joinQuery, mClauseHelper.getConditionArgs(where));
+                cursor = mDatabase.rawQuery(joinQuery, mClauseHelper.getConditionArgs(where));
             } catch (Exception e) {
                 throw new SQLException(e.getMessage());
             }
         } else {
-            Cursor cursor = mDatabase.query(
+            cursor = mDatabase.query(
                     tableName,
                     columns,
                     mClauseHelper.getCondition(where),
@@ -327,13 +329,13 @@ public abstract class BaseLocalDatabaseProvider extends DatabaseProvider {
                     mClauseHelper.getOrderBy(orderBy),
                     mClauseHelper.getLimit(limit)
             );
-
-            if (cursor != null) {
-                cursor.setNotificationUri(mContext.getContentResolver(), getUri(tableName, null));
-            }
-
-            return cursor;
         }
+
+        if (cursor != null) {
+            cursor.setNotificationUri(mContext.getContentResolver(), getUri(tableName, null));
+        }
+
+        return cursor;
     }
 
     @Override
