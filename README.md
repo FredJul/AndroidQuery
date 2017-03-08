@@ -54,7 +54,7 @@ Table of Contents
 ###Gradle dependencies###
 
 ```groovy
-ext.androidquery_version = '1.5.4'
+ext.androidquery_version = '1.5.5'
 
 dependencies {
     annotationProcessor "net.frju.androidquery:android-query-preprocessor:${androidquery_version}"
