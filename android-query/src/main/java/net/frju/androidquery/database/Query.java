@@ -273,7 +273,7 @@ public abstract class Query {
                 throw new IllegalStateException("delete with model() method require a primary key");
             }
 
-            Object[] keys = new String[delete.getModels().length];
+            Object[] keys = new Object[delete.getModels().length];
             for (int i = 0; i < models.length; i++) {
                 keys[i] = tableDesc.getPrimaryKeyValue(models[i]);
 
