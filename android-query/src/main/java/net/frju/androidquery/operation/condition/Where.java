@@ -36,6 +36,14 @@ public class Where {
             return new Compare(mFieldDbName, Compare.Op.IS, false);
         }
 
+        public Compare isNull() {
+            return new Compare(mFieldDbName, Compare.Op.IS, null);
+        }
+
+        public Compare isNotNull() {
+            return new Compare(mFieldDbName, Compare.Op.IS_NOT, null);
+        }
+
         public Compare isEqualTo(Object value) {
             return new Compare(mFieldDbName, Compare.Op.IS, value);
         }
