@@ -49,9 +49,9 @@ Table of Contents
 
 ---
 
-#Setup#
+# Setup
 
-###Gradle dependencies###
+### Gradle dependencies
 
 ```groovy
 ext.androidquery_version = '1.5.5'
@@ -72,7 +72,7 @@ If you want to use RxJava1 or RxJava2 you also need to add some of the following
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1' // For RxJava2 and rx2() method
 ```
 
-###Initialize the ORM###
+### Initialize the ORM
 
 You need to initialize the ORM with a context to make it work properly. A good way to do it is by defining your Application object:
 
@@ -95,7 +95,7 @@ And then declare it into your AndroidManifest.xml:
         android:name=".App">
 ```
 
-###Define your local database and models###
+### Define your local database and models
 
 You first need to declare your database. A `BaseLocalDatabaseProvider` is using SQLite to store data.
 
@@ -148,21 +148,21 @@ Then models are defined by POJOs that are annotated with `@DbModel`. Model field
 @DbModel(databaseProvider = LocalDatabaseProvider.class)
 public class User {
 
-    @DbField(index = true, dbName = "_id",
-            primaryKey = true, autoIncrement = true)
-    public int id;
+    @DbField(index = true, dbName = "_id",
+            primaryKey = true, autoIncrement = true)
+    public int id;
     
-    @DbField
-    public String username;
-    
-    @DbField
-    public long timestamp;
-    
-    @DbField
-    public boolean isRegistered;
-    
-    @DbField
-    public byte[] profilePicture;
+    @DbField
+    public String username;
+
+    @DbField
+    public long timestamp;
+
+    @DbField
+    public boolean isRegistered;
+
+    @DbField
+    public byte[] profilePicture;
 }
       </code></pre>
     </td>
@@ -171,18 +171,18 @@ public class User {
 @DbModel(databaseProvider = LocalDatabaseProvider::class)
 class Feed { // data class not supported
 
-    @DbField(primaryKey = true, autoIncrement = true)
-    var id = 0
-    
-    @DbField(unique = true)
-    var username: String? = null
+    @DbField(primaryKey = true, autoIncrement = true)
+    var id = 0
+
+    @DbField(unique = true)
+    var username: String? = null
 }
       </code></pre>
     </td>
   </tr>
 </table>
 
-###Use custom types###
+### Use custom types
 
 By default AndroidQuery supports several Java/Android types, but you are not restricted to them and can define some additional types:
 
@@ -202,7 +202,7 @@ public class UriConverter extends BaseTypeConverter<String, Uri> {
 }
 ```
 
-###Supported constraints###
+### Supported constraints
 
 Here are the supported constraints:
 - primary key (only on one field)
@@ -213,11 +213,11 @@ Here are the supported constraints:
 
 ---
 
-#Queries#
+# Queries
 
 By convenience all examples of this section will be done synchronously. For asynchronous queries, please refer to the corresponding section. 
 
-###Select###
+### Select
 
 For a `select()` query you will get back a `CursorResult` object, which needs to be closed after use. You can use a try-with-resources statement for that:
 
@@ -248,7 +248,7 @@ User[] users = USER.select()
 However be careful: this is less efficient than directly using the `CursorResult` object since it needs to read and copy everything in memory.
 Calling `toArray()` or `toList()` methods will automatically close the `CursorResult` object for you.
 
-###Insert###
+### Insert
 
 ```java
 User user = new User();
@@ -260,7 +260,7 @@ user.setTimestamp(System.currentTimeMillis());
 USER.insert(user).query();
 ```
 
-###Update###
+### Update
 
 ```java
 ContentValues contentValues = new ContentValues();
@@ -273,7 +273,7 @@ int rowsUpdated = USER.update()
         .query();
 ```
 
-###Save###
+### Save
 
 ```java
 USER.save(user).query();
@@ -282,21 +282,21 @@ USER.save(user).query();
 The `save()` method will either insert the data if not in database or will update it, since this can be slower you should use that method only if you don't know if the data has been already inserted.
 You need to define a primary key in your model to be able to use the `save()` method.
 
-###Delete###
+### Delete
 
 ```java
 // DELETE FROM User;
 int rowsDeleted = USER.delete().query(); // delete all users, can add a where() if necessary
 ```
 
-###Count###
+### Count
 
 ```java
 // SELECT Count(*) FROM User;
 int count = USER.count().query();
 ```
 
-###Raw Query###
+### Raw Query
 
 ```java
 // Raw queries;
@@ -307,7 +307,7 @@ if (cursor != null) {
 }
 ```
 
-###Where clauses###
+### Where clauses
 
 The `Where` class is used to build up the where query:
 
@@ -347,11 +347,11 @@ User[] users = USER.select()
 
 ---
 
-#Relations between models#
+# Relations between models
 
 Sometimes you want to automatically populate data of a model from another one (ie. get all posts of a user). There is actually two ways of doing so.
 
-###Variable initializer###
+### Variable initializer
 
 You can initialize some variable thanks to the `InitMethod` annotation.
 
@@ -375,7 +375,7 @@ When you call `queryAndInit()` or similar RxJava methods, you will actually exec
 
 Be careful to not do any circular reference.
 
-###Local database and joins###
+### Local database and joins
 
 If you do not need a list of sub models and if both model share the same `BaseLocalDatabaseProvider` (does not work with `BaseContentDatabaseProvider`), you could use a join.
 This is far more efficient than the previous method since it does not add any database request.
@@ -415,7 +415,7 @@ User user = comments[0].getUser(); // The nested User object is populated by the
 
 ---
 
-#Asynchronous queries#
+# Asynchronous queries
 
 For an asynchronous query (to not block the UI), you can notably use RxJava (v1 or v2) or Kotlin Anko library.
 
@@ -426,62 +426,57 @@ For an asynchronous query (to not block the UI), you can notably use RxJava (v1 
   </tr>
   <tr style="background: none">
     <td style="padding:0; margin:0; border:none; width:50%;">
-    
-    It is recommended to put all the returned Disposable into a CompositeDisposable and clear it inside the activity onDestroy():
-    
+It is recommended to put all the returned Disposable into a CompositeDisposable and clear it inside the activity onDestroy():
       <pre lang="java"><code class="language-java">
 private final CompositeDisposable mCompositeDisposable
-                = new CompositeDisposable();
+                = new CompositeDisposable();
 
 private void doQuery() {
-    mCompositeDisposable.add(USER.select()
-        .rx2First() // we get the first user only
-        .flatMap(new Function&lt;User, Single&lt;CursorResult&lt;Comment>>>() {
-            @Override
-            public Single&lt;CursorResult&lt;Comment>> apply(User user)
-                    throws Exception {
-                return COMMENT.select()
-                    .where(Where.field(COMMENT.USER_ID)
-                    .isEqualTo(user.id))
-                    .rx2();
-            }
-        })
-        .subscribe(new Consumer&lt;CursorResult&lt;Comment>>() {
-            @Override
-            public void accept(CursorResult&lt;Comment> comments)
-                    throws Exception {
-                // do something with the comments of first user
-                // you are in UI thread here
-            }
-        }));
+    mCompositeDisposable.add(USER.select()
+        .rx2First() // we get the first user only
+        .flatMap(new Function&lt;User, Single&lt;CursorResult&lt;Comment>>>() {
+            @Override
+            public Single&lt;CursorResult&lt;Comment>> apply(User user)
+                    throws Exception {
+                return COMMENT.select()
+                    .where(Where.field(COMMENT.USER_ID)
+                    .isEqualTo(user.id))
+                    .rx2();
+            }
+        })
+        .subscribe(new Consumer&lt;CursorResult&lt;Comment>>() {
+            @Override
+            public void accept(CursorResult&lt;Comment> comments)
+                    throws Exception {
+                // do something with the comments of first user
+                // you are in UI thread here
+            }
+        }));
 }
 
 @Override
 protected void onDestroy() {
-    super.onDestroy();
-    mCompositeDisposable.clear();
+    super.onDestroy();
+    mCompositeDisposable.clear();
 }
       </code></pre>
-      
 By default RxJava queries are always executed on Schedulers.io() and the result given on AndroidSchedulers.mainThread() unless you call the methods subscribeOn() and observeOn().
-
     </td>
     <td style="padding:0; margin:0; border:none; width:50%;">
-      <pre lang="kotlin"><code class="language-kotlin">
-
+      <pre lang="java"><code class="language-java">
 doAsync {
-    val firstUser = USER.select()
-        .queryFirst()
+    val firstUser = USER.select()
+        .queryFirst()
 
-    val comments = COMMENT.select()
-        .where(Where.field(COMMENT.USER_ID)
-        .isEqualTo(firstUser.id))
-        .query()
+    val comments = COMMENT.select()
+        .where(Where.field(COMMENT.USER_ID)
+        .isEqualTo(firstUser.id))
+        .query()
 
-    uiThread {
-        // do something with the comments of first user
-        // you are in UI thread here
-    }
+    uiThread {
+        // do something with the comments of first user
+        // you are in UI thread here
+    }
 }
       </code></pre>
     </td>
@@ -490,7 +485,7 @@ doAsync {
 
 ---
 
-#Listening data changes#
+# Listening data changes
 
 To listen to the data changes in your activity/fragment, you can create a Android loader this way:
 ```java
@@ -570,7 +565,7 @@ private final ContentObserver mContentObserver = new ThrottledContentObserver(ne
 
 Please note that this is working even without setting any ContentProvider for your models. Be careful: you will not be notified if you modify the data with raw queries.
 
-###Database operation hooks###
+### Database operation hooks
 
 If you just need to maintain the data coherence or generate some default value you can inherits your model from `ModelListener`.
 
@@ -608,7 +603,7 @@ Again, be careful: you will not be notified if you modify the data with raw quer
 
 ---
 
-#Expose your models to an external application#
+# Expose your models to an external application
 
 Your data can also be accessed by an external application through a ContentProvider.
 To do so, you first need to declare the authority of your `BaseLocalDatabaseProvider`:
@@ -644,7 +639,7 @@ From the external application, you will be able to access to the data either by 
 
 ---
 
-#Access to some external data#
+# Access to some external data
 
 You can as well declare some models which are actually stored into another application.
 AndroidQuery will access these data through a ContentProvider.
@@ -680,7 +675,7 @@ Then you can query that model in the same way. However, please note that raw que
 
 ---
 
-#Default Android models#
+# Default Android models
 
 AndroidQuery also provide a library which allows you to easily access to default Android ContentProviders. You need to add `android-query-models` into your dependencies.
 ```groovy
@@ -718,7 +713,7 @@ Contact[] contacts = CONTACT.select()
 
 ---
 
-#TODO#
+# TODO
 - Generate a default local database provider inside Q and allow to directly put an URI in @DbModel without having to create a ContentDatabaseProvider
 - Better migration support (like @Migration(1) function?)
 - Support for transactions
