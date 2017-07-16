@@ -1,6 +1,8 @@
 [![API](https://img.shields.io/badge/API-11%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=11)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/fredericjulian)
 
+# WARNING: now that [Room](https://developer.android.com/topic/libraries/architecture/room.html) is out, I no longer maintain that library. If you need a library to easy access to default android ContentProvider, I would maybe suggest the use of [PrivacyStreams](https://github.com/PrivacyStreams/PrivacyStreams).
+
 AndroidQuery
 ======================
 
